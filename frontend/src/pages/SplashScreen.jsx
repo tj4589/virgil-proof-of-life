@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { motion, AnimatePresence } from 'framer-motion';
 
 // Pure CSS + Framer Motion Cinematic Splash Screen
 // Guaranteed to work on all devices without WebGL crashes

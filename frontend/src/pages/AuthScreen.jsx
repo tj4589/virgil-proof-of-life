@@ -21,42 +21,60 @@ const AuthScreen = ({ onLogin, theme, onToggleTheme }) => {
   };
 
   return (
-    <div className="screen on" style={{ background: 'var(--bg)', minHeight: '100vh', display: 'flex' }}>
-      {/* Left side: branding/visuals */}
-      <div className="auth-left" style={{ flex: 1, background: 'var(--surface)', display: 'flex', flexDirection: 'column', padding: '60px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'relative', zIndex: 2 }}>
-          <img src={logoSrc} alt="VIRGIL" style={{ height: '32px', marginBottom: '60px' }} />
-          <h1 style={{ fontSize: '36px', color: 'var(--text)', fontWeight: 600, letterSpacing: '-0.5px', marginBottom: '16px', lineHeight: 1.2 }}>
-            Payroll Integrity<br />Intelligence
-          </h1>
-          <p style={{ color: 'var(--text3)', fontSize: '16px', maxWidth: '300px', lineHeight: 1.5 }}>
-            Authorized personnel only. Secure access gateway for approved organizations.
-          </p>
+    <div className="screen on" style={{ background: 'var(--bg)', flexDirection: 'column' }}>
+      <div className="ob-topbar">
+        <div className="ob-brand">
+          <img src={logoSrc} alt="VIRGIL" style={{ height: '28px', width: 'auto' }} />
         </div>
-        
-        {/* Abstract intelligence visual */}
-        <div style={{ position: 'absolute', bottom: '-10%', right: '-10%', opacity: 0.3, pointerEvents: 'none' }}>
-           <div style={{ width: '600px', height: '600px', border: '1px solid var(--red)', borderRadius: '50%', position: 'absolute' }} />
-           <div style={{ width: '400px', height: '400px', border: '1px dashed var(--red)', borderRadius: '50%', position: 'absolute', top: '100px', left: '100px' }} />
-           <div style={{ width: '200px', height: '200px', background: 'radial-gradient(circle, var(--red) 0%, transparent 70%)', borderRadius: '50%', position: 'absolute', top: '200px', left: '200px', filter: 'blur(40px)' }} />
+        <div style={{ fontSize: '12px', color: 'var(--text3)' }}>Secure Uplink</div>
+        <div className="ob-steps-dots">
+          <div className="ob-dot on" />
         </div>
       </div>
 
-      {/* Right side: Login Form */}
-      <div className="auth-right" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: 20, right: 20 }}>
-          <ThemeToggle theme={theme} onToggle={onToggleTheme} compact />
+      <div className="ob-body">
+        <div className="ob-left-panel">
+          <div className="ob-eyebrow">Enterprise Access</div>
+          <div className="ob-headline">
+            Payroll Integrity Intelligence.
+          </div>
+          <div className="ob-desc">
+            Authorized personnel only. Secure access gateway for approved organizations.
+          </div>
+          <div className="ob-left-visual" aria-hidden="true">
+            <div className="ob-planet">
+              <div className="ob-planet-ring" />
+              <div className="ob-orbit orbit-one">
+                <span><i className="ti ti-shield-lock" /></span>
+              </div>
+              <div className="ob-orbit orbit-two">
+                <span><i className="ti ti-key" /></span>
+              </div>
+              <div className="ob-orbit orbit-three">
+                <span><i className="ti ti-lock" /></span>
+              </div>
+              <div className="ob-core">
+                <i className="ti ti-fingerprint" />
+              </div>
+            </div>
+            <div className="ob-floating-card card-a">
+              <span>Status</span>
+              <strong>Protected</strong>
+            </div>
+            <div className="ob-floating-card card-b">
+              <span>Uplink</span>
+              <strong>Secured</strong>
+            </div>
+          </div>
         </div>
 
-        <div style={{ width: '100%', maxWidth: '360px' }}>
-          <div style={{ marginBottom: '32px' }}>
-            <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>Secure Sign In</h2>
-            <p style={{ fontSize: '14px', color: 'var(--text3)' }}>Enter your credentials to access the uplink.</p>
-          </div>
+        <div className="ob-right-panel">
+          <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>Secure Sign In</div>
+          <div style={{ fontSize: '12px', color: 'var(--text3)', marginBottom: '24px' }}>Enter your credentials to access the uplink.</div>
 
-          <form onSubmit={handleLogin}>
-            <div className="form-group" style={{ marginBottom: '20px' }}>
-              <label className="form-label" style={{ color: 'var(--text2)' }}>Work Email</label>
+          <form onSubmit={handleLogin} style={{ width: '100%' }}>
+            <div className="form-group">
+              <label className="form-label">Work Email</label>
               <input 
                 type="email"
                 className="form-input" 
@@ -64,13 +82,12 @@ const AuthScreen = ({ onLogin, theme, onToggleTheme }) => {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)' }}
               />
             </div>
 
             <div className="form-group" style={{ marginBottom: '32px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <label className="form-label" style={{ color: 'var(--text2)', marginBottom: 0 }}>Password</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <label className="form-label" style={{ marginBottom: 0 }}>Password</label>
                 <a href="#" style={{ fontSize: '12px', color: 'var(--red)', textDecoration: 'none' }}>Forgot password?</a>
               </div>
               <input 
@@ -80,15 +97,14 @@ const AuthScreen = ({ onLogin, theme, onToggleTheme }) => {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', marginTop: '8px' }}
               />
             </div>
 
             <button 
               type="submit"
-              className="btn btn-primary" 
+              className="ob-continue" 
               disabled={isLoading || !email || !password}
-              style={{ width: '100%', background: 'var(--red)', color: '#fff', border: 'none', padding: '12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, opacity: (isLoading || !email || !password) ? 0.7 : 1 }}
+              style={{ opacity: (isLoading || !email || !password) ? 0.6 : 1, width: '100%', display: 'flex', justifyContent: 'center' }}
             >
               {isLoading ? (
                 <><i className="ti ti-loader" style={{ animation: 'spin 1s linear infinite' }} /> Authenticating...</>
@@ -99,7 +115,7 @@ const AuthScreen = ({ onLogin, theme, onToggleTheme }) => {
           </form>
 
           <div style={{ marginTop: '32px', textAlign: 'center', fontSize: '13px', color: 'var(--text3)' }}>
-            No account? <button onClick={() => setShowModal(true)} style={{ background: 'none', border: 'none', color: 'var(--red)', cursor: 'pointer', padding: 0, fontSize: '13px', textDecoration: 'underline' }}>Request Access</button>
+            No account? <button type="button" onClick={() => setShowModal(true)} style={{ background: 'none', border: 'none', color: 'var(--red)', cursor: 'pointer', padding: 0, fontSize: '13px', textDecoration: 'underline' }}>Request Access</button>
           </div>
         </div>
       </div>
