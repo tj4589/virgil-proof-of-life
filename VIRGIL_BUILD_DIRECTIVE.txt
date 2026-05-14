@@ -1,0 +1,686 @@
+# VIRGIL — FINAL BUILD EXECUTION DOCUMENT
+## Squad Hackathon 3.0 — Production Direction
+
+# IMPORTANT CONTEXT
+
+The project already has an existing structure and partially completed frontend.
+
+DO NOT rebuild the project from scratch.
+
+The following folders/files already exist and must be respected and extended:
+
+frontend/src/pages:
+* SplashScreen.jsx
+* DashboardScreen.jsx
+* OnboardingScreen.jsx
+* UploadScreen.jsx
+* ResultsScreen.jsx
+* WorkersScreen.jsx
+* PaymentsScreen.jsx
+* AuditTrailScreen.jsx
+* ReportsScreen.jsx
+* SettingsScreen.jsx
+
+frontend/src/components:
+* Sidebar.jsx
+* ThemeToggle.jsx
+
+frontend/src/lib:
+* api.js
+* demoData.js
+
+Backend and AI services also already exist.
+
+The task now is to:
+* refine
+* connect
+* polish
+* complete
+* productionize
+
+NOT restart.
+
+---
+
+# PRODUCT SUMMARY
+
+VIRGIL is an AI-powered payroll integrity and proof-of-life verification system that detects ghost workers before salary payments are released.
+
+The system:
+* analyzes payroll datasets
+* checks proof-of-life signals
+* detects suspicious anomalies
+* risk scores workers
+* blocks suspicious salary disbursement
+* releases verified payments through Squad API
+
+Core principle:
+"When confidence is low, VIRGIL does not pay."
+
+---
+
+# DESIGN PHILOSOPHY
+
+VIRGIL should feel like:
+* elite government intelligence software
+* premium security infrastructure
+* cinematic
+* calm
+* modern SaaS
+* trustworthy
+
+DO NOT:
+* make it cyberpunk
+* make it crypto-looking
+* use neon overload
+* use generic dashboard templates
+* overuse charts
+* clutter screens
+
+Inspiration:
+* Stripe Radar
+* Linear
+* Palantir
+* Arc Browser
+* Vercel
+* Apple cinematic intros
+
+---
+
+# GLOBAL DESIGN RULES
+
+Typography:
+* Satoshi
+* General Sans
+* SF Pro Display
+* Neue Montreal
+
+Spacing:
+* large whitespace
+* premium layout spacing
+* calm composition
+
+Motion:
+* subtle only
+* fade transitions
+* hover glow
+* shimmer loading
+* smooth transforms
+* cinematic easing
+
+NO:
+* bouncing animations
+* excessive particles
+* flashy motion
+
+---
+
+# COLOR SYSTEM
+
+Background: #050505
+Surface: #111217
+Surface Soft: #181A20
+Primary Accent: #D72638
+Text: #F5F5F7
+Muted: #9CA3AF
+Success: #22C55E
+Warning: #F59E0B
+Danger: #EF4444
+
+---
+
+# LOGO SYSTEM
+
+Dark Mode:
+* V = red
+* IRGIL = white
+
+Light Mode:
+* V = red
+* IRGIL = black
+
+Use:
+* transparent PNG
+* adaptive logo rendering
+
+Files already exist:
+* virgil_logo.png
+* virgil_logo_for_white.png
+
+Automatically switch based on theme.
+
+---
+
+# CURRENT SPLASH SCREEN
+
+Splash screen already exists.
+DO NOT replace it completely.
+Improve it.
+
+Current direction is correct:
+* cinematic
+* minimal
+* intelligence-system feel
+
+Improve:
+* contrast
+* typography visibility
+* loading transitions
+* atmospheric motion
+* Three.js background depth
+
+---
+
+# SPLASH SCREEN REQUIREMENTS
+
+File: frontend/src/pages/SplashScreen.jsx
+
+Requirements:
+* full-screen cinematic intro
+* Three.js animated background
+* subtle red signal particles
+* encrypted grid floor
+* slow camera drift
+* ambient glow
+* soft fog
+
+Center: VIRGIL
+Below: Payroll Integrity Intelligence
+
+Loading messages:
+* Initializing secure uplink...
+* Loading verification layers...
+* Establishing AI neural pathways...
+* Verifying identity clusters...
+* System Ready.
+
+Progress line:
+* thin red animated line
+* smooth progression
+
+Transition:
+* fade into onboarding
+* no hard cuts
+
+DO NOT:
+* use giant AI graphics
+* use robots
+* use HUD overload
+
+---
+
+# ONBOARDING SCREEN
+
+File: frontend/src/pages/OnboardingScreen.jsx
+
+Style:
+* split-screen enterprise onboarding
+* inspired by Remote.com
+
+LEFT SIDE:
+* cinematic visual panel
+* abstract payroll/security graphics
+* subtle motion
+* messaging
+
+RIGHT SIDE:
+* step-by-step onboarding
+* premium form styling
+* minimal fields
+
+Steps:
+1. Organization details
+2. Payroll source
+3. Verification settings
+4. AI sensitivity
+5. Completion
+
+Add:
+* smooth step transitions
+* progress indicator
+* premium spacing
+
+---
+
+# DASHBOARD SCREEN
+
+File: frontend/src/pages/DashboardScreen.jsx
+
+This is the most important screen.
+
+The dashboard should feel like:
+"Payroll Operations Intelligence Center"
+
+NOT: "admin template"
+
+Layout:
+* left sidebar
+* top intelligence summary
+* operational panels
+* detection feed
+* payment integrity status
+
+Main Metrics:
+* Total Workers
+* Verified Workers
+* Flagged Workers
+* Funds Protected
+* Pending Reviews
+* Risk Exposure
+
+Add:
+* subtle live updates
+* hover interactions
+* animated counters
+* threat intelligence feel
+
+Example wording:
+* Identity collision detected
+* Payroll anomaly detected
+* Verification mismatch
+* High-risk disbursement blocked
+
+---
+
+# UPLOAD SCREEN
+
+File: frontend/src/pages/UploadScreen.jsx
+
+Purpose: Admin uploads payroll CSV.
+
+Requirements:
+* drag-and-drop upload
+* CSV parsing
+* validation
+* upload progress
+* payroll preview table
+
+Fields:
+* worker_id
+* full_name
+* department
+* salary
+* account_number
+* attendance_score
+* last_verification
+
+After upload: Trigger AI analysis flow.
+
+---
+
+# AI ANALYSIS FLOW
+
+After upload: show cinematic AI processing state.
+
+Messages:
+* Detecting duplicate payroll signatures...
+* Cross-checking attendance anomalies...
+* Verifying payment integrity...
+* Building trust profiles...
+* Risk scoring workers...
+
+This must feel premium.
+DO NOT use fake "chatbot AI".
+
+---
+
+# RESULTS SCREEN
+
+File: frontend/src/pages/ResultsScreen.jsx
+
+Purpose: Display AI outcomes.
+
+Each worker must show:
+* Trust Score
+* Risk Level
+* Status
+* Explanation
+* Recommended Action
+
+Statuses:
+* VERIFIED
+* NEEDS REVIEW
+* FLAGGED
+
+Example:
+HIGH RISK — Confidence: 91%
+Reasons:
+* Shared bank account
+* No attendance in 124 days
+* Failed proof-of-life
+* Salary anomaly detected
+Recommended Action: BLOCK PAYMENT
+
+IMPORTANT: All AI outputs must be explainable.
+
+---
+
+# WORKERS SCREEN
+
+File: frontend/src/pages/WorkersScreen.jsx
+
+Purpose: Detailed worker management.
+
+Add:
+* searchable worker list
+* filter by risk
+* filter by department
+* worker detail modal
+* verification history
+* activity timeline
+
+Worker details:
+* identity info
+* attendance pattern
+* verification history
+* device trust
+* payment history
+* risk explanation
+
+---
+
+# PROOF-OF-LIFE SYSTEM
+
+Create worker verification flow.
+Workers DO NOT use admin dashboard.
+
+Worker flow:
+1. Open verification link
+2. Enter Staff ID
+3. Enter OTP
+4. Complete selfie/liveness check
+5. Complete random prompt
+6. Receive verification result
+
+Random prompts:
+* Blink twice
+* Turn left
+* Smile
+* Raise right hand
+
+Record:
+* device info
+* timestamp
+* verification confidence
+* location if allowed
+* liveness result
+
+Output:
+* VERIFIED
+* NEEDS REVIEW
+* FLAGGED
+
+For demo: simulate face/liveness scoring realistically.
+
+---
+
+# PAYMENTS SCREEN
+
+File: frontend/src/pages/PaymentsScreen.jsx
+
+Purpose: Squad payment operations.
+
+Flow:
+1. Admin clicks Release Payments
+2. ONLY VERIFIED workers processed
+3. One Squad transfer API call per verified worker
+4. Webhook updates payment status
+5. Audit trail updated
+
+Statuses:
+* SUCCESS
+* FAILED
+* PENDING
+* BLOCKED
+
+IMPORTANT: Do NOT implement virtual accounts.
+
+Use:
+* disbursement flow only
+* webhook confirmation
+* transaction history
+
+---
+
+# AUDIT TRAIL SCREEN
+
+File: frontend/src/pages/AuditTrailScreen.jsx
+
+Purpose: Enterprise-grade audit visibility.
+
+Track:
+* payroll uploads
+* AI decisions
+* manual overrides
+* proof-of-life completion
+* transfer events
+* webhook events
+* failed payments
+* suspicious activity
+
+This should feel:
+* forensic
+* trustworthy
+* enterprise
+
+---
+
+# REPORTS SCREEN
+
+File: frontend/src/pages/ReportsScreen.jsx
+
+Purpose: Executive summaries.
+
+Add:
+* payroll integrity overview
+* fraud trends
+* anomaly frequency
+* protected funds
+* department risk comparison
+
+Charts: minimal and elegant only.
+
+---
+
+# SETTINGS SCREEN
+
+File: frontend/src/pages/SettingsScreen.jsx
+
+Add:
+* AI sensitivity slider
+* proof-of-life frequency
+* Squad configuration
+* organization settings
+* notification preferences
+* theme settings
+
+---
+
+# SIDEBAR
+
+File: frontend/src/components/Sidebar.jsx
+
+Style:
+* minimal
+* premium
+* intelligence platform feel
+
+Menu:
+* Overview
+* Detection Center
+* Workers
+* Payments
+* Audit Trail
+* Reports
+* Settings
+
+Add:
+* active indicators
+* hover glow
+* smooth transitions
+
+---
+
+# THEME SYSTEM
+
+File: frontend/src/components/ThemeToggle.jsx
+
+Requirements:
+* dark/light mode
+* adaptive logo switching
+* preserve cinematic feel in both modes
+
+---
+
+# FRONTEND RULES
+
+DO:
+* use Framer Motion
+* use premium spacing
+* use smooth transitions
+* use consistent typography
+* use atmospheric UI
+
+DO NOT:
+* use Bootstrap-style admin layouts
+* overuse gradients
+* use excessive cards
+* clutter information
+* overcomplicate interactions
+
+---
+
+# BACKEND RULES
+
+Backend stack already exists. Refine and connect.
+
+Requirements:
+* Express.js API
+* SQLite database
+* REST endpoints
+* worker storage
+* audit logs
+* payment tracking
+* verification status management
+
+Add:
+* clean API architecture
+* proper validation
+* error handling
+* modular services
+
+---
+
+# AI SERVICE RULES
+
+AI service already exists. Improve:
+* anomaly scoring
+* risk explanations
+* confidence scoring
+* explainability
+
+Use:
+* synthetic payroll datasets
+* attendance anomalies
+* duplicate detection
+* payment anomalies
+* inactivity patterns
+
+AI must output:
+* trust_score
+* confidence
+* reasons
+* recommended_action
+
+---
+
+# ADVERSARIAL DATA HANDLING
+
+VIRGIL must assume:
+* data can be forged
+* records can be manipulated
+* attendance can be falsified
+
+Rules:
+* no single signal determines trust
+* low confidence = block payment
+* suspicious patterns = escalate review
+* incomplete data = NEEDS REVIEW
+
+System must fail safely.
+
+---
+
+# SQUAD API INTEGRATION
+
+Use Squad meaningfully.
+
+Architecture:
+VIRGIL decides WHO is safe to pay.
+Squad executes payment disbursement.
+
+Flow:
+* transfer API per verified worker
+* webhook confirmation
+* payment history storage
+
+Add:
+* transaction references
+* webhook verification
+* transfer status updates
+
+---
+
+# DATABASE RULES
+
+Use SQLite for demo reliability.
+
+Store:
+* workers
+* payrolls
+* trust scores
+* proof-of-life events
+* audit logs
+* payment history
+* webhook history
+
+Design for future PostgreSQL migration.
+
+---
+
+# GITHUB + STRUCTURE
+
+Maintain professional repo structure.
+
+Required:
+* README.md
+* setup instructions
+* architecture explanation
+* Squad API explanation
+* AI explanation
+* screenshots
+* environment examples
+
+DO NOT push:
+* real API keys
+* .env values
+* secrets
+
+---
+
+# FINAL PRODUCT GOAL
+
+The final experience should feel like:
+* a real government payroll intelligence platform
+* a deployable enterprise product
+* a serious anti-fraud system
+
+The strongest qualities should be:
+* clarity
+* trust
+* atmosphere
+* explainability
+* operational realism
+
+Final core message:
+"VIRGIL verifies workforce legitimacy before public funds are released."
