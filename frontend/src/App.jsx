@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import SplashScreen     from './pages/SplashScreen';
+import AuthScreen       from './pages/AuthScreen';
 import OnboardingScreen from './pages/OnboardingScreen';
 import DashboardScreen  from './pages/DashboardScreen';
 import UploadScreen     from './pages/UploadScreen';
@@ -43,8 +44,17 @@ export default function App() {
 
   if (isVerify) return <ProofOfLifeScreen theme={theme} onToggleTheme={toggleTheme} />;
 
-  if (screen === 'splash')    return <SplashScreen    onComplete={() => setScreen('onboard')} theme={theme} onToggleTheme={toggleTheme} />;
-  if (screen === 'onboard')   return <OnboardingScreen onComplete={() => setScreen('dashboard')} theme={theme} onToggleTheme={toggleTheme} />;
+  if (screen === 'splash')    return <SplashScreen    onComplete={() => setScreen('auth')} theme={theme} onToggleTheme={toggleTheme} />;
+  
+  if (screen === 'auth')      return <AuthScreen      onLogin={() => {
+    const isSetup = localStorage.getItem('virgil_setup') === 'true';
+    setScreen(isSetup ? 'dashboard' : 'onboard');
+  }} theme={theme} onToggleTheme={toggleTheme} />;
+
+  if (screen === 'onboard')   return <OnboardingScreen onComplete={() => {
+    localStorage.setItem('virgil_setup', 'true');
+    setScreen('dashboard');
+  }} theme={theme} onToggleTheme={toggleTheme} />;
   if (screen === 'upload')    return <UploadScreen    onUpload={() => setScreen('loading')} onNav={handleNav} theme={theme} onToggleTheme={toggleTheme} />;
   if (screen === 'loading')   return <AILoadingScreen onComplete={() => setScreen('results')} theme={theme} onToggleTheme={toggleTheme} />;
   if (screen === 'results')   return <ResultsScreen   onDashboard={() => setScreen('dashboard')} onNav={handleNav} theme={theme} onToggleTheme={toggleTheme} />;
