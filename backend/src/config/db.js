@@ -1,0 +1,23 @@
+const { Sequelize } = require('sequelize');
+const path = require('path');
+
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: path.join(__dirname, '../../ghostdetect.sqlite'),
+  logging: false
+});
+
+const connectDB = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database Connected: Local SQLite (Offline-ready)');
+    // Automatically sync models to database
+    await sequelize.sync({ alter: true });
+    console.log('Database models synchronized');
+  } catch (error) {
+    console.error('Database Connection Error:', error);
+    process.exit(1);
+  }
+};
+
+module.exports = { sequelize, connectDB };

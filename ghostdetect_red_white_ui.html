@@ -1,0 +1,564 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --r50:#FCEBEB;--r100:#F7C1C1;--r200:#F09595;--r400:#E24B4A;--r600:#A32D2D;--r800:#791F1F;
+  --g50:#EAF3DE;--g400:#639922;--g600:#3B6D11;
+}
+.wrap{background:#fff;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);overflow:hidden;min-height:580px}
+.screen{display:none;flex-direction:column;min-height:580px}
+.screen.on{display:flex}
+.nav{display:flex;gap:3px;padding:8px;background:#FCEBEB;border-bottom:1px solid #F7C1C1;flex-wrap:wrap;justify-content:center}
+.np{padding:5px 11px;border-radius:20px;font-size:10px;font-weight:500;cursor:pointer;color:#A32D2D;border:0.5px solid transparent}
+.np.on{background:#E24B4A;color:#fff}
+.np:hover:not(.on){background:#F7C1C1;color:#791F1F}
+
+/* ── SPLASH ── */
+.splash{background:#fff;align-items:center;justify-content:center;gap:18px;flex:1}
+.sp-ring{width:88px;height:88px;border-radius:24px;background:#FCEBEB;border:1.5px solid #F09595;display:flex;align-items:center;justify-content:center}
+.sp-title{font-size:30px;font-weight:500;color:#791F1F}
+.sp-sub{font-size:11px;color:#A32D2D;letter-spacing:.1em;text-transform:uppercase}
+.sp-track{width:180px;height:3px;background:#F7C1C1;border-radius:2px}
+.sp-fill{height:3px;border-radius:2px;background:#E24B4A;animation:ld 2.2s ease forwards}
+@keyframes ld{from{width:0}to{width:100%}}
+.sp-msg{font-size:11px;color:#F09595}
+.sp-badge{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:#FCEBEB;border:0.5px solid #F7C1C1;font-size:11px;color:#A32D2D;margin-top:4px}
+
+/* ── ONBOARD ── */
+.onboard{flex:1;display:grid;grid-template-columns:220px 1fr}
+.ob-left{background:#FCEBEB;border-right:1px solid #F7C1C1;padding:32px 20px;display:flex;flex-direction:column;gap:20px}
+.ob-brand{display:flex;align-items:center;gap:8px}
+.ob-brand-icon{width:28px;height:28px;background:#E24B4A;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.ob-brand-name{font-size:14px;font-weight:500;color:#791F1F}
+.ob-steps{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.os{display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:var(--border-radius-md);opacity:.5}
+.os.on{background:#F7C1C1;opacity:1;border-radius:var(--border-radius-md)}
+.os-num{width:24px;height:24px;border-radius:50%;border:1.5px solid #E24B4A;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#A32D2D;flex-shrink:0}
+.os.on .os-num{background:#E24B4A;color:#fff;border-color:#E24B4A}
+.os-t{font-size:12px;font-weight:500;color:#791F1F}
+.os-s{font-size:11px;color:#A32D2D;margin-top:1px}
+.ob-right{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;gap:16px;background:#fff}
+.ob-icon-big{width:60px;height:60px;border-radius:18px;background:#FCEBEB;border:0.5px solid #F7C1C1;display:flex;align-items:center;justify-content:center}
+.ob-h{font-size:18px;font-weight:500;color:#791F1F;text-align:center}
+.ob-p{font-size:13px;color:#A32D2D;text-align:center;line-height:1.6;max-width:260px}
+.ob-input{width:100%;padding:10px 12px;border-radius:var(--border-radius-md);border:1px solid #F7C1C1;background:#FCEBEB;color:#791F1F;font-size:13px;outline:none}
+.ob-input:focus{border-color:#E24B4A}
+.ob-btn{width:100%;padding:11px;border-radius:var(--border-radius-md);background:#E24B4A;color:#fff;border:none;font-size:13px;font-weight:500;cursor:pointer}
+.ob-btn:hover{background:#A32D2D}
+.ob-dots{display:flex;gap:5px}
+.od{height:6px;border-radius:3px;background:#F7C1C1}
+.od.on{background:#E24B4A;width:18px}
+.od:not(.on){width:6px}
+
+/* ── LANDING ── */
+.landing{flex:1;background:#fff}
+.ln-top{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid #F7C1C1;background:#fff}
+.ln-logo{display:flex;align-items:center;gap:8px}
+.ln-logo-ic{width:28px;height:28px;background:#E24B4A;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.ln-logo-name{font-size:14px;font-weight:500;color:#791F1F}
+.ln-links{display:flex;gap:16px;font-size:12px;color:#A32D2D}
+.ln-hero{background:#FCEBEB;padding:44px 40px 36px;text-align:center;border-bottom:1px solid #F7C1C1}
+.ln-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;background:#F7C1C1;color:#791F1F;font-size:11px;font-weight:500;margin-bottom:14px}
+.ln-h1{font-size:28px;font-weight:500;color:#791F1F;line-height:1.25;margin-bottom:10px}
+.ln-p{font-size:13px;color:#A32D2D;line-height:1.7;max-width:420px;margin:0 auto 22px}
+.ln-btns{display:flex;gap:10px;justify-content:center}
+.ln-btn-p{padding:10px 24px;background:#E24B4A;color:#fff;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;border:none}
+.ln-btn-p:hover{background:#A32D2D}
+.ln-btn-s{padding:10px 24px;background:#fff;color:#A32D2D;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;border:1px solid #F09595}
+.ln-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px 24px}
+.ln-card{background:#FCEBEB;border-radius:var(--border-radius-lg);padding:16px;border:0.5px solid #F7C1C1}
+.ln-card-ic{width:34px;height:34px;border-radius:10px;background:#F7C1C1;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.ln-card-t{font-size:13px;font-weight:500;color:#791F1F;margin-bottom:4px}
+.ln-card-p{font-size:11px;color:#A32D2D;line-height:1.6}
+
+/* ── UPLOAD ── */
+.upload{flex:1;background:#fff}
+.up-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid #F7C1C1;background:#FCEBEB}
+.up-body{display:grid;grid-template-columns:1fr 300px;gap:16px;padding:16px;flex:1}
+.drop{border:1.5px dashed #F09595;border-radius:var(--border-radius-lg);padding:36px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;background:#FCEBEB}
+.drop:hover{border-color:#E24B4A;background:#F7C1C1}
+.drop-ic{width:48px;height:48px;background:#F7C1C1;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.drop-t{font-size:14px;font-weight:500;color:#791F1F}
+.drop-s{font-size:12px;color:#A32D2D}
+.fmt{display:flex;gap:6px;margin-top:4px}
+.fpill{padding:3px 10px;border-radius:20px;background:#fff;border:0.5px solid #F09595;font-size:10px;color:#A32D2D;font-weight:500}
+.csv-prev{background:#FCEBEB;border-radius:var(--border-radius-lg);padding:12px;border:0.5px solid #F7C1C1;margin-top:10px}
+.csv-head{font-size:10px;font-weight:500;color:#A32D2D;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.cr{display:flex;gap:6px;padding:5px 0;border-bottom:0.5px solid #F7C1C1;font-size:10px}
+.cr:last-child{border-bottom:none}
+.cc{flex:1;color:#A32D2D;font-family:var(--font-mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc.h{color:#791F1F;font-weight:500}
+.cc.bad{color:#E24B4A}
+.up-right{display:flex;flex-direction:column;gap:12px}
+.ucard{background:#FCEBEB;border-radius:var(--border-radius-lg);padding:14px;border:0.5px solid #F7C1C1}
+.ucard-t{font-size:12px;font-weight:500;color:#791F1F;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.req{display:flex;align-items:center;gap:7px;font-size:11px;color:#A32D2D;padding:3px 0}
+.rdt{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.up-go{width:100%;padding:11px;background:#E24B4A;color:#fff;border:none;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer}
+.up-go:hover{background:#A32D2D}
+
+/* ── AI LOADING ── */
+.aiload{background:#fff;align-items:center;justify-content:center;gap:16px;flex:1}
+.ai-pct{font-size:48px;font-weight:500;color:#E24B4A;line-height:1}
+.ai-title{font-size:18px;font-weight:500;color:#791F1F}
+.ai-sub{font-size:12px;color:#A32D2D}
+.ai-track{width:300px;height:4px;background:#F7C1C1;border-radius:2px}
+.ai-fill{height:4px;border-radius:2px;background:#E24B4A;transition:width .4s ease}
+.ai-steps{display:flex;flex-direction:column;gap:0;width:300px;background:#FCEBEB;border-radius:var(--border-radius-lg);border:0.5px solid #F7C1C1;overflow:hidden}
+.ast{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid #F7C1C1;opacity:.35}
+.ast:last-child{border-bottom:none}
+.ast.done{opacity:1;background:#EAF3DE}
+.ast.run{opacity:1;background:#FCEBEB}
+.ast-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ast.done .ast-ic{background:#EAF3DE;color:#3B6D11}
+.ast.run .ast-ic{background:#F7C1C1;color:#E24B4A;border:1.5px solid #E24B4A}
+.ast-t{font-size:12px;color:#A32D2D}
+.ast.done .ast-t{color:#3B6D11}
+.ast.run .ast-t{color:#791F1F;font-weight:500}
+
+/* ── RESULTS ── */
+.results{flex:1;background:#fff}
+.res-top{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid #F7C1C1;background:#FCEBEB}
+.res-alert{margin:14px 16px;background:#FCEBEB;border:1px solid #F09595;border-radius:var(--border-radius-lg);padding:12px 16px;display:flex;align-items:center;gap:12px}
+.ra-ic{width:34px;height:34px;background:#F7C1C1;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ra-t{font-size:13px;font-weight:500;color:#791F1F}
+.ra-s{font-size:11px;color:#A32D2D;margin-top:2px}
+.res-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px 14px}
+.rstat{background:#FCEBEB;border-radius:var(--border-radius-md);padding:11px 14px;border:0.5px solid #F7C1C1}
+.rstat-l{font-size:10px;color:#A32D2D;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.rstat-v{font-size:20px;font-weight:500;color:#791F1F}
+.rstat-v.r{color:#E24B4A}
+.rstat-v.g{color:#3B6D11}
+.res-tbl{margin:0 16px;border:0.5px solid #F7C1C1;border-radius:var(--border-radius-lg);overflow:hidden}
+.tbl-head{padding:10px 14px;border-bottom:0.5px solid #F7C1C1;background:#FCEBEB;display:flex;align-items:center;justify-content:space-between}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+thead th{font-size:10px;font-weight:500;color:#A32D2D;text-transform:uppercase;letter-spacing:.04em;padding:8px 13px;text-align:left;border-bottom:0.5px solid #F7C1C1;background:#FCEBEB}
+tbody tr{border-bottom:0.5px solid #F7C1C1}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#FCEBEB}
+tbody td{padding:9px 13px;font-size:11px;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500}
+.bpaid{background:#EAF3DE;color:#3B6D11}
+.bflag{background:#FCEBEB;color:#791F1F;border:0.5px solid #F09595}
+.mbar{display:flex;align-items:center;gap:5px}
+.mb{width:44px;height:3px;background:#F7C1C1;border-radius:2px}
+.mf{height:3px;border-radius:2px}
+
+/* ── DASHBOARD ── */
+.dash{flex:1;background:#fff;display:grid;grid-template-columns:190px 1fr}
+.dsb{border-right:1px solid #F7C1C1;display:flex;flex-direction:column;background:#FCEBEB}
+.dsb-brand{padding:14px;border-bottom:0.5px solid #F7C1C1;display:flex;align-items:center;gap:8px}
+.dsb-ic{width:26px;height:26px;background:#E24B4A;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.dsb-nm{font-size:13px;font-weight:500;color:#791F1F}
+.dsb-sec{padding:10px 12px 3px;font-size:9px;font-weight:500;color:#F09595;text-transform:uppercase;letter-spacing:.07em}
+.di{display:flex;align-items:center;gap:8px;padding:8px 10px;margin:1px 6px;border-radius:var(--border-radius-md);cursor:pointer;font-size:12px;color:#A32D2D}
+.di:hover{background:#F7C1C1}
+.di.on{background:#F7C1C1;color:#791F1F;font-weight:500;border-left:2px solid #E24B4A}
+.di-badge{margin-left:auto;background:#F7C1C1;color:#791F1F;font-size:9px;padding:1px 5px;border-radius:10px;font-weight:500}
+.di-badge.g{background:#EAF3DE;color:#3B6D11}
+.dsb-foot{margin-top:auto;padding:10px;border-top:0.5px solid #F7C1C1}
+.d-av{width:26px;height:26px;border-radius:50%;background:#F7C1C1;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#791F1F}
+.dmain{display:flex;flex-direction:column;background:#fff}
+.dtop{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:0.5px solid #F7C1C1;background:#fff}
+.dcont{padding:14px;overflow:auto}
+.dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.dsc{background:#FCEBEB;border-radius:var(--border-radius-md);padding:11px 13px;border:0.5px solid #F7C1C1}
+.dsc-l{font-size:9px;color:#A32D2D;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.dsc-v{font-size:18px;font-weight:500;color:#791F1F}
+.dsc-v.r{color:#E24B4A}
+.dsc-v.g{color:#3B6D11}
+.dsc-s{font-size:10px;color:#A32D2D;margin-top:2px}
+.d2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.dcard{background:#fff;border:0.5px solid #F7C1C1;border-radius:var(--border-radius-lg);overflow:hidden}
+.dch{padding:10px 14px;border-bottom:0.5px solid #F7C1C1;background:#FCEBEB;display:flex;align-items:center;justify-content:space-between}
+.dct{font-size:12px;font-weight:500;color:#791F1F}
+.dcb{padding:10px 14px}
+.drisk{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid #F7C1C1}
+.drisk:last-child{border-bottom:none}
+.drn{font-size:11px;color:#791F1F;width:85px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+.drb{flex:1;height:4px;background:#F7C1C1;border-radius:2px}
+.drf{height:4px;border-radius:2px}
+.drp{font-size:10px;font-weight:500;min-width:28px;text-align:right}
+.dact{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:0.5px solid #F7C1C1}
+.dact:last-child{border-bottom:none}
+.dadc{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.dadt{font-size:11px;color:#791F1F;line-height:1.5}
+.dads{font-size:10px;color:#A32D2D}
+.squad-card{background:#FCEBEB;border:0.5px solid #F7C1C1;border-radius:var(--border-radius-lg);overflow:hidden}
+.sq-row{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:0.5px solid #F7C1C1;font-size:11px}
+.sq-row:last-child{border-bottom:none}
+.sq-ref{font-family:var(--font-mono);font-size:10px;color:#E24B4A}
+.btn-r{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500;cursor:pointer;background:#FCEBEB;border:0.5px solid #F09595;color:#791F1F}
+.btn-r:hover{background:#F7C1C1}
+.btn-main{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500;cursor:pointer;background:#E24B4A;border:none;color:#fff}
+.btn-main:hover{background:#A32D2D}
+</style>
+
+<h2 class="sr-only">GhostDetect full product UI — 7 screens in red and white theme</h2>
+
+<div class="wrap">
+<div class="nav">
+  <div class="np on" onclick="go('sp',this)">1 Splash</div>
+  <div class="np" onclick="go('ob',this)">2 Onboarding</div>
+  <div class="np" onclick="go('ln',this)">3 Landing</div>
+  <div class="np" onclick="go('up',this)">4 Upload</div>
+  <div class="np" onclick="go('ai',this)">5 AI loading</div>
+  <div class="np" onclick="go('rs',this)">6 Results</div>
+  <div class="np" onclick="go('db',this)">7 Dashboard</div>
+</div>
+
+<!-- 1 SPLASH -->
+<div class="screen splash on" id="s-sp">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+    <div class="sp-ring"><i class="ti ti-shield-check" style="font-size:40px;color:#E24B4A" aria-hidden="true"></i></div>
+    <div class="sp-title">GhostDetect</div>
+    <div class="sp-sub">Payroll fraud intelligence</div>
+    <div class="sp-track"><div class="sp-fill" id="spfill"></div></div>
+    <div class="sp-msg" id="spmsg">Initialising secure environment…</div>
+    <div class="sp-badge"><i class="ti ti-lock" style="font-size:12px" aria-hidden="true"></i> End-to-end encrypted · Squad powered</div>
+  </div>
+</div>
+
+<!-- 2 ONBOARDING -->
+<div class="screen" id="s-ob">
+  <div class="onboard">
+    <div class="ob-left">
+      <div class="ob-brand">
+        <div class="ob-brand-icon"><i class="ti ti-shield-check" style="font-size:15px;color:#fff" aria-hidden="true"></i></div>
+        <span class="ob-brand-name">GhostDetect</span>
+      </div>
+      <div style="font-size:10px;color:#F09595;text-transform:uppercase;letter-spacing:.07em;margin-top:4px">How it works</div>
+      <div class="ob-steps">
+        <div class="os on" id="os0"><div class="os-num">1</div><div><div class="os-t">Upload payroll CSV</div><div class="os-s">Drop your batch file</div></div></div>
+        <div class="os" id="os1"><div class="os-num">2</div><div><div class="os-t">AI analyses records</div><div class="os-s">Model scores every worker</div></div></div>
+        <div class="os" id="os2"><div class="os-num">3</div><div><div class="os-t">Review flagged workers</div><div class="os-s">See reasons & confidence</div></div></div>
+        <div class="os" id="os3"><div class="os-num">4</div><div><div class="os-t">Release via Squad API</div><div class="os-s">Verified workers get paid</div></div></div>
+      </div>
+    </div>
+    <div class="ob-right">
+      <div class="ob-icon-big" id="ob-ic"><i class="ti ti-building-bank" style="font-size:26px;color:#E24B4A" aria-hidden="true"></i></div>
+      <div class="ob-h" id="ob-h">Welcome to GhostDetect</div>
+      <div class="ob-p" id="ob-p">AI-powered payroll fraud detection built for Nigerian government agencies and HR departments.</div>
+      <input class="ob-input" id="ob-inp" placeholder="Enter your ministry / organisation" style="display:none"/>
+      <button class="ob-btn" id="ob-btn" onclick="obNext()">Get started</button>
+      <div class="ob-dots">
+        <div class="od on" id="od0"></div>
+        <div class="od" id="od1"></div>
+        <div class="od" id="od2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 LANDING -->
+<div class="screen" id="s-ln">
+  <div class="landing">
+    <div class="ln-top">
+      <div class="ln-logo">
+        <div class="ln-logo-ic"><i class="ti ti-shield-check" style="font-size:14px;color:#fff" aria-hidden="true"></i></div>
+        <span class="ln-logo-name">GhostDetect</span>
+      </div>
+      <div class="ln-links"><span style="cursor:pointer">How it works</span><span style="cursor:pointer">About</span><span style="cursor:pointer">Docs</span></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-r" style="font-size:11px">Sign in</button>
+        <button class="btn-main" onclick="go('up',document.querySelectorAll('.np')[3])">Start free ↗</button>
+      </div>
+    </div>
+    <div class="ln-hero">
+      <div class="ln-pill"><i class="ti ti-sparkles" style="font-size:11px" aria-hidden="true"></i> Squad Hackathon 3.0 — Challenge 01</div>
+      <div class="ln-h1">Stop ghost workers<br>before they get paid</div>
+      <div class="ln-p">GhostDetect uses AI to scan your payroll in seconds, flag fraudulent records with confidence scores, and block disbursements through Squad API until identity is verified.</div>
+      <div class="ln-btns">
+        <button class="ln-btn-p" onclick="go('up',document.querySelectorAll('.np')[3])">Upload payroll now ↗</button>
+        <button class="ln-btn-s">Watch the demo</button>
+      </div>
+    </div>
+    <div class="ln-cards">
+      <div class="ln-card">
+        <div class="ln-card-ic"><i class="ti ti-brain" style="font-size:18px;color:#E24B4A" aria-hidden="true"></i></div>
+        <div class="ln-card-t">AI anomaly detection</div>
+        <div class="ln-card-p">Random Forest model trained on 5,000 Nigerian payroll records. Flags NIN duplicates, salary outliers, and missing fields instantly.</div>
+      </div>
+      <div class="ln-card">
+        <div class="ln-card-ic"><i class="ti ti-lock" style="font-size:18px;color:#E24B4A" aria-hidden="true"></i></div>
+        <div class="ln-card-t">Squad payment gating</div>
+        <div class="ln-card-p">Verified workers get paid. Flagged records are blocked. The money cannot move until AI confirms the identity is legitimate.</div>
+      </div>
+      <div class="ln-card">
+        <div class="ln-card-ic"><i class="ti ti-clipboard-list" style="font-size:18px;color:#E24B4A" aria-hidden="true"></i></div>
+        <div class="ln-card-t">Full audit trail</div>
+        <div class="ln-card-p">Every decision logged — who flagged it, the AI reasons, timestamp, and Squad reference. Complete accountability for every kobo.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 UPLOAD -->
+<div class="screen" id="s-up">
+  <div class="upload">
+    <div class="up-bar">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:24px;height:24px;background:#E24B4A;border-radius:7px;display:flex;align-items:center;justify-content:center"><i class="ti ti-shield-check" style="font-size:13px;color:#fff" aria-hidden="true"></i></div>
+        <span style="font-size:13px;font-weight:500;color:#791F1F">GhostDetect</span>
+        <span style="font-size:11px;color:#A32D2D">/ Upload payroll</span>
+      </div>
+      <button class="btn-r" style="font-size:11px">Federal Payroll Unit</button>
+    </div>
+    <div class="up-body">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="drop" onclick="go('ai',document.querySelectorAll('.np')[4])">
+          <div class="drop-ic"><i class="ti ti-cloud-upload" style="font-size:26px;color:#E24B4A" aria-hidden="true"></i></div>
+          <div class="drop-t">Drop your payroll file here</div>
+          <div class="drop-s">or click to browse from your computer</div>
+          <div class="fmt"><span class="fpill">CSV</span><span class="fpill">XLSX</span><span class="fpill">JSON</span></div>
+        </div>
+        <div class="csv-prev">
+          <div class="csv-head">CSV preview — payroll_may2026.csv</div>
+          <div class="cr"><span class="cc h">name</span><span class="cc h">nin</span><span class="cc h">salary</span><span class="cc h">dept</span><span class="cc h">bvn</span></div>
+          <div class="cr"><span class="cc">Chukwuemeka Obi</span><span class="cc">10000000019</span><span class="cc">168,927</span><span class="cc">Finance</span><span class="cc">22…</span></div>
+          <div class="cr"><span class="cc">Ngozi Adeyemi</span><span class="cc">10000000018</span><span class="cc">197,739</span><span class="cc">Health</span><span class="cc">22…</span></div>
+          <div class="cr" style="background:#FCEBEB"><span class="cc bad">Worker 03</span><span class="cc bad">10000000019</span><span class="cc bad">999,999</span><span class="cc bad">—</span><span class="cc bad">—</span></div>
+          <div style="font-size:10px;color:#A32D2D;margin-top:6px;padding-top:4px;border-top:0.5px solid #F7C1C1">20 rows · 1 pre-flagged by format check</div>
+        </div>
+      </div>
+      <div class="up-right">
+        <div class="ucard">
+          <div class="ucard-t"><i class="ti ti-checklist" style="font-size:14px;color:#E24B4A" aria-hidden="true"></i> Required columns</div>
+          <div class="req"><div class="rdt" style="background:#3B6D11"></div> name</div>
+          <div class="req"><div class="rdt" style="background:#3B6D11"></div> nin (11 digits)</div>
+          <div class="req"><div class="rdt" style="background:#3B6D11"></div> salary (Naira)</div>
+          <div class="req"><div class="rdt" style="background:#E24B4A"></div> bvn (optional)</div>
+          <div class="req"><div class="rdt" style="background:#E24B4A"></div> department (optional)</div>
+          <div class="req"><div class="rdt" style="background:#E24B4A"></div> bank_account (optional)</div>
+        </div>
+        <div class="ucard">
+          <div class="ucard-t"><i class="ti ti-file-check" style="font-size:14px;color:#E24B4A" aria-hidden="true"></i> File ready</div>
+          <div style="font-size:11px;color:#A32D2D;margin-bottom:10px">payroll_may2026.csv · 20 records · 14KB</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+            <div style="background:#fff;border:0.5px solid #F7C1C1;border-radius:var(--border-radius-md);padding:8px;text-align:center">
+              <div style="font-size:16px;font-weight:500;color:#791F1F">20</div>
+              <div style="font-size:10px;color:#A32D2D">workers</div>
+            </div>
+            <div style="background:#FCEBEB;border:0.5px solid #F09595;border-radius:var(--border-radius-md);padding:8px;text-align:center">
+              <div style="font-size:16px;font-weight:500;color:#E24B4A">1</div>
+              <div style="font-size:10px;color:#A32D2D">pre-flagged</div>
+            </div>
+          </div>
+        </div>
+        <button class="up-go" onclick="go('ai',document.querySelectorAll('.np')[4])"><i class="ti ti-brain" aria-hidden="true"></i> Run AI detection ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 AI LOADING -->
+<div class="screen aiload" id="s-ai">
+  <div class="ai-pct" id="ai-pct">0%</div>
+  <div class="ai-title">AI is analysing your batch</div>
+  <div class="ai-sub" id="ai-msg">Preparing worker records…</div>
+  <div class="ai-track"><div class="ai-fill" id="ai-fill" style="width:0%"></div></div>
+  <div class="ai-steps">
+    <div class="ast run" id="as0"><div class="ast-ic"><i class="ti ti-database" aria-hidden="true"></i></div><span class="ast-t">Parsing 20 worker records</span></div>
+    <div class="ast" id="as1"><div class="ast-ic"><i class="ti ti-copy" aria-hidden="true"></i></div><span class="ast-t">Checking NIN & BVN for duplicates</span></div>
+    <div class="ast" id="as2"><div class="ast-ic"><i class="ti ti-chart-bar" aria-hidden="true"></i></div><span class="ast-t">Running anomaly detection model</span></div>
+    <div class="ast" id="as3"><div class="ast-ic"><i class="ti ti-file-check" aria-hidden="true"></i></div><span class="ast-t">Scoring confidence levels</span></div>
+    <div class="ast" id="as4"><div class="ast-ic"><i class="ti ti-credit-card" aria-hidden="true"></i></div><span class="ast-t">Preparing Squad payment queue</span></div>
+  </div>
+</div>
+
+<!-- 6 RESULTS -->
+<div class="screen" id="s-rs">
+  <div class="results">
+    <div class="res-top">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:24px;height:24px;background:#E24B4A;border-radius:7px;display:flex;align-items:center;justify-content:center"><i class="ti ti-shield-check" style="font-size:13px;color:#fff" aria-hidden="true"></i></div>
+        <span style="font-size:13px;font-weight:500;color:#791F1F">Detection results — May 2026</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-r" style="font-size:11px"><i class="ti ti-alert-triangle" aria-hidden="true"></i> 4 flagged</button>
+        <button class="btn-main" onclick="go('db',document.querySelectorAll('.np')[6])">Go to dashboard ↗</button>
+      </div>
+    </div>
+    <div class="res-alert">
+      <div class="ra-ic"><i class="ti ti-alert-triangle" style="font-size:18px;color:#E24B4A" aria-hidden="true"></i></div>
+      <div style="flex:1">
+        <div class="ra-t">4 ghost workers detected — ₦712,450 payment blocked</div>
+        <div class="ra-s">NIN duplication · salary outliers · missing department assignments</div>
+      </div>
+      <button class="btn-main" style="font-size:11px" onclick="go('db',document.querySelectorAll('.np')[6])">Release verified payments ↗</button>
+    </div>
+    <div class="res-stats">
+      <div class="rstat"><div class="rstat-l">Total scanned</div><div class="rstat-v">20</div></div>
+      <div class="rstat"><div class="rstat-l">Flagged ghosts</div><div class="rstat-v r">4</div></div>
+      <div class="rstat"><div class="rstat-l">Verified</div><div class="rstat-v g">16</div></div>
+      <div class="rstat"><div class="rstat-l">Model confidence</div><div class="rstat-v" style="color:#E24B4A">94%</div></div>
+    </div>
+    <div class="res-tbl">
+      <div class="tbl-head">
+        <span style="font-size:12px;font-weight:500;color:#791F1F">Worker results</span>
+        <span style="font-size:10px;color:#A32D2D">Flagged sorted first</span>
+      </div>
+      <table>
+        <thead><tr>
+          <th style="width:26%">Name</th>
+          <th style="width:20%">NIN</th>
+          <th style="width:16%">Salary</th>
+          <th style="width:16%">AI score</th>
+          <th style="width:22%">Status</th>
+        </tr></thead>
+        <tbody>
+          <tr style="background:#FCEBEB"><td style="font-weight:500;color:#E24B4A">Worker 04</td><td style="font-family:var(--font-mono);font-size:10px;color:#A32D2D">10000000003</td><td style="color:#E24B4A">₦0</td><td><div class="mbar"><div class="mb"><div class="mf" style="width:94%;background:#E24B4A"></div></div><span style="font-size:10px;color:#E24B4A;font-weight:500">94%</span></div></td><td><span class="badge bflag"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Ghost detected</span></td></tr>
+          <tr style="background:#FCEBEB"><td style="font-weight:500;color:#E24B4A">Worker 03</td><td style="font-family:var(--font-mono);font-size:10px;color:#A32D2D">10000000019</td><td style="color:#E24B4A">₦999,999</td><td><div class="mbar"><div class="mb"><div class="mf" style="width:91%;background:#E24B4A"></div></div><span style="font-size:10px;color:#E24B4A;font-weight:500">91%</span></div></td><td><span class="badge bflag"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Ghost detected</span></td></tr>
+          <tr><td style="font-weight:500">Chukwuemeka Obi</td><td style="font-family:var(--font-mono);font-size:10px;color:#A32D2D">10000000019</td><td>₦168,927</td><td><div class="mbar"><div class="mb"><div class="mf" style="width:30%;background:#3B6D11"></div></div><span style="font-size:10px;color:#3B6D11;font-weight:500">30%</span></div></td><td><span class="badge bpaid"><i class="ti ti-check" aria-hidden="true"></i> Verified</span></td></tr>
+          <tr><td style="font-weight:500">Ngozi Adeyemi</td><td style="font-family:var(--font-mono);font-size:10px;color:#A32D2D">10000000018</td><td>₦197,739</td><td><div class="mbar"><div class="mb"><div class="mf" style="width:30%;background:#3B6D11"></div></div><span style="font-size:10px;color:#3B6D11;font-weight:500">30%</span></div></td><td><span class="badge bpaid"><i class="ti ti-check" aria-hidden="true"></i> Verified</span></td></tr>
+          <tr><td style="color:#A32D2D;font-size:11px" colspan="5">+ 14 more verified workers</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 7 DASHBOARD -->
+<div class="screen" id="s-db">
+  <div class="dash">
+    <div class="dsb">
+      <div class="dsb-brand">
+        <div class="dsb-ic"><i class="ti ti-shield-check" style="font-size:13px;color:#fff" aria-hidden="true"></i></div>
+        <span class="dsb-nm">GhostDetect</span>
+      </div>
+      <div class="dsb-sec">Overview</div>
+      <div class="di on"><i class="ti ti-layout-dashboard" style="font-size:14px" aria-hidden="true"></i> Dashboard</div>
+      <div class="di"><i class="ti ti-users" style="font-size:14px" aria-hidden="true"></i> Workers <span class="di-badge g">16</span></div>
+      <div class="dsb-sec">Detection</div>
+      <div class="di"><i class="ti ti-alert-triangle" style="font-size:14px" aria-hidden="true"></i> Flagged <span class="di-badge">4</span></div>
+      <div class="di"><i class="ti ti-credit-card" style="font-size:14px" aria-hidden="true"></i> Payments <span class="di-badge g">16</span></div>
+      <div class="di"><i class="ti ti-clipboard-list" style="font-size:14px" aria-hidden="true"></i> Audit log</div>
+      <div class="dsb-sec">Tools</div>
+      <div class="di"><i class="ti ti-upload" style="font-size:14px" aria-hidden="true"></i> Upload new batch</div>
+      <div class="di"><i class="ti ti-settings" style="font-size:14px" aria-hidden="true"></i> Settings</div>
+      <div class="dsb-foot">
+        <div style="display:flex;align-items:center;gap:7px">
+          <div class="d-av">AO</div>
+          <div>
+            <div style="font-size:11px;font-weight:500;color:#791F1F">Admin Officer</div>
+            <div style="font-size:10px;color:#A32D2D">Federal Payroll Unit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dmain">
+      <div class="dtop">
+        <div>
+          <div style="font-size:13px;font-weight:500;color:#791F1F">Dashboard overview</div>
+          <div style="font-size:10px;color:#A32D2D">May 2026 · Last updated just now</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn-r" style="font-size:10px"><i class="ti ti-upload" aria-hidden="true"></i> Upload CSV</button>
+          <button class="btn-main" style="font-size:10px" onclick="sendPrompt('Release Squad API payments for all 16 verified workers in GhostDetect')"><i class="ti ti-send" aria-hidden="true"></i> Release payments ↗</button>
+        </div>
+      </div>
+      <div class="dcont">
+        <div class="dgrid">
+          <div class="dsc"><div class="dsc-l">Total workers</div><div class="dsc-v">20</div><div class="dsc-s">May 2026 batch</div></div>
+          <div class="dsc"><div class="dsc-l">Ghost workers</div><div class="dsc-v r">4</div><div class="dsc-s">₦712K blocked</div></div>
+          <div class="dsc"><div class="dsc-l">Verified & paid</div><div class="dsc-v g">16</div><div class="dsc-s">₦2.94M via Squad</div></div>
+          <div class="dsc"><div class="dsc-l">Model accuracy</div><div class="dsc-v" style="color:#E24B4A">94%</div><div class="dsc-s">Random Forest</div></div>
+        </div>
+        <div class="d2">
+          <div class="dcard">
+            <div class="dch"><span class="dct">Top risk workers</span><span class="badge bflag">4 flagged</span></div>
+            <div class="dcb">
+              <div class="drisk"><span class="drn">Worker 04</span><div class="drb"><div class="drf" style="width:94%;background:#E24B4A"></div></div><span class="drp" style="color:#E24B4A">94%</span></div>
+              <div class="drisk"><span class="drn">Worker 03</span><div class="drb"><div class="drf" style="width:91%;background:#E24B4A"></div></div><span class="drp" style="color:#E24B4A">91%</span></div>
+              <div class="drisk"><span class="drn">Worker 02</span><div class="drb"><div class="drf" style="width:88%;background:#E24B4A"></div></div><span class="drp" style="color:#E24B4A">88%</span></div>
+              <div class="drisk"><span class="drn">Worker 01</span><div class="drb"><div class="drf" style="width:85%;background:#E24B4A"></div></div><span class="drp" style="color:#E24B4A">85%</span></div>
+              <div class="drisk"><span class="drn">Kelechi Onyeka</span><div class="drb"><div class="drf" style="width:30%;background:#3B6D11"></div></div><span class="drp" style="color:#3B6D11">30%</span></div>
+            </div>
+          </div>
+          <div class="dcard">
+            <div class="dch"><span class="dct">Activity feed</span></div>
+            <div class="dcb">
+              <div class="dact"><div class="dadc" style="background:#E24B4A"></div><div><div class="dadt">Worker 03 flagged — NIN linked to 3 records</div><div class="dads">2 min ago</div></div></div>
+              <div class="dact"><div class="dadc" style="background:#E24B4A"></div><div><div class="dadt">Worker 04 — ₦0 salary, no department</div><div class="dads">2 min ago</div></div></div>
+              <div class="dact"><div class="dadc" style="background:#3B6D11"></div><div><div class="dadt">16 workers verified · Squad batch queued</div><div class="dads">3 min ago</div></div></div>
+              <div class="dact"><div class="dadc" style="background:#E24B4A"></div><div><div class="dadt">CSV uploaded · 20 records parsed</div><div class="dads">5 min ago</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="squad-card">
+          <div class="dch"><span class="dct">Squad payment summary — May 2026</span><button class="btn-r" style="font-size:10px"><i class="ti ti-download" aria-hidden="true"></i> Export</button></div>
+          <div class="sq-row"><span style="color:#A32D2D">Batch ID</span><span class="sq-ref">BATCH-2026-05-0044</span></div>
+          <div class="sq-row"><span style="color:#A32D2D">Total released</span><span style="font-weight:500;color:#791F1F">₦2,940,000</span></div>
+          <div class="sq-row"><span style="color:#A32D2D">Total blocked</span><span style="font-weight:500;color:#E24B4A">₦712,450</span></div>
+          <div class="sq-row"><span style="color:#A32D2D">Squad status</span><span class="badge bpaid"><i class="ti ti-check" aria-hidden="true"></i> Settled</span></div>
+          <div class="sq-row"><span style="color:#A32D2D">Settlement time</span><span style="color:#A32D2D;font-size:10px">Today, 10:42 AM</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+let obStep=0;
+const obData=[
+  {ic:'ti-building-bank',h:'Welcome to GhostDetect',p:'AI-powered payroll fraud detection built for Nigerian government agencies and HR departments.',btn:'Get started',inp:false},
+  {ic:'ti-shield-lock',h:'Your data is secure',p:'All payroll data is encrypted end-to-end. We never store raw NIN or BVN data beyond your session.',btn:'Understood, continue',inp:false},
+  {ic:'ti-user-check',h:'Set up your account',p:'Tell us your organisation so we can configure the right fraud detection thresholds for your sector.',btn:'Enter dashboard ↗',inp:true},
+];
+function obNext(){
+  obStep++;
+  if(obStep>=obData.length){go('ln',document.querySelectorAll('.np')[2]);return;}
+  const d=obData[obStep];
+  document.getElementById('ob-ic').innerHTML=`<i class="ti ${d.ic}" style="font-size:26px;color:#E24B4A" aria-hidden="true"></i>`;
+  document.getElementById('ob-h').textContent=d.h;
+  document.getElementById('ob-p').textContent=d.p;
+  document.getElementById('ob-btn').textContent=d.btn;
+  document.getElementById('ob-inp').style.display=d.inp?'block':'none';
+  for(let i=0;i<3;i++){
+    const el=document.getElementById('od'+i);
+    el.classList.toggle('on',i===obStep);
+    el.style.width=i===obStep?'18px':'6px';
+    const os=document.getElementById('os'+i);
+    if(os)os.classList.toggle('on',i===obStep);
+  }
+}
+
+let aiTmr=null;
+function startAI(){
+  let pct=0;
+  const pf=document.getElementById('ai-fill');
+  const pp=document.getElementById('ai-pct');
+  const pm=document.getElementById('ai-msg');
+  document.querySelectorAll('.ast').forEach(s=>{s.classList.remove('done','run');});
+  document.getElementById('as0').classList.add('run');
+  pf.style.width='0%';pp.textContent='0%';
+  if(aiTmr)clearInterval(aiTmr);
+  aiTmr=setInterval(()=>{pct=Math.min(pct+2,100);pf.style.width=pct+'%';pp.textContent=pct+'%';if(pct>=100)clearInterval(aiTmr);},60);
+  const steps=[
+    {t:700,run:1,done:0,msg:'Checking NIN & BVN for duplicates…'},
+    {t:1500,run:2,done:1,msg:'Running Random Forest model…'},
+    {t:2400,run:3,done:2,msg:'Scoring confidence levels…'},
+    {t:3200,run:4,done:3,msg:'Preparing Squad payment queue…'},
+    {t:4100,run:-1,done:4,msg:'Detection complete!',final:true},
+  ];
+  steps.forEach(s=>setTimeout(()=>{
+    pm.textContent=s.msg;
+    if(s.done>=0&&s.done<5){document.getElementById('as'+s.done).classList.remove('run');document.getElementById('as'+s.done).classList.add('done');}
+    if(s.run>=0&&s.run<5)document.getElementById('as'+s.run).classList.add('run');
+    if(s.final)setTimeout(()=>go('rs',document.querySelectorAll('.np')[5]),700);
+  },s.t));
+}
+
+function go(id,el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.np').forEach(s=>s.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');
+  if(el)el.classList.add('on');
+  if(id==='ai')startAI();
+}
+
+setTimeout(()=>{document.getElementById('spmsg').textContent='Loading AI model…';},1000);
+setTimeout(()=>{document.getElementById('spmsg').textContent='Ready.';},2000);
+</script>

@@ -1,0 +1,57 @@
+# ── Dependencies ──
+node_modules/
+.pnp
+.pnp.js
+
+# ── Environment & Secrets ──
+.env
+.env.local
+.env.*.local
+*.env
+
+# ── Build outputs ──
+dist/
+build/
+.vite/
+
+# ── Python / AI ──
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pkl
+*.joblib
+.Python
+venv/
+env/
+.venv/
+ai/model/ghost_detector.pkl
+
+# ── Uploads ──
+backend/uploads/
+
+# ── SQLite Database ──
+*.sqlite
+*.sqlite3
+*.db
+
+# ── Logs ──
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── OS Files ──
+.DS_Store
+Thumbs.db
+
+# ── Editor ──
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Coverage ──
+coverage/
+.nyc_output/

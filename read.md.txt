@@ -1,0 +1,672 @@
+# GhostDetect — Squad Hackathon 3.0 Build Guide
+### Challenge 01: Proof of Life
+**"AI-Powered Ghost Worker Detection with Squad Payment Gating"**
+
+---
+
+## What We're Building
+
+GhostDetect is an AI-powered payroll fraud detection system that identifies ghost workers,
+duplicate identities, and anomalous payment patterns — then uses the **Squad API to gate
+salary disbursements**. Verified workers get paid. Unverified records get flagged and held.
+
+The core innovation: **detection and payment are the same action.** Fraud doesn't just get
+flagged — the money literally cannot move until verification passes.
+
+---
+
+## The Four Pillars (from the Challenge Brief)
+
+| Pillar | How GhostDetect Addresses It |
+|--------|------------------------------|
+| Proof of Life | AI verifies identity before payment releases |
+| AI Technical Depth | Anomaly detection + NIN/BVN cross-check + document OCR |
+| Squad API Integration | Payment gating — Squad is the release mechanism |
+| Impact | Nigeria loses billions annually to ghost workers — this stops it |
+
+---
+
+## Project Structure
+
+```
+ghostdetect/
+├── README.md
+├── .env.example
+├── .gitignore
+│
+├── frontend/                          # React + Vite
+│   ├── public/
+│   └── src/
+│       ├── components/
+│       │   ├── WorkerUpload.jsx        # Upload payroll CSV or single record
+│       │   ├── VerificationCard.jsx    # Show AI result per worker
+│       │   ├── FlaggedList.jsx         # List of flagged/suspicious records
+│       │   ├── PaymentGate.jsx         # Approve/reject payment UI
+│       │   ├── DocumentScanner.jsx     # Upload ID/certificate for OCR check
+│       │   ├── StatsBar.jsx            # Dashboard summary stats
+│       │   └── AuditLog.jsx            # Full history of decisions
+│       ├── pages/
+│       │   ├── Home.jsx
+│       │   ├── Dashboard.jsx           # Main admin view
+│       │   ├── WorkerDetail.jsx        # Single worker deep-dive
+│       │   └── Reports.jsx             # Exportable fraud report
+│       ├── lib/
+│       │   └── api.js                  # All calls to your backend
+│       ├── App.jsx
+│       └── main.jsx
+│
+├── backend/                           # Node.js + Express
+│   └── src/
+│       ├── routes/
+│       │   ├── workers.js              # Upload + manage worker records
+│       │   ├── verify.js               # Trigger AI verification
+│       │   ├── payments.js             # Squad payment gating logic
+│       │   └── documents.js            # Document upload + OCR trigger
+│       ├── models/
+│       │   ├── Worker.js               # Worker schema
+│       │   ├── VerificationResult.js   # AI result per worker
+│       │   └── AuditEntry.js           # Immutable audit log
+│       ├── services/
+│       │   ├── squadService.js         # All Squad API calls
+│       │   ├── aiService.js            # Calls Python AI microservice
+│       │   └── ocrService.js           # Calls OCR API (Tesseract/Google Vision)
+│       ├── middleware/
+│       │   ├── auth.js
+│       │   └── errorHandler.js
+│       ├── config/
+│       │   └── db.js
+│       └── app.js
+│
+├── ai/                                # Python + FastAPI
+│   ├── model/
+│   │   ├── train.py                   # Train anomaly detection model
+│   │   ├── predict.py                 # Score a single worker record
+│   │   └── features.py               # Feature engineering
+│   ├── ocr/
+│   │   └── document_check.py         # ID/cert authenticity check
+│   ├── data/
+│   │   └── synthetic_payroll.csv     # Generated training data
+│   ├── api.py                         # FastAPI entry point
+│   └── requirements.txt
+│
+└── docs/
+    ├── architecture.png
+    ├── squad-integration.md
+    └── demo-script.md
+```
+
+---
+
+## Tech Stack
+
+| Layer | Technology | Why |
+|-------|-----------|-----|
+| Frontend | React + Vite | Fast, clean dashboard UI |
+| Backend | Node.js + Express | Squad API proxy, orchestration |
+| AI Service | Python + FastAPI + scikit-learn | Anomaly detection model |
+| OCR | Tesseract.js or Google Vision API | Document forgery detection |
+| Database | MongoDB Atlas (free tier) | Flexible worker records schema |
+| Payments | Squad API | Payment gating — core feature |
+| Hosting | Vercel (frontend) + Render (backend + AI) | Free tier, fast deploys |
+
+---
+
+## Core Feature 1: AI Anomaly Detection Engine
+
+### What It Flags
+- Duplicate NIN or BVN across multiple worker records
+- Same bank account linked to multiple names
+- Workers with no ministry/department assignment
+- Salary amounts that are statistical outliers
+- Workers added to payroll without HR approval record
+- Names that are slight variations of each other (fuzzy match)
+
+### How to Build It
+
+**Step 1 — Generate synthetic training data**
+```python
+# ai/data/generate.py
+import pandas as pd
+import numpy as np
+from faker import Faker
+import uuid
+
+fake = Faker('en_NG')  # Nigerian locale
+
+def generate_payroll(n=5000, ghost_rate=0.15):
+    records = []
+    used_nins = set()
+
+    for i in range(n):
+        is_ghost = np.random.random() < ghost_rate
+        nin = fake.numerify('###########')
+
+        # Ghost workers share NINs or have missing fields
+        if is_ghost and used_nins:
+            nin = np.random.choice(list(used_nins))  # duplicate NIN
+
+        record = {
+            'worker_id': str(uuid.uuid4()),
+            'name': fake.name(),
+            'nin': nin,
+            'bvn': fake.numerify('###########'),
+            'bank_account': fake.numerify('##########'),
+            'salary': np.random.normal(150000, 50000) if not is_ghost
+                      else np.random.choice([0, 999999999, 150000]),
+            'department': fake.company() if not is_ghost else None,
+            'date_added': fake.date_between('-3y', 'today').isoformat(),
+            'last_verified': fake.date_between('-1y', 'today').isoformat()
+                             if not is_ghost else None,
+            'is_ghost': int(is_ghost)
+        }
+        records.append(record)
+        used_nins.add(nin)
+
+    return pd.DataFrame(records)
+```
+
+**Step 2 — Feature engineering**
+```python
+# ai/model/features.py
+def engineer_features(df):
+    # Count how many workers share this NIN
+    df['nin_count'] = df.groupby('nin')['nin'].transform('count')
+
+    # Count how many workers share this bank account
+    df['account_count'] = df.groupby('bank_account')['bank_account'].transform('count')
+
+    # Salary z-score (how far from average)
+    df['salary_zscore'] = (df['salary'] - df['salary'].mean()) / df['salary'].std()
+
+    # Missing fields score (0-3, higher = more suspicious)
+    df['missing_score'] = (
+        df['department'].isna().astype(int) +
+        df['last_verified'].isna().astype(int) +
+        (df['salary'] == 0).astype(int)
+    )
+
+    feature_cols = ['nin_count', 'account_count', 'salary_zscore', 'missing_score']
+    return df[feature_cols]
+```
+
+**Step 3 — Train the model**
+```python
+# ai/model/train.py
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+import joblib
+
+# Load + engineer features
+df = pd.read_csv('data/synthetic_payroll.csv')
+X = engineer_features(df)
+y = df['is_ghost']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+print(classification_report(y_test, model.predict(X_test)))
+joblib.dump(model, 'model/ghost_detector.pkl')
+```
+
+**Step 4 — FastAPI endpoint**
+```python
+# ai/api.py
+from fastapi import FastAPI
+from pydantic import BaseModel
+import joblib, numpy as np
+
+app = FastAPI()
+model = joblib.load('model/ghost_detector.pkl')
+
+class WorkerRecord(BaseModel):
+    nin_count: int
+    account_count: int
+    salary_zscore: float
+    missing_score: int
+
+@app.post('/predict')
+def predict(worker: WorkerRecord):
+    features = [[
+        worker.nin_count,
+        worker.account_count,
+        worker.salary_zscore,
+        worker.missing_score
+    ]]
+    prob = model.predict_proba(features)[0][1]
+    label = 'GHOST' if prob > 0.6 else 'LEGITIMATE'
+
+    reasons = []
+    if worker.nin_count > 1:
+        reasons.append(f'NIN linked to {worker.nin_count} workers')
+    if worker.account_count > 1:
+        reasons.append(f'Bank account shared by {worker.account_count} workers')
+    if abs(worker.salary_zscore) > 2:
+        reasons.append('Salary is a statistical outlier')
+    if worker.missing_score > 1:
+        reasons.append('Multiple required fields are missing')
+
+    return {
+        'label': label,
+        'confidence': round(prob * 100, 1),
+        'reasons': reasons
+    }
+```
+
+---
+
+## Core Feature 2: Squad API Payment Gating
+
+This is your killer feature. Every other team will detect fraud. Only you will **stop the money.**
+
+### The Flow
+```
+HR uploads payroll batch
+        ↓
+AI scores every worker record
+        ↓
+Score > 60% ghost probability?
+    YES → Status: FLAGGED → Payment BLOCKED
+    NO  → Status: VERIFIED → Payment QUEUED
+        ↓
+Admin reviews flagged workers (can override)
+        ↓
+VERIFIED workers → Squad API initiates salary payout
+FLAGGED workers → Held, logged in audit trail
+```
+
+### Squad API Calls to Build
+
+```javascript
+// backend/services/squadService.js
+
+const SQUAD_BASE = process.env.SQUAD_BASE_URL;
+const SQUAD_KEY = process.env.SQUAD_SECRET_KEY;
+
+const headers = {
+  'Authorization': `Bearer ${SQUAD_KEY}`,
+  'Content-Type': 'application/json'
+};
+
+// 1. Create a virtual account per verified worker
+async function createWorkerAccount(worker) {
+  const res = await fetch(`${SQUAD_BASE}/virtual-account`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      customer_identifier: worker._id,
+      first_name: worker.firstName,
+      last_name: worker.lastName,
+      mobile_num: worker.phone,
+      email: worker.email,
+      bvn: worker.bvn,
+    })
+  });
+  return res.json();
+}
+
+// 2. Initiate salary payment to verified worker
+async function releaseSalaryPayment(worker, amount) {
+  const res = await fetch(`${SQUAD_BASE}/disbursement/single`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      transaction_reference: `SALARY-${worker._id}-${Date.now()}`,
+      amount: amount * 100,  // Squad uses kobo
+      bank_code: worker.bankCode,
+      account_number: worker.bankAccount,
+      account_name: worker.name,
+      narration: `Salary payment - ${new Date().toLocaleDateString('en-NG', {month: 'long', year: 'numeric'})}`,
+      currency_id: 'NGN'
+    })
+  });
+  return res.json();
+}
+
+// 3. Verify a transaction completed
+async function verifyTransaction(reference) {
+  const res = await fetch(
+    `${SQUAD_BASE}/transaction/verify/${reference}`,
+    { headers }
+  );
+  return res.json();
+}
+
+module.exports = { createWorkerAccount, releaseSalaryPayment, verifyTransaction };
+```
+
+### Payment Route Logic
+```javascript
+// backend/routes/payments.js
+router.post('/release-batch', auth, async (req, res) => {
+  const { batchId } = req.body;
+  const workers = await Worker.find({ batch: batchId, status: 'VERIFIED' });
+
+  const results = [];
+  for (const worker of workers) {
+    try {
+      const squadResult = await squadService.releaseSalaryPayment(
+        worker,
+        worker.salary
+      );
+      await Worker.findByIdAndUpdate(worker._id, {
+        status: 'PAID',
+        squadReference: squadResult.data?.transaction_reference
+      });
+      await AuditEntry.create({
+        workerId: worker._id,
+        action: 'PAYMENT_RELEASED',
+        squadReference: squadResult.data?.transaction_reference,
+        timestamp: new Date()
+      });
+      results.push({ worker: worker._id, status: 'PAID' });
+    } catch (err) {
+      results.push({ worker: worker._id, status: 'FAILED', error: err.message });
+    }
+  }
+  res.json({ released: results.filter(r => r.status === 'PAID').length, results });
+});
+```
+
+---
+
+## Core Feature 3: Document OCR Check
+
+Simple but visually impressive in the demo. User uploads a worker ID or certificate → AI checks it.
+
+```python
+# ai/ocr/document_check.py
+import pytesseract
+from PIL import Image
+import re
+
+def check_document(image_path):
+    img = Image.open(image_path)
+    text = pytesseract.image_to_string(img)
+
+    flags = []
+
+    # Check for NIN format (11 digits)
+    nin_matches = re.findall(r'\b\d{11}\b', text)
+    if not nin_matches:
+        flags.append('No valid NIN found in document')
+
+    # Check for expiry date
+    if 'expires' not in text.lower() and 'expiry' not in text.lower():
+        flags.append('No expiry date detected')
+
+    # Check for issuing authority
+    keywords = ['federal', 'republic', 'nigeria', 'nimc', 'inec']
+    if not any(k in text.lower() for k in keywords):
+        flags.append('No recognized Nigerian issuing authority found')
+
+    return {
+        'extracted_text': text[:500],  # first 500 chars
+        'nin_found': nin_matches[0] if nin_matches else None,
+        'flags': flags,
+        'verdict': 'SUSPICIOUS' if len(flags) >= 2 else 'LIKELY_VALID'
+    }
+```
+
+---
+
+## README.md (Copy This Into Your Repo)
+
+```markdown
+# GhostDetect — AI-Powered Payroll Fraud Detection
+
+> Squad Hackathon 3.0 | Challenge 01: Proof of Life
+
+GhostDetect uses machine learning to identify ghost workers in payroll data,
+then uses Squad API to gate salary disbursements — verified workers get paid,
+fraudulent records get blocked.
+
+## The Problem
+Ghost workers cost the Nigerian government an estimated ₦200 billion+ annually.
+Existing solutions detect fraud after money has already moved. GhostDetect
+stops the payment before it happens.
+
+## How It Works
+1. HR uploads payroll batch (CSV or manual entry)
+2. AI scores every worker — flags anomalies in real time
+3. Verified workers: Squad API releases salary payment
+4. Flagged workers: Payment blocked, HR alerted for manual review
+5. Full audit trail of every decision, every payment
+
+## Tech Stack
+- Frontend: React + Vite
+- Backend: Node.js + Express
+- AI: Python + FastAPI + scikit-learn
+- OCR: Tesseract (document verification)
+- Database: MongoDB Atlas
+- Payments: Squad API
+
+## Getting Started
+
+### Prerequisites
+- Node.js v18+
+- Python 3.10+
+- MongoDB Atlas account (free)
+- Squad API sandbox credentials
+- Tesseract installed locally (`brew install tesseract` or `apt install tesseract-ocr`)
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/yourteam/ghostdetect.git
+cd ghostdetect
+```
+
+### 2. Environment variables
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+```
+
+### 3. Run backend
+```bash
+cd backend && npm install && npm run dev
+# http://localhost:3001
+```
+
+### 4. Run frontend
+```bash
+cd frontend && npm install && npm run dev
+# http://localhost:5173
+```
+
+### 5. Run AI service
+```bash
+cd ai
+pip install -r requirements.txt
+python model/train.py          # train model first
+uvicorn api:app --reload       # http://localhost:8000
+```
+
+## Environment Variables
+
+### backend/.env
+```
+SQUAD_SECRET_KEY=your_squad_secret_key
+SQUAD_BASE_URL=https://sandbox-api-d.squadco.com
+MONGODB_URI=mongodb+srv://...
+JWT_SECRET=random_long_string
+AI_SERVICE_URL=http://localhost:8000
+PORT=3001
+```
+
+### frontend/.env
+```
+VITE_API_BASE_URL=http://localhost:3001
+```
+
+## Demo Flow
+See docs/demo-script.md
+
+## Team
+- [Name] — AI/ML
+- [Name] — Backend
+- [Name] — Frontend
+- [Name] — Product/Design
+
+## License
+MIT
+```
+
+---
+
+## Instructions for Antigravity — Read Before Writing One Line of Code
+
+### 🔴 Critical Rules
+
+1. **Squad secret key lives in backend `.env` only.** Frontend never touches it.
+   Every Squad call goes: Frontend → Your Backend → Squad API. Never Frontend → Squad directly.
+
+2. **The AI service is a separate process.** Backend calls it via HTTP on port 8000.
+   Train the model (`python model/train.py`) BEFORE starting the API server.
+   If the model file doesn't exist, the API will crash on startup.
+
+3. **All amounts to Squad must be in KOBO (not Naira).** ₦150,000 = 15,000,000 kobo.
+   Multiply every amount by 100 before sending to Squad. This is the #1 payment bug.
+
+4. **Use the Squad sandbox URL during development.**
+   `https://sandbox-api-d.squadco.com` — not the live URL.
+   Switch to live URL only when you're ready to present.
+
+5. **Never delete a worker record — only update status.**
+   The audit trail depends on every record existing. Use `status` field:
+   `PENDING → VERIFIED or FLAGGED → PAID or HELD`
+
+6. **The AI confidence score must show in the UI.**
+   Judges need to see "87% ghost probability — 3 reasons" in the demo.
+   A flag without an explanation looks like a black box. That kills your AI score.
+
+7. **Handle file upload size.** Payroll CSVs can be large. Set a 10MB limit in Express:
+   ```javascript
+   app.use(express.json({ limit: '10mb' }));
+   ```
+
+8. **MongoDB: index your NIN and BVN fields.**
+   The duplicate detection query runs across ALL workers. Without an index it will
+   be slow and may timeout. Add this to Worker.js model:
+   ```javascript
+   workerSchema.index({ nin: 1 });
+   workerSchema.index({ bvn: 1 });
+   workerSchema.index({ bankAccount: 1 });
+   ```
+
+---
+
+### 🟡 Build Order — Do This in Sequence
+
+**Day 1 — Foundation**
+- [ ] Repos set up, all dependencies installed
+- [ ] MongoDB connected and a Worker model created
+- [ ] Squad sandbox credentials confirmed working (make ONE test API call)
+- [ ] Basic Express server running with CORS enabled
+
+**Day 2 — AI Core**
+- [ ] Synthetic payroll data generated (`python data/generate.py`)
+- [ ] Model trained and saved to `model/ghost_detector.pkl`
+- [ ] FastAPI endpoint running: POST a worker → get back label + confidence + reasons
+- [ ] Backend calls AI service and returns result to frontend
+
+**Day 3 — Verification Flow**
+- [ ] Frontend: upload a CSV of workers
+- [ ] Backend: parse CSV, score each worker via AI, store results in MongoDB
+- [ ] Frontend: dashboard shows workers with VERIFIED / FLAGGED status + confidence
+- [ ] Frontend: click a flagged worker → see the reasons
+
+**Day 4 — Squad Payment Gating**
+- [ ] Backend: `POST /payments/release-batch` calls Squad for all VERIFIED workers
+- [ ] Frontend: "Release Payments" button on dashboard
+- [ ] Squad response stored + shown in UI (transaction reference)
+- [ ] FLAGGED workers visibly blocked — show ₦ amount held
+
+**Day 5 — Document OCR**
+- [ ] Backend: file upload route for worker ID document
+- [ ] AI service: Tesseract extracts text, flags are returned
+- [ ] Frontend: upload ID image → see verdict + extracted NIN
+
+**Day 6 — Polish**
+- [ ] Stats bar: total workers, flagged count, ₦ amount blocked, ₦ amount released
+- [ ] Audit log page showing every action + Squad reference
+- [ ] Full responsive layout (works on mobile too)
+- [ ] Error states everywhere (failed Squad call, AI timeout, bad CSV format)
+
+**Day 7 — Freeze**
+- [ ] Zero new features
+- [ ] End-to-end demo rehearsed 3+ times
+- [ ] README complete
+- [ ] GitHub repo clean and public
+
+---
+
+### 🟢 Demo Script (Memorize This)
+
+**Scene 1 — The Hook (30 sec)**
+"Nigeria loses over ₦200 billion annually to ghost workers. The ICPC recovered ₦20 billion
+in pension fraud from fictitious employees in 2024 alone. The problem isn't detection —
+it's that money moves before anyone checks."
+
+**Scene 2 — Upload Payroll**
+- Open GhostDetect dashboard on laptop
+- Upload a CSV with 20 worker records (pre-prepared, with 4 ghosts seeded in)
+- Show the upload processing in real time
+
+**Scene 3 — AI Scores the Batch**
+- Dashboard populates with workers
+- 4 workers flagged RED with confidence scores ("91% ghost probability")
+- Click one — show the reasons: "NIN linked to 3 other workers", "Bank account shared"
+- This is the AI moment — let it breathe
+
+**Scene 4 — Document Check**
+- Upload a sample worker ID image
+- Show Tesseract extracting the NIN
+- Show the verdict: SUSPICIOUS — "No recognized Nigerian issuing authority found"
+
+**Scene 5 — Payment Gating**
+- Click "Release Payments for Verified Workers"
+- Show Squad API firing for 16 verified workers
+- Show Squad transaction references appearing in the table
+- Show the 4 flagged workers with "PAYMENT BLOCKED — ₦X held"
+- This is your Squad integration moment — make it clear
+
+**Scene 6 — The Numbers**
+- Stats bar: "16 workers paid | 4 flagged | ₦2.4M blocked"
+- "In a real ministry payroll of 10,000 workers, this system would have caught
+  this fraud before a single kobo was disbursed."
+
+---
+
+## Common Errors and How to Avoid Them
+
+| Error | Fix |
+|-------|-----|
+| Squad 401 Unauthorized | Check Authorization header is `Bearer YOUR_KEY` not just the key |
+| Squad amount errors | Always multiply Naira by 100 — Squad uses kobo |
+| AI service 500 on startup | Run `python model/train.py` first — model file must exist |
+| CSV upload failing | Ensure multer middleware is installed and configured in Express |
+| CORS errors | Add `app.use(cors())` in app.js before any routes |
+| Tesseract not found | Install system-level Tesseract, not just the Python package |
+| MongoDB slow on duplicate queries | Add indexes on `nin`, `bvn`, `bankAccount` fields |
+| Frontend shows stale data after payment | Refresh worker list after Squad response completes |
+| Render free tier cold start | Add a keep-alive ping or warn judges about 30s startup |
+
+---
+
+## Judging Criteria Mapping
+
+| Criterion | Weight | How GhostDetect Scores It |
+|-----------|--------|--------------------------|
+| AI Technical Depth | 30% | Working RandomForest model, confidence scores, explainable reasons |
+| Squad API Integration | 20% | Payment gating — Squad is the release mechanism, not an add-on |
+| Problem Relevance | 15% | ₦200B annual loss, real Nigerian data, ICPC case studies |
+| Solution Design & Scalability | 15% | Microservices architecture, batch processing, audit trail |
+| Presentation & Demo | 15% | Live demo: upload → flag → block payment → show Squad txn |
+| Impact Potential (bonus) | 10% | Government payroll, NGOs, private HR platforms |
+
+---
+
+*Built for Squad Hackathon 3.0 — May 2026*
