@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sidebar } from '../components/Sidebar';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { getSettings, saveSettings } from '../lib/api';
 
 const SettingsScreen = ({ onNav, theme, onToggleTheme }) => {
-  const [thresholds, setThresholds] = useState({ detect: 60, block: 80, review: 31 });
+  const [thresholds, setThresholds] = useState({ sensitivity: 85, autoBlock: 85, manualReview: 90 });
+  const [isSaving, setIsSaving] = useState(false);
   const [polFreq, setPolFreq] = useState('monthly');
-  const [sensitivity, setSensitivity] = useState('high');
   const [signals, setSignals] = useState({
     'Duplicate NIN': true,
     'Duplicate bank account': true,
@@ -19,6 +20,23 @@ const SettingsScreen = ({ onNav, theme, onToggleTheme }) => {
 
   const toggleSignal = (key) => setSignals(prev => ({ ...prev, [key]: !prev[key] }));
 
+  useEffect(() => {
+    getSettings().then(data => {
+      if (data) setThresholds(data);
+    }).catch(console.error);
+  }, []);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await saveSettings(thresholds);
+      setTimeout(() => setIsSaving(false), 800);
+    } catch (e) {
+      console.error(e);
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="screen on" style={{ flexDirection: 'row' }}>
       <Sidebar active="settings" onNav={onNav} theme={theme} onToggleTheme={onToggleTheme} />
@@ -29,8 +47,9 @@ const SettingsScreen = ({ onNav, theme, onToggleTheme }) => {
             <div className="topbar-sub">Verification policy, AI configuration, and Squad API gateway</div>
           </div>
           <div className="topbar-right">
-            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-            <button className="btn btn-primary"><i className="ti ti-device-floppy" /> Save changes</button>
+            <button className="btn btn-primary" onClick={handleSave} disabled={isSaving}>
+              {isSaving ? <><i className="ti ti-loader" style={{ animation: 'spin 1s linear infinite' }} /> Saving</> : <><i className="ti ti-device-floppy" /> Save changes</>}
+            </button>
           </div>
         </div>
 
@@ -43,14 +62,14 @@ const SettingsScreen = ({ onNav, theme, onToggleTheme }) => {
             </div>
             <div className="card-body settings-stack">
               {[
-                { key: 'detect', label: 'Ghost detection threshold', desc: 'Minimum score to flag a worker as suspicious' },
-                { key: 'block', label: 'Auto-block payment threshold', desc: 'Payments automatically held above this score' },
-                { key: 'review', label: 'Manual review trigger', desc: 'Score range requiring HR review before release' },
+                { key: 'sensitivity', label: 'Risk sensitivity', desc: 'Minimum score to flag a worker as suspicious' },
+                { key: 'autoBlock', label: 'Auto-block payment threshold', desc: 'Payments automatically held above this score' },
+                { key: 'manualReview', label: 'Manual review trigger', desc: 'Score range requiring HR review before release' },
               ].map(({ key, label, desc }) => (
                 <label key={key} className="setting-row">
                   <span>
                     {label}
-                    <small>{thresholds[key]}%</small>
+                    <small>{thresholds[key]}{key !== 'sensitivity' && '%'}</small>
                   </span>
                   <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 6 }}>{desc}</div>
                   <input
@@ -87,18 +106,11 @@ const SettingsScreen = ({ onNav, theme, onToggleTheme }) => {
                   <option value="biannual">Bi-annual</option>
                 </select>
               </div>
-              <div className="settings-field-row">
-                <label className="form-label">AI sensitivity</label>
-                <select
-                  className="form-select"
-                  value={sensitivity}
-                  onChange={e => setSensitivity(e.target.value)}
-                >
-                  <option value="strict">Strict — Flag anything suspicious</option>
-                  <option value="high">High — Recommended</option>
-                  <option value="balanced">Balanced — Fewer false positives</option>
-                  <option value="lenient">Lenient — High confidence only</option>
-                </select>
+              <div className="settings-field-row" style={{ alignItems: 'center' }}>
+                <label className="form-label" style={{ marginBottom: 0 }}>Appearance Theme</label>
+                <div style={{ background: 'var(--surface2)', padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                  <ThemeToggle theme={theme} onToggle={onToggleTheme} compact={false} />
+                </div>
               </div>
             </div>
           </div>

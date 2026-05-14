@@ -37,3 +37,19 @@ export const verifyPol = async (data) => {
   if (!res.ok) throw new Error('Verification failed');
   return res.json();
 };
+
+export const getSettings = async () => {
+  const res = await fetch(`${API_URL}/settings`);
+  if (!res.ok) throw new Error('Failed to fetch settings');
+  return res.json();
+};
+
+export const saveSettings = async (settings) => {
+  const res = await fetch(`${API_URL}/settings`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(settings),
+  });
+  if (!res.ok) throw new Error('Failed to save settings');
+  return res.json();
+};

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ThemeToggle } from '../components/ThemeToggle';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Pure CSS + Framer Motion Cinematic Splash Screen
 // Guaranteed to work on all devices without WebGL crashes
@@ -55,7 +55,6 @@ const SplashScreen = ({ onComplete, theme, onToggleTheme }) => {
   return (
     <div className="screen splash on" style={{ position: 'relative', backgroundColor: 'var(--splash-bg)', overflow: 'hidden', height: '100vh', width: '100vw' }}>
       <div style={{ position: 'absolute', top: '18px', right: '18px', zIndex: 8 }}>
-        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
       </div>
       
       {/* 1. Cinematic Radial Background Glow */}

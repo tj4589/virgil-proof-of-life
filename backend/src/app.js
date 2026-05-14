@@ -18,6 +18,7 @@ app.use('/workers', require('./routes/workers'));
 app.use('/payments', require('./routes/payments'));
 app.use('/attendance', require('./routes/attendance'));
 app.use('/payroll', require('./routes/payroll'));
+app.use('/settings', require('./routes/settings'));
 
 
 const PORT = process.env.PORT || 3001;

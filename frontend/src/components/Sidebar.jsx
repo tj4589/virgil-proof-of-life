@@ -1,5 +1,3 @@
-import { ThemeToggle } from './ThemeToggle';
-
 export const Sidebar = ({ active, onNav, theme, onToggleTheme }) => {
   const logoSrc = theme === 'light' ? '/logo-light.png' : '/logo.png';
   const items = [
@@ -15,7 +13,6 @@ export const Sidebar = ({ active, onNav, theme, onToggleTheme }) => {
     <div className="sidebar">
       <div className="sb-brand">
         <img src={logoSrc} alt="VIRGIL" style={{ height: '28px', width: 'auto' }} />
-        <ThemeToggle theme={theme} onToggle={onToggleTheme} compact />
       </div>
       <nav className="sb-nav">
         {items.map(it => (

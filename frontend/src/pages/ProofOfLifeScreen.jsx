@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { verifyPol } from '../lib/api';
-import { ThemeToggle } from '../components/ThemeToggle';
+import { verifyPol } from '../lib/api';
 
 const prompts = [
   "Blink twice",
@@ -69,7 +69,6 @@ const ProofOfLifeScreen = ({ theme, onToggleTheme }) => {
   return (
     <div className="screen pol-screen" style={{ background: 'var(--bg)', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ position: 'absolute', top: 20, right: 20 }}>
-        <ThemeToggle theme={theme} onToggle={onToggleTheme} compact />
       </div>
 
       <div className="pol-container" style={{ width: '100%', maxWidth: '420px', padding: '40px', background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
