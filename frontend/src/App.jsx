@@ -10,6 +10,7 @@ import WorkersScreen    from './pages/WorkersScreen';
 import AuditTrailScreen from './pages/AuditTrailScreen';
 import ReportsScreen    from './pages/ReportsScreen';
 import SettingsScreen   from './pages/SettingsScreen';
+import ProofOfLifeScreen from './pages/ProofOfLifeScreen';
 
 const getInitialTheme = () => {
   const saved = localStorage.getItem('virgil-theme');
@@ -20,6 +21,7 @@ const getInitialTheme = () => {
 export default function App() {
   const [screen, setScreen] = useState('splash');
   const [theme, setTheme] = useState(getInitialTheme);
+  const isVerify = window.location.pathname === '/verify';
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -38,6 +40,8 @@ export default function App() {
     if (id === 'settings')  { setScreen('settings');  return; }
     setScreen('dashboard');
   };
+
+  if (isVerify) return <ProofOfLifeScreen theme={theme} onToggleTheme={toggleTheme} />;
 
   if (screen === 'splash')    return <SplashScreen    onComplete={() => setScreen('onboard')} theme={theme} onToggleTheme={toggleTheme} />;
   if (screen === 'onboard')   return <OnboardingScreen onComplete={() => setScreen('dashboard')} theme={theme} onToggleTheme={toggleTheme} />;

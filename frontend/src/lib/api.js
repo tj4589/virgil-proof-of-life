@@ -27,3 +27,13 @@ export const getStats = async () => {
   if (!res.ok) throw new Error('Failed to fetch stats');
   return res.json();
 };
+
+export const verifyPol = async (data) => {
+  const res = await fetch(`${API_URL}/workers/verify-pol`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Verification failed');
+  return res.json();
+};

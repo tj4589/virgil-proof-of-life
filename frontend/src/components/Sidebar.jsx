@@ -1,6 +1,7 @@
 import { ThemeToggle } from './ThemeToggle';
 
 export const Sidebar = ({ active, onNav, theme, onToggleTheme }) => {
+  const logoSrc = theme === 'light' ? '/logo-light.png' : '/logo.png';
   const items = [
     { id:'overview', ic:'ti-layout-dashboard', label:'Overview' },
     { id:'detection', ic:'ti-shield-search', label:'Detection', badge:'958' },
@@ -13,7 +14,7 @@ export const Sidebar = ({ active, onNav, theme, onToggleTheme }) => {
   return (
     <div className="sidebar">
       <div className="sb-brand">
-        <img src="/logo.png" alt="VIRGIL" style={{ height: '28px', width: 'auto' }} />
+        <img src={logoSrc} alt="VIRGIL" style={{ height: '28px', width: 'auto' }} />
         <ThemeToggle theme={theme} onToggle={onToggleTheme} compact />
       </div>
       <nav className="sb-nav">

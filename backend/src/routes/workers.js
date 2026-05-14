@@ -86,4 +86,40 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Process Proof of Life
+router.post('/verify-pol', async (req, res) => {
+  try {
+    const { staffId, confidence, livenessPassed } = req.body;
+    
+    const worker = await Worker.findOne({ where: { staffId } });
+    if (!worker) {
+      return res.status(404).json({ success: false, error: 'Worker not found' });
+    }
+
+    let newStatus = 'FLAGGED';
+    if (livenessPassed && confidence > 85) {
+      newStatus = 'VERIFIED';
+    } else if (livenessPassed && confidence > 60) {
+      newStatus = 'NEEDS REVIEW';
+    }
+
+    await worker.update({
+      status: newStatus,
+      lastVerified: new Date(),
+      aiConfidence: confidence
+    });
+
+    await AuditEntry.create({
+      workerId: worker.id,
+      action: 'PROOF_OF_LIFE_COMPLETED',
+      details: `Worker completed Liveness Check. Confidence: ${confidence}%. Status updated to ${newStatus}.`
+    });
+
+    res.json({ success: true, status: newStatus, worker });
+  } catch (error) {
+    console.error('POL Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 module.exports = router;

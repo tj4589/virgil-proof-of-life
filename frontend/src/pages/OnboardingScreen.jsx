@@ -28,6 +28,7 @@ const story = [
 const OnboardingScreen = ({ onComplete, theme, onToggleTheme }) => {
   const [step, setStep] = useState(0);
   const [source, setSource] = useState('excel');
+  const logoSrc = theme === 'light' ? '/logo-light.png' : '/logo.png';
   const next = () => step < 2 ? setStep(step + 1) : onComplete();
   const sources = [
     { id: 'excel', ic: 'ti-file-spreadsheet', label: 'Excel / CSV File', sub: 'Upload records manually' },
@@ -38,7 +39,7 @@ const OnboardingScreen = ({ onComplete, theme, onToggleTheme }) => {
     <div className="screen on" style={{ background: 'var(--bg)', flexDirection: 'column' }}>
       <div className="ob-topbar">
         <div className="ob-brand">
-          <img src="/logo.png" alt="VIRGIL" style={{ height: '28px', width: 'auto' }} />
+          <img src={logoSrc} alt="VIRGIL" style={{ height: '28px', width: 'auto' }} />
         </div>
         <div style={{ fontSize: '12px', color: 'var(--text3)' }}>0{step + 1} / 04</div>
         <div className="ob-steps-dots">

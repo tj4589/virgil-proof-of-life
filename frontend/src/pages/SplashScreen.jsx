@@ -30,6 +30,7 @@ const SplashScreen = ({ onComplete, theme, onToggleTheme }) => {
   const [phase, setPhase] = useState(0);
   const [isOutro, setIsOutro] = useState(false);
   const [loadingText, setLoadingText] = useState('Initializing secure uplink...');
+  const logoSrc = theme === 'light' ? '/logo-light.png' : '/logo.png';
 
   useEffect(() => {
     let currentPhase = 0;
@@ -145,12 +146,12 @@ const SplashScreen = ({ onComplete, theme, onToggleTheme }) => {
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
         >
           <img
-            src="/logo.png"
+            src={logoSrc}
             alt="VIRGIL"
             style={{ 
               width: '180px', 
               marginBottom: '20px', 
-              filter: 'drop-shadow(0 0 35px rgba(255,0,0,0.8))' 
+              filter: theme === 'light' ? 'none' : 'drop-shadow(0 0 35px rgba(255,0,0,0.8))' 
             }}
           />
           
