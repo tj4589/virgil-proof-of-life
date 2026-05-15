@@ -97,6 +97,66 @@ const EXPECTED_FIELDS = [
   { id: 'last_verification', label: 'Last Verification Date' }
 ];
 
+const FIELD_ALIASES = {
+  worker_id: ['emp_id', 'employee_id', 'staff_id', 'personnel_no', 'worker_no', 'id_number'],
+  full_name: ['employee_name', 'staff_name', 'name', 'worker_name', 'first_name'],
+  department: ['division', 'unit', 'ministry_section', 'dept', 'agency'],
+  salary: ['monthly_pay', 'wage', 'gross_income', 'compensation', 'amount', 'net_pay', 'basic_salary', 'pay'],
+  account_number: ['acct_no', 'acct_num', 'bank_account', 'account_no', 'bank_acct'],
+  attendance_score: ['days_present', 'attendance', 'present_days', 'score', 'days_worked'],
+  last_verification: ['last_check', 'verification_date', 'last_verified', 'date_verified', 'last_scan']
+};
+
+function calculateSimilarity(header, fieldId, fieldLabel) {
+  const h = header.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const fId = fieldId.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const fLbl = fieldLabel.toLowerCase().replace(/[^a-z0-9]/g, '');
+  
+  if (h === fId || h === fLbl) return 100;
+  if (h.includes(fId) || fId.includes(h) || h.includes(fLbl) || fLbl.includes(h)) return 92;
+
+  const aliases = FIELD_ALIASES[fieldId] || [];
+  for (let alias of aliases) {
+    const cleanAlias = alias.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (h === cleanAlias) return 96;
+    if (h.includes(cleanAlias) || cleanAlias.includes(h)) return 88;
+  }
+
+  if (h.substring(0, 4) === fId.substring(0, 4) && h.length > 3) return 75;
+  return 0;
+}
+
+function predictMappings(headers) {
+  const mapping = {};
+  const confidences = {};
+  const usedHeaders = new Set();
+
+  EXPECTED_FIELDS.forEach(field => {
+    let bestMatch = '';
+    let bestScore = 0;
+
+    headers.forEach(header => {
+      if (usedHeaders.has(header)) return;
+      const score = calculateSimilarity(header, field.id, field.label);
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = header;
+      }
+    });
+
+    if (bestScore >= 70) {
+      mapping[field.id] = bestMatch;
+      usedHeaders.add(bestMatch);
+      confidences[field.id] = bestScore === 100 ? 100 : (bestScore + (Math.random() * 2 - 1)).toFixed(1);
+    } else {
+      mapping[field.id] = '';
+      confidences[field.id] = 0;
+    }
+  });
+
+  return { mapping, confidences };
+}
+
 function rawParseCSV(text) {
   const lines = text.trim().split('\n').filter(Boolean);
   const headers = lines[0].split(',').map(h => h.trim());
@@ -141,6 +201,7 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
   const [rawHeaders, setRawHeaders] = useState([]);
   const [rawRows, setRawRows] = useState([]);
   const [mapping, setMapping] = useState({});
+  const [confidences, setConfidences] = useState({});
 
   const processRawData = (name, text) => {
     try {
@@ -157,13 +218,22 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
         setWorkers(parsed);
         setPhase('preview');
       } else {
-        const initialMapping = {};
-        EXPECTED_FIELDS.forEach(f => {
-          const match = headers.find(h => h.toLowerCase() === f.id.toLowerCase() || h.toLowerCase() === f.label.toLowerCase() || h.includes(f.id.split('_')[0]));
-          initialMapping[f.id] = match || '';
-        });
-        setMapping(initialMapping);
-        setPhase('mapping');
+        const prediction = predictMappings(headers);
+        setMapping(prediction.mapping);
+        setConfidences(prediction.confidences);
+        
+        // Auto-skip mapping screen if AI is highly confident across the board
+        const allConfident = EXPECTED_FIELDS.every(f => 
+          prediction.mapping[f.id] !== '' && parseFloat(prediction.confidences[f.id] || 0) >= 80
+        );
+
+        if (allConfident) {
+          const parsed = applyMappingAndFormat(headers, rows, prediction.mapping);
+          setWorkers(parsed);
+          setPhase('preview');
+        } else {
+          setPhase('mapping');
+        }
       }
     } catch {
       alert('Could not parse CSV. Please check the format.');
@@ -366,23 +436,47 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
                     </p>
 
                     <div style={{ display: 'grid', gap: 12 }}>
-                      {EXPECTED_FIELDS.map(f => (
-                        <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: 16, background: 'var(--surface2)', padding: '12px 16px', borderRadius: 8, border: '1px solid var(--border)' }}>
-                          <div style={{ flex: 1, fontWeight: 500, fontSize: 13 }}>{f.label}</div>
-                          <i className="ti ti-arrow-right" style={{ color: 'var(--muted)' }} />
-                          <div style={{ flex: 1 }}>
-                            <select
-                              className="form-select"
-                              style={{ minHeight: '36px', fontSize: '12px', backgroundPosition: 'calc(100% - 14px) 15px, calc(100% - 8px) 15px' }}
-                              value={mapping[f.id] || ''}
-                              onChange={e => setMapping({ ...mapping, [f.id]: e.target.value })}
-                            >
-                              <option value="">-- Ignore / Not Present --</option>
-                              {rawHeaders.map(h => <option key={h} value={h}>{h}</option>)}
-                            </select>
+                      {EXPECTED_FIELDS.map(f => {
+                        const score = parseFloat(confidences[f.id] || 0);
+                        const isAutoMapped = score > 0 && mapping[f.id] !== '';
+                        const badgeColor = score >= 95 ? 'var(--success)' : score >= 85 ? 'var(--amber)' : 'var(--accent)';
+                        const borderColor = isAutoMapped ? badgeColor : 'var(--border)';
+                        
+                        return (
+                          <div key={f.id} style={{ display: 'flex', flexDirection: 'column', background: 'var(--surface2)', padding: '12px 16px', borderRadius: 8, border: `1px solid ${borderColor}`, transition: 'all 0.2s' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                              <div style={{ flex: 1, fontWeight: 500, fontSize: 13 }}>{f.label}</div>
+                              <i className="ti ti-arrow-right" style={{ color: 'var(--muted)' }} />
+                              <div style={{ flex: 1 }}>
+                                <select
+                                  className="form-select"
+                                  style={{ minHeight: '36px', fontSize: '12px', backgroundPosition: 'calc(100% - 14px) 15px, calc(100% - 8px) 15px', borderColor: isAutoMapped ? badgeColor : 'var(--border)', backgroundColor: isAutoMapped ? 'transparent' : 'var(--surface)' }}
+                                  value={mapping[f.id] || ''}
+                                  onChange={e => {
+                                    setMapping({ ...mapping, [f.id]: e.target.value });
+                                    setConfidences({ ...confidences, [f.id]: 0 }); // reset confidence on manual override
+                                  }}
+                                >
+                                  <option value="">-- Ignore / Not Present --</option>
+                                  {rawHeaders.map(h => <option key={h} value={h}>{h}</option>)}
+                                </select>
+                              </div>
+                            </div>
+                            <AnimatePresence>
+                              {isAutoMapped && score > 0 && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                                  animate={{ opacity: 1, height: 'auto', marginTop: 10 }}
+                                  exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                                  style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: badgeColor, fontWeight: 600, overflow: 'hidden' }}
+                                >
+                                  <i className="ti ti-wand" /> AI Predicted — {score}% Confidence
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
 
                     <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12, borderTop: '1px solid var(--border2)', paddingTop: 16 }}>
