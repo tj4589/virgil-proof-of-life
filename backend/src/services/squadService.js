@@ -1,59 +1,110 @@
+/**
+ * squadService.js
+ *
+ * VIRGIL uses Squad's Transfer/Disbursement API to release verified salaries.
+ * The organization has a funded Squad business account. VIRGIL authorizes
+ * and initiates disbursements only for workers that have passed AI verification.
+ *
+ * Virtual account creation is NOT part of this flow.
+ */
+
 const fetch = require('node-fetch');
 
 const SQUAD_BASE = process.env.SQUAD_BASE_URL || 'https://sandbox-api-d.squadco.com';
-const SQUAD_KEY = process.env.SQUAD_SECRET_KEY;
+const SQUAD_KEY  = process.env.SQUAD_SECRET_KEY;
+const SQUAD_MODE = process.env.SQUAD_MODE || 'live_sandbox'; // Default to live_sandbox
 
 const headers = {
   'Authorization': `Bearer ${SQUAD_KEY}`,
-  'Content-Type': 'application/json'
+  'Content-Type':  'application/json',
 };
 
-// 1. Create a virtual account per verified worker
-async function createWorkerAccount(worker) {
-  const res = await fetch(`${SQUAD_BASE}/virtual-account`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      customer_identifier: worker.id.toString(),
-      first_name: worker.firstName,
-      last_name: worker.lastName,
-      mobile_num: worker.phone || '08000000000',
-      email: worker.email || `${worker.firstName.toLowerCase()}@example.com`,
-      bvn: worker.bvn,
-      dob: "01/01/1990", // required field
-      address: "Lagos", // required field
-      gender: "1" // required field
-    })
-  });
-  return res.json();
+/**
+ * Initiate a salary disbursement to a verified worker's bank account.
+ * Called ONLY after VIRGIL AI confirms the worker is not a ghost.
+ *
+ * @param {object} worker  - Verified worker record from DB
+ * @param {number} amount  - Salary amount in NGN (converted to kobo internally)
+ * @param {boolean} forceMock - Used to optionally allow "Run simulated fallback"
+ */
+async function releaseSalaryPayment(worker, amount, forceMock = false) {
+  const transaction_reference = `VIRGIL-SALARY-${worker.id}-${Date.now()}`;
+
+  // Use real Squad API if mode is live_sandbox, key exists, and not forcing mock
+  if (!forceMock && SQUAD_MODE === 'live_sandbox' && SQUAD_KEY) {
+    try {
+      const res = await fetch(`${SQUAD_BASE}/disbursement/single`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          transaction_reference,
+          amount:                Math.round(amount * 100), // Squad requires kobo
+          bank_code:             worker.bankCode,
+          account_number:        worker.bankAccount,
+          account_name:          `${worker.firstName} ${worker.lastName}`,
+          narration:             `VIRGIL Salary — ${new Date().toLocaleDateString('en-NG', { month: 'long', year: 'numeric' })}`,
+          currency_id:           'NGN',
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err);
+      }
+
+      return await res.json();
+    } catch (error) {
+      console.error(`[SQUAD] Live sandbox payment failed: ${error.message}`);
+      // Throw the error clearly so the caller knows it failed in live mode
+      throw new Error(`LIVE_SANDBOX disbursement failed: ${error.message}`);
+    }
+  } else {
+    // MOCK_FALLBACK mode
+    console.warn(`[SQUAD] Running in MOCK_FALLBACK mode. Simulating payment for ${worker.id}.`);
+    return {
+      status: 200,
+      success: true,
+      message: "Simulated Success (MOCK_FALLBACK mode)",
+      data: { transaction_reference }
+    };
+  }
 }
 
-// 2. Initiate salary payment to verified worker
-async function releaseSalaryPayment(worker, amount) {
-  // CRITICAL RULE: Squad amounts must be in kobo. Multiply Naira by 100.
-  const res = await fetch(`${SQUAD_BASE}/disbursement/single`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      transaction_reference: `SALARY-${worker.id}-${Date.now()}`,
-      amount: Math.round(amount * 100),  // Squad uses kobo
-      bank_code: worker.bankCode,
-      account_number: worker.bankAccount,
-      account_name: `${worker.firstName} ${worker.lastName}`,
-      narration: `Salary payment - ${new Date().toLocaleDateString('en-NG', {month: 'long', year: 'numeric'})}`,
-      currency_id: 'NGN'
-    })
-  });
-  return res.json();
+/**
+ * Verify a transaction reference via Squad webhook or manual lookup.
+ * Used for audit confirmation after disbursement.
+ *
+ * @param {string} reference - The transaction reference returned by Squad
+ * @param {boolean} forceMock - Used to optionally allow "Run simulated fallback"
+ */
+async function verifyTransaction(reference, forceMock = false) {
+  if (!forceMock && SQUAD_MODE === 'live_sandbox' && SQUAD_KEY) {
+    try {
+      const res = await fetch(
+        `${SQUAD_BASE}/transaction/verify/${reference}`,
+        { headers }
+      );
+
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err);
+      }
+
+      return await res.json();
+    } catch (error) {
+      console.error(`[SQUAD] Live sandbox verification failed: ${error.message}`);
+      throw new Error(`LIVE_SANDBOX verification failed: ${error.message}`);
+    }
+  } else {
+    // MOCK_FALLBACK mode
+    console.warn(`[SQUAD] Running in MOCK_FALLBACK mode. Simulating verification for ${reference}.`);
+    return {
+      status: 200,
+      success: true,
+      message: "Simulated Verification Success (MOCK_FALLBACK mode)",
+      data: { transaction_reference: reference }
+    };
+  }
 }
 
-// 3. Verify a transaction completed
-async function verifyTransaction(reference) {
-  const res = await fetch(
-    `${SQUAD_BASE}/transaction/verify/${reference}`,
-    { headers }
-  );
-  return res.json();
-}
-
-module.exports = { createWorkerAccount, releaseSalaryPayment, verifyTransaction };
+module.exports = { releaseSalaryPayment, verifyTransaction };

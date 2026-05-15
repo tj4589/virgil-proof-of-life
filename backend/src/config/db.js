@@ -12,7 +12,7 @@ const connectDB = async () => {
     await sequelize.authenticate();
     console.log('Database Connected: Local SQLite (Offline-ready)');
     // Automatically sync models to database
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log('Database models synchronized');
   } catch (error) {
     console.error('Database Connection Error:', error);

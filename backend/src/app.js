@@ -14,11 +14,12 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
 // Routes
-app.use('/workers', require('./routes/workers'));
-app.use('/payments', require('./routes/payments'));
-app.use('/attendance', require('./routes/attendance'));
-app.use('/payroll', require('./routes/payroll'));
-app.use('/settings', require('./routes/settings'));
+app.use('/workers',   require('./routes/workers'));
+app.use('/payments',  require('./routes/payments'));
+app.use('/attendance',require('./routes/attendance'));
+app.use('/payroll',   require('./routes/payroll'));
+app.use('/settings',  require('./routes/settings'));
+app.use('/webhooks',  require('./routes/webhooks'));
 
 
 const PORT = process.env.PORT || 3001;

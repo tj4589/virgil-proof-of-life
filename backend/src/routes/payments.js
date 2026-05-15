@@ -6,6 +6,7 @@ const squadService = require('../services/squadService');
 // Release batch payment
 router.post('/release-batch', async (req, res) => {
   try {
+    const { forceMock = false } = req.body || {};
     const workers = await Worker.findAll({
       where: { status: 'VERIFIED' }
     });
@@ -15,7 +16,8 @@ router.post('/release-batch', async (req, res) => {
       try {
         const squadResult = await squadService.releaseSalaryPayment(
           worker,
-          worker.salary
+          worker.salary,
+          forceMock
         );
         
         const reference = squadResult.data?.transaction_reference || squadResult.transaction_reference || `MOCK-${Date.now()}`;
