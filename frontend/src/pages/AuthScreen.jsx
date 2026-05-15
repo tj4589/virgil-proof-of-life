@@ -130,8 +130,8 @@ const AuthScreen = ({ onLogin, theme, onToggleTheme }) => {
               exit={{ opacity: 0, scale: 0.95 }}
               style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '32px', maxWidth: '400px', width: '90%', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}
             >
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(215,38,56,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                <i className="ti ti-shield-lock" style={{ fontSize: '24px', color: 'var(--red)' }} />
+              <div style={{ margin: '0 auto 20px' }}>
+                <img src={logoSrc} alt="VIRGIL" style={{ height: '24px' }} />
               </div>
               <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>Enterprise Access Only</h3>
               <p style={{ fontSize: '14px', color: 'var(--text2)', lineHeight: 1.5, marginBottom: '24px' }}>
