@@ -24,7 +24,7 @@ const AuthScreen = ({ onLogin, theme, onToggleTheme }) => {
     <div className="screen on" style={{ background: 'var(--bg)', flexDirection: 'column' }}>
       <div className="ob-topbar">
         <div className="ob-brand">
-          <img src={logoSrc} alt="VIRGIL" style={{ height: '28px', width: 'auto' }} />
+          <img src={logoSrc} alt="VIRGIL" style={{ height: '40px', width: 'auto' }} />
         </div>
         <div style={{ fontSize: '12px', color: 'var(--text3)' }}>Secure Uplink</div>
         <div className="ob-steps-dots">
@@ -131,7 +131,7 @@ const AuthScreen = ({ onLogin, theme, onToggleTheme }) => {
               style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '32px', maxWidth: '400px', width: '90%', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}
             >
               <div style={{ margin: '0 auto 20px' }}>
-                <img src={logoSrc} alt="VIRGIL" style={{ height: '24px' }} />
+                <img src={logoSrc} alt="VIRGIL" style={{ height: '32px' }} />
               </div>
               <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>Enterprise Access Only</h3>
               <p style={{ fontSize: '14px', color: 'var(--text2)', lineHeight: 1.5, marginBottom: '24px' }}>

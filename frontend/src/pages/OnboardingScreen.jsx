@@ -59,7 +59,7 @@ const OnboardingScreen = ({ onComplete, theme, onToggleTheme }) => {
     <div className="screen on" style={{ background: 'var(--bg)', flexDirection: 'column' }}>
       <div className="ob-topbar">
         <div className="ob-brand">
-          <img src={logoSrc} alt="VIRGIL" style={{ height: '28px', width: 'auto' }} />
+          <img src={logoSrc} alt="VIRGIL" style={{ height: '40px', width: 'auto' }} />
         </div>
         <div style={{ fontSize: '12px', color: 'var(--text3)' }}>0{step + 1} / 04</div>
         <div className="ob-steps-dots">

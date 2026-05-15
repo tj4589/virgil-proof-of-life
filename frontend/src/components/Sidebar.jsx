@@ -12,7 +12,7 @@ export const Sidebar = ({ active, onNav, theme, onToggleTheme }) => {
   return (
     <div className="sidebar">
       <div className="sb-brand">
-        <img src={logoSrc} alt="VIRGIL" style={{ height: '28px', width: 'auto' }} />
+        <img src={logoSrc} alt="VIRGIL" style={{ height: '40px', width: 'auto' }} />
       </div>
       <nav className="sb-nav">
         {items.map(it => (
