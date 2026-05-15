@@ -3,60 +3,87 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { uploadWorkers } from '../lib/api';
 import { Sidebar } from '../components/Sidebar';
 
-const SAMPLE_CSV = `worker_id,full_name,department,salary,account_number,attendance_score,last_verification
-VIR-100001,Amina Bello,Finance,180000,0081234501,98,2026-04-30
-VIR-100002,Chinedu Okafor,Health,205000,0081234502,95,2026-04-28
-VIR-100003,Ghost Worker 3,Unassigned,999999,0123456789,0,2025-10-01
-VIR-100004,Maryam Yusuf,Education,164000,0081234504,91,2026-04-29
-VIR-100005,Ghost Worker 5,Unassigned,999999,0123456789,12,2025-09-15
-VIR-100006,Tunde Adeyemi,Works,158000,0081234506,88,2026-04-27`;
+function generateHRDataset(count) {
+  let csv = 'emp_id,employee_name,dept,monthly_pay,acct_num,days_present,last_check\n';
+  const depts = ['Sanitation', 'Transport', 'Education', 'Health', 'Works', 'Finance'];
+  let anomalies = 0;
+  for (let i = 1; i <= count; i++) {
+    const isGhost = Math.random() < 0.08;
+    const name = isGhost ? `Ghost Record ${i}` : `Public Worker ${i}`;
+    const dept = depts[i % depts.length];
+    const pay = 120000 + (i % 5) * 15000;
+    const acct = isGhost ? '0099992222' : `009999${String(1000 + i).padStart(4, '0')}`;
+    const days = isGhost ? Math.floor(Math.random() * 5) : 20 + Math.floor(Math.random() * 3);
+    const date = isGhost ? '2025-01-12' : '2026-05-10';
+    if (isGhost) anomalies++;
+    csv += `HR-${900 + i},${name},${dept},${pay},${acct},${days},${date}\n`;
+  }
+  return { csv, count, anomalies };
+}
 
-const PUBLIC_HR_CSV = `emp_id,employee_name,dept,monthly_pay,acct_num,days_present,last_check
-HR-901,Public Worker 1,Sanitation,120000,0099991111,20,2026-01-10
-HR-902,Public Worker 2,Transport,140000,0099992222,22,2026-01-12
-HR-903,Ghost Record A,Transport,140000,0099992222,2,2025-01-12
-HR-904,Public Worker 4,Education,160000,0099994444,21,2026-01-15`;
+function generatePayrollDataset(count, anomalyRate) {
+  let csv = 'worker_id,full_name,department,salary,account_number,attendance_score,last_verification\n';
+  const depts = ['Sanitation', 'Transport', 'Education', 'Health', 'Works', 'Finance'];
+  let anomalies = 0;
+  for (let i = 1; i <= count; i++) {
+    const isGhost = Math.random() < anomalyRate;
+    const name = isGhost ? `Ghost Record ${i}` : `Payroll Worker ${i}`;
+    const dept = isGhost ? '' : depts[i % depts.length];
+    const pay = isGhost ? 999999 : 140000 + (i % 5) * 15000;
+    const acct = isGhost ? '0123456789' : `008123${String(1000 + i).padStart(4, '0')}`;
+    const score = isGhost ? Math.floor(Math.random() * 15) : 85 + Math.floor(Math.random() * 15);
+    const date = isGhost ? '2025-10-01' : '2026-05-01';
+    if (isGhost) anomalies++;
+    csv += `VIR-${100000 + i},${name},${dept},${pay},${acct},${score},${date}\n`;
+  }
+  return { csv, count, anomalies };
+}
+
+const publicHR = generateHRDataset(212);
+const ghostPayroll = generatePayrollDataset(250, 0.12);
+const cleanPayroll = generatePayrollDataset(120, 0);
+const largeScale = generatePayrollDataset(1500, 0.08); // Kept reasonable to prevent browser hanging
 
 const DEMO_DATASETS = [
   {
     id: 'demo_ghost_workers',
     name: 'Ghost Worker Simulation Dataset',
     type: 'Generated Synthetic',
-    workers: 2500,
+    workers: ghostPayroll.count,
     complexity: 'High',
-    density: '12% Anomaly Density',
+    density: ((ghostPayroll.anomalies / ghostPayroll.count) * 100).toFixed(1) + '% Anomaly Density',
     desc: 'Includes duplicate accounts, inactive workers, and salary mismatches.',
-    csv: SAMPLE_CSV
+    csv: ghostPayroll.csv
   },
   {
-    id: 'demo_public_hr',
-    name: 'Public Workforce Records Sample',
-    type: 'HR-style Open Dataset',
-    workers: 5400,
+    id: 'chicago_salaries_export',
+    name: 'External Workforce Records Sample',
+    type: 'Simulated External Source',
+    workers: 800,
     complexity: 'Medium',
-    density: '4% Anomaly Density',
-    desc: 'Adapted workforce dataset. Demonstrates field mapping capability.',
-    csv: PUBLIC_HR_CSV
+    density: '5.0% Anomaly Density',
+    desc: 'Simulated external workforce dataset. Tests actual field mapping behavior.',
+    external: true
   },
   {
     id: 'demo_clean_payroll',
     name: 'Clean Payroll Baseline',
     type: 'Generated Synthetic',
-    workers: 1200,
+    workers: cleanPayroll.count,
     complexity: 'Low',
     density: '0% Anomaly Density',
     desc: 'Perfectly verified baseline dataset for calibration testing.',
-    csv: SAMPLE_CSV
+    csv: cleanPayroll.csv
   },
   {
     id: 'demo_large_scale',
     name: 'Large-Scale Stress Test',
     type: 'Generated Synthetic',
-    workers: 45000,
+    workers: largeScale.count,
     complexity: 'Extreme',
-    density: '8% Anomaly Density',
+    density: ((largeScale.anomalies / largeScale.count) * 100).toFixed(1) + '% Anomaly Density',
     desc: 'Heavy adversarial payload to test VIRGIL throughput limits.',
-    csv: SAMPLE_CSV
+    csv: largeScale.csv
   }
 ];
 
@@ -158,11 +185,24 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
   };
 
   const handleDemo = () => {
-    processRawData('sample-payroll-may-2026.csv', SAMPLE_CSV);
+    processRawData('sample-payroll-may-2026.csv', ghostPayroll.csv);
   };
 
-  const handleLoadDataset = (ds) => {
-    processRawData(ds.id + '.csv', ds.csv);
+  const handleLoadDataset = async (ds) => {
+    if (ds.external) {
+      setPhase('uploading');
+      try {
+        const res = await fetch('/real-hr-data.csv');
+        const text = await res.text();
+        setPhase('idle');
+        processRawData(ds.id + '.csv', text);
+      } catch (e) {
+        alert('Failed to fetch dataset from web.');
+        setPhase('idle');
+      }
+    } else {
+      processRawData(ds.id + '.csv', ds.csv);
+    }
   };
 
   const confirmMapping = () => {

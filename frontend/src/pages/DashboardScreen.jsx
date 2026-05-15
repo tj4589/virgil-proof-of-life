@@ -43,8 +43,9 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
 
   const aiStages = [
     { icon: 'ti-file-upload', label: 'Batch intake', detail: 'CSV payroll records normalized' },
-    { icon: 'ti-brain', label: 'AI scoring', detail: '8 fraud signals scored per worker' },
-    { icon: 'ti-shield-search', label: 'Explainability', detail: 'Confidence, evidence, severity' },
+    { icon: 'ti-brain', label: 'Ensemble Risk Scoring', detail: 'Multi-model fraud evaluation' },
+    { icon: 'ti-network', label: 'Graph Analysis', detail: 'Syndicate & relationship mapping' },
+    { icon: 'ti-shield-search', label: 'Unified Trust Score', detail: 'Confidence, evidence, severity' },
     { icon: 'ti-lock-dollar', label: 'Squad gate', detail: 'Verified paid, ghosts held' },
   ];
 

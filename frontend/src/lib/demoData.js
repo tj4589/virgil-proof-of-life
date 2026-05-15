@@ -138,7 +138,7 @@ export const demoWorkers = [
 ];
 
 export const aiSignals = [
-  { label: 'Duplicate bank account', value: 244, severity: 'high', detail: 'Shared account links across worker names' },
+  { label: 'Graph/Syndicate Link', value: 244, severity: 'high', detail: 'Shared bank account links across worker clusters' },
   { label: 'Attendance anomaly', value: 176, severity: 'high', detail: 'No attendance signal for 6+ months' },
   { label: 'Salary mismatch', value: 212, severity: 'medium', detail: 'Salary outside department grade band' },
   { label: 'Inactive biometric history', value: 380, severity: 'medium', detail: 'No biometric scan in 90+ days' },
