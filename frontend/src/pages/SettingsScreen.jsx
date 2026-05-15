@@ -62,9 +62,9 @@ const SettingsScreen = ({ onNav, theme, onToggleTheme }) => {
             </div>
             <div className="card-body settings-stack">
               {[
-                { key: 'sensitivity', label: 'Risk sensitivity', desc: 'Minimum score to flag a worker as suspicious' },
-                { key: 'autoBlock', label: 'Auto-block payment threshold', desc: 'Payments automatically held above this score' },
-                { key: 'manualReview', label: 'Manual review trigger', desc: 'Score range requiring HR review before release' },
+                { key: 'sensitivity', label: 'Risk Sensitivity Base Threshold', desc: 'Minimum AI confidence score required to flag a worker as a potential anomaly.' },
+                { key: 'autoBlock', label: 'Auto-Block Payment Threshold', desc: 'Disbursements are automatically frozen if the fraud score exceeds this limit.' },
+                { key: 'manualReview', label: 'Mandatory Human Review Trigger', desc: 'Scores above this threshold strictly mandate an HR officer override before payment.' },
               ].map(({ key, label, desc }) => (
                 <label key={key} className="setting-row">
                   <span>
@@ -101,9 +101,10 @@ const SettingsScreen = ({ onNav, theme, onToggleTheme }) => {
                   value={polFreq}
                   onChange={e => setPolFreq(e.target.value)}
                 >
+                  <option value="weekly">Weekly</option>
                   <option value="monthly">Monthly</option>
                   <option value="quarterly">Quarterly</option>
-                  <option value="biannual">Bi-annual</option>
+                  <option value="randomized">Randomized</option>
                 </select>
               </div>
               <div className="settings-field-row" style={{ alignItems: 'center' }}>
@@ -123,10 +124,9 @@ const SettingsScreen = ({ onNav, theme, onToggleTheme }) => {
             </div>
             <div className="card-body settings-stack">
               {[
-                { icon: 'ti-shield-lock', title: 'Sandbox mode', desc: 'https://sandbox-api-d.squadco.com', badge: 'Active', cls: 'badge-green' },
-                { icon: 'ti-currency-naira', title: 'Kobo conversion', desc: 'All Naira values × 100 before release', badge: 'Enabled', cls: 'badge-green' },
-                { icon: 'ti-key', title: 'Secret key', desc: 'Stored in backend environment only', badge: 'Protected', cls: 'badge-amber' },
-                { icon: 'ti-webhook', title: 'Webhook endpoint', desc: '/api/squad/webhook — listening for confirmations', badge: 'Live', cls: 'badge-green' },
+                { icon: 'ti-shield-lock', title: 'Sandbox Mode', desc: 'Operating safely in pre-production environment', badge: 'Active', cls: 'badge-green' },
+                { icon: 'ti-plug-connected', title: 'API Connection Status', desc: 'Securely authenticated with Squad backend', badge: 'Verified', cls: 'badge-green' },
+                { icon: 'ti-webhook', title: 'Webhook Endpoint', desc: 'Listening for live payment confirmations', badge: 'Live', cls: 'badge-green' },
               ].map(({ icon, title, desc, badge, cls }) => (
                 <div key={title} className="integration-row">
                   <i className={`ti ${icon}`} />
@@ -134,6 +134,18 @@ const SettingsScreen = ({ onNav, theme, onToggleTheme }) => {
                   <span className={`badge ${cls}`}>{badge}</span>
                 </div>
               ))}
+              
+              <details className="developer-diagnostics" style={{ marginTop: '16px', fontSize: '13px' }}>
+                <summary style={{ cursor: 'pointer', color: 'var(--muted)', padding: '8px 0', borderTop: '1px dashed var(--border)', userSelect: 'none' }}>
+                  <i className="ti ti-settings" style={{ marginRight: '6px' }} />
+                  Advanced Diagnostics
+                </summary>
+                <div className="integration-row" style={{ background: 'var(--surface2)', opacity: 0.8, marginTop: '8px', border: '1px solid var(--border)' }}>
+                  <i className="ti ti-currency-naira" />
+                  <div><strong>Kobo Conversion</strong><small>All Naira values × 100 before payload transmission</small></div>
+                  <span className="badge badge-amber">Enabled</span>
+                </div>
+              </details>
             </div>
           </div>
 
@@ -149,7 +161,6 @@ const SettingsScreen = ({ onNav, theme, onToggleTheme }) => {
                 { label: 'Payment released via Squad', checked: true },
                 { label: 'Manual review required', checked: true },
                 { label: 'Payroll batch uploaded', checked: false },
-                { label: 'Webhook received', checked: false },
               ].map(({ label, checked }) => (
                 <label key={label} className="signal-toggle" style={{ cursor: 'pointer' }}>
                   <input type="checkbox" defaultChecked={checked} style={{ accentColor: 'var(--accent)' }} />

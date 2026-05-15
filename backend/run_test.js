@@ -111,6 +111,12 @@ async function runTests() {
 
       console.log('\n--- Test Completed Successfully ---');
       
+      console.log('[TEST] Cleaning up mock data...');
+      await AuditEntry.destroy({ where: { workerId: worker.id } });
+      await PaymentTransaction.destroy({ where: { workerId: worker.id } });
+      await worker.destroy();
+      console.log('[TEST] Cleanup finished.');
+      
     } catch (err) {
       console.error('\n[TEST] Error occurred during testing:', err);
     } finally {
