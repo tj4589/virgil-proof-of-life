@@ -2,7 +2,7 @@ export const Sidebar = ({ active, onNav, theme, onToggleTheme }) => {
   const logoSrc = theme === 'light' ? '/logo-light.png' : '/logo.png';
   const items = [
     { id:'overview', ic:'ti-layout-dashboard', label:'Overview' },
-    { id:'detection', ic:'ti-shield-search', label:'Detection', badge:'958' },
+    { id:'detection', ic:'ti-shield-search', label:'Detection' },
     { id:'workers', ic:'ti-users', label:'Workers' },
     { id:'payments', ic:'ti-credit-card', label:'Payments' },
     { id:'audit', ic:'ti-clipboard-list', label:'Audit Trail' },

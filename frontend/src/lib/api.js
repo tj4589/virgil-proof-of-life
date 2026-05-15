@@ -10,10 +10,16 @@ export const uploadWorkers = async (workers) => {
   return res.json();
 };
 
+import { demoWorkers } from './demoData';
+
 export const getWorkers = async () => {
   const res = await fetch(`${API_URL}/workers`);
   if (!res.ok) throw new Error('Failed to fetch workers');
-  return res.json();
+  const data = await res.json();
+  if (data.length === 0 && localStorage.getItem('virgil_demo_mode') === 'true') {
+    return demoWorkers;
+  }
+  return data;
 };
 
 export const releasePayments = async () => {

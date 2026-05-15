@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Sidebar } from '../components/Sidebar';
 import { demoWorkers, formatMoney, getDemoMetrics } from '../lib/demoData';
+import { getWorkers } from '../lib/api';
 
 const DEPT_DATA = [
   { dept: 'Finance', workers: 3, flagged: 0, risk: 12 },
@@ -23,7 +24,14 @@ const SIGNAL_TRENDS = [
 ];
 
 const ReportsScreen = ({ onNav, theme, onToggleTheme }) => {
+  const [hasData, setHasData] = useState(false);
   const metrics = getDemoMetrics(demoWorkers);
+
+  useEffect(() => {
+    getWorkers()
+      .then(data => setHasData(data.length > 0))
+      .catch(() => setHasData(false));
+  }, []);
 
   return (
     <div className="screen on" style={{ flexDirection: 'row' }}>
@@ -36,123 +44,88 @@ const ReportsScreen = ({ onNav, theme, onToggleTheme }) => {
           </div>
           <div className="topbar-right">
             <span className="batch-tag">May 2026 Batch</span>
-            <button className="btn btn-ghost"><i className="ti ti-download" /> Export PDF</button>
-            <button className="btn btn-primary" onClick={() => onNav('payments')}>
-              <i className="ti ti-send" /> Release payments
-            </button>
+            {hasData && <button className="btn btn-ghost"><i className="ti ti-download" /> Export PDF</button>}
+            {hasData && <button className="btn btn-primary" onClick={() => onNav('payments')}><i className="ti ti-send" /> Release payments</button>}
           </div>
         </div>
 
         <div className="page-pad">
-          {/* KPI strip */}
-          <div className="tab-summary-grid" style={{ gridTemplateColumns: 'repeat(4,1fr)', marginBottom: 20 }}>
-            <div className="tab-summary-card">
-              <span>Ghost records</span><strong className="red">{metrics.flagged}</strong>
-            </div>
-            <div className="tab-summary-card">
-              <span>Verified workers</span><strong className="green">{metrics.verified}</strong>
-            </div>
-            <div className="tab-summary-card">
-              <span>Funds protected</span><strong>{formatMoney(metrics.blockedAmount)}</strong>
-            </div>
-            <div className="tab-summary-card">
-              <span>Integrity score</span><strong>{metrics.integrity}%</strong>
-            </div>
+        {!hasData ? (
+          <div style={{ width: '100%', textAlign: 'center', padding: '80px 20px', background: 'var(--surface)', borderRadius: '12px', border: '1px dashed var(--border)' }}>
+            <i className="ti ti-chart-bar" style={{ fontSize: '40px', color: 'var(--text3)', marginBottom: '16px', display: 'block' }} />
+            <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)' }}>No reports generated yet</div>
+            <div style={{ fontSize: '14px', marginTop: '8px', color: 'var(--text3)' }}>Reports will appear here after payroll analysis is complete.</div>
           </div>
+        ) : (
+          <>
+            {/* KPI strip */}
+            <div className="tab-summary-grid" style={{ gridTemplateColumns: 'repeat(4,1fr)', marginBottom: 20 }}>
+              <div className="tab-summary-card"><span>Ghost records</span><strong className="red">{metrics.flagged}</strong></div>
+              <div className="tab-summary-card"><span>Verified workers</span><strong className="green">{metrics.verified}</strong></div>
+              <div className="tab-summary-card"><span>Funds protected</span><strong>{formatMoney(metrics.blockedAmount)}</strong></div>
+              <div className="tab-summary-card"><span>Integrity score</span><strong>{metrics.integrity}%</strong></div>
+            </div>
 
-          <div className="report-grid">
-            {/* Hero */}
-            <section className="report-hero card">
-              <span className="eyebrow">Proof of Life — May 2026</span>
-              <h2>{metrics.flagged} ghost records blocked before payout</h2>
-              <p>
-                VIRGIL detected duplicate identity and payment patterns across the May 2026 payroll batch,
-                then prevented <strong>{formatMoney(metrics.blockedAmount)}</strong> from reaching
-                unverified records through the Squad payment gate.
-              </p>
-              <div style={{ marginTop: 20, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {[
-                  { label: 'AI Model', val: 'RandomForest' },
-                  { label: 'Fraud Signals', val: '8 dimensions' },
-                  { label: 'Processing Time', val: '< 3 minutes' },
-                  { label: 'Payment Gate', val: 'Squad API' },
-                ].map(({ label, val }) => (
-                  <div key={label} className="report-kv-chip">
-                    <span>{label}</span>
-                    <strong>{val}</strong>
-                  </div>
-                ))}
-              </div>
-            </section>
+            <div className="report-grid">
+              <section className="report-hero card">
+                <span className="eyebrow">Proof of Life — May 2026</span>
+                <h2>{metrics.flagged} ghost records blocked before payout</h2>
+                <p>VIRGIL detected duplicate identity and payment patterns across the May 2026 payroll batch, then prevented <strong>{formatMoney(metrics.blockedAmount)}</strong> from reaching unverified records through the Squad payment gate.</p>
+                <div style={{ marginTop: 20, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {[
+                    { label: 'AI Model', val: 'RandomForest' },
+                    { label: 'Fraud Signals', val: '8 dimensions' },
+                    { label: 'Processing Time', val: '< 3 minutes' },
+                    { label: 'Payment Gate', val: 'Squad API' },
+                  ].map(({ label, val }) => (
+                    <div key={label} className="report-kv-chip"><span>{label}</span><strong>{val}</strong></div>
+                  ))}
+                </div>
+              </section>
 
-            {/* Department Risk */}
-            <div className="card">
-              <div className="card-header">
-                <span className="card-title">Department Risk Comparison</span>
-              </div>
-              <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {DEPT_DATA.sort((a, b) => b.risk - a.risk).map(d => (
-                  <div key={d.dept} className="dept-risk-row">
-                    <div className="dept-risk-meta">
-                      <span>{d.dept}</span>
-                      <small>{d.flagged} flagged / {d.workers}</small>
-                    </div>
-                    <div className="dept-risk-bar-wrap">
-                      <div className="dept-risk-bar">
-                        <motion.div
-                          className="dept-risk-fill"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${d.risk}%` }}
-                          transition={{ duration: 0.8, ease: 'easeOut' }}
-                          style={{ background: d.risk > 60 ? 'var(--accent)' : d.risk > 30 ? 'var(--warning)' : 'var(--success)' }}
-                        />
+              <div className="card">
+                <div className="card-header"><span className="card-title">Department Risk Comparison</span></div>
+                <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {DEPT_DATA.sort((a, b) => b.risk - a.risk).map(d => (
+                    <div key={d.dept} className="dept-risk-row">
+                      <div className="dept-risk-meta"><span>{d.dept}</span><small>{d.flagged} flagged / {d.workers}</small></div>
+                      <div className="dept-risk-bar-wrap">
+                        <div className="dept-risk-bar">
+                          <motion.div className="dept-risk-fill" initial={{ width: 0 }} animate={{ width: `${d.risk}%` }} transition={{ duration: 0.8, ease: 'easeOut' }} style={{ background: d.risk > 60 ? 'var(--accent)' : d.risk > 30 ? 'var(--warning)' : 'var(--success)' }} />
+                        </div>
+                        <span className="dept-risk-pct" style={{ color: d.risk > 60 ? 'var(--accent)' : d.risk > 30 ? 'var(--warning)' : 'var(--success)' }}>{d.risk}%</span>
                       </div>
-                      <span className="dept-risk-pct" style={{ color: d.risk > 60 ? 'var(--accent)' : d.risk > 30 ? 'var(--warning)' : 'var(--success)' }}>
-                        {d.risk}%
-                      </span>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Fraud Signal Trends */}
-            <div className="card">
-              <div className="card-header">
-                <span className="card-title">Fraud Signal Frequency</span>
-                <span className="mini-link">This batch</span>
-              </div>
-              <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {SIGNAL_TRENDS.map(sig => (
-                  <div key={sig.label} className={`signal-card ${sig.severity}`}>
-                    <div>
-                      <strong>{sig.label}</strong>
-                      <span>{sig.count} occurrences</span>
+              <div className="card">
+                <div className="card-header"><span className="card-title">Fraud Signal Frequency</span><span className="mini-link">This batch</span></div>
+                <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {SIGNAL_TRENDS.map(sig => (
+                    <div key={sig.label} className={`signal-card ${sig.severity}`}>
+                      <div><strong>{sig.label}</strong><span>{sig.count} occurrences</span></div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
+                        <b style={{ fontSize: 18 }}>{sig.count}</b>
+                        <small style={{ color: sig.delta.startsWith('+') ? 'var(--accent)' : 'var(--success)', fontSize: 10, fontWeight: 700 }}>{sig.delta} vs last batch</small>
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
-                      <b style={{ fontSize: 18 }}>{sig.count}</b>
-                      <small style={{ color: sig.delta.startsWith('+') ? 'var(--accent)' : 'var(--success)', fontSize: 10, fontWeight: 700 }}>
-                        {sig.delta} vs last batch
-                      </small>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Qualitative cards */}
-            {[
-              { title: 'AI Technical Depth', body: 'RandomForest anomaly detection across 8 fraud signals: identity, attendance, salary, biometric, bank account, and payroll tenure patterns.' },
-              { title: 'Squad API Integration', body: 'Verified workers are released via Squad Transfer API with transaction references logged. Flagged workers receive a BLOCKED status before any funds move.' },
-              { title: 'Explainability First', body: 'Every risk score includes human-readable evidence with severity and confidence contribution. No black-box decisions.' },
-              { title: 'Impact Potential', body: 'Designed for Nigerian ministries, federal agencies, state payrolls, NGOs, and private HR payrolls processing thousands of workers per cycle.' },
-            ].map(({ title, body }) => (
-              <div key={title} className="card report-card">
-                <strong>{title}</strong>
-                <p>{body}</p>
-              </div>
-            ))}
-          </div>
+              {[
+                { title: 'AI Technical Depth', body: 'RandomForest anomaly detection across 8 fraud signals: identity, attendance, salary, biometric, bank account, and payroll tenure patterns.' },
+                { title: 'Squad API Integration', body: 'Verified workers are released via Squad Transfer API with transaction references logged. Flagged workers receive a BLOCKED status before any funds move.' },
+                { title: 'Explainability First', body: 'Every risk score includes human-readable evidence with severity and confidence contribution. No black-box decisions.' },
+                { title: 'Impact Potential', body: 'Designed for Nigerian ministries, federal agencies, state payrolls, NGOs, and private HR payrolls processing thousands of workers per cycle.' },
+              ].map(({ title, body }) => (
+                <div key={title} className="card report-card"><strong>{title}</strong><p>{body}</p></div>
+              ))}
+            </div>
+          </>
+        )}
         </div>
       </div>
     </div>

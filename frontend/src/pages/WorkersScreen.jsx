@@ -112,7 +112,7 @@ const WorkerModal = ({ worker, onClose }) => (
 );
 
 const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
-  const [workers, setWorkers] = useState(demoWorkers);
+  const [workers, setWorkers] = useState([]);
   const [query, setQuery] = useState('');
   const [riskFilter, setRiskFilter] = useState('all');
   const [deptFilter, setDeptFilter] = useState('all');
@@ -120,8 +120,8 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
 
   useEffect(() => {
     getWorkers()
-      .then(data => setWorkers(data.length ? data.map(normalizeWorker) : demoWorkers))
-      .catch(() => setWorkers(demoWorkers));
+      .then(data => setWorkers(data.length ? data.map(normalizeWorker) : []))
+      .catch(() => setWorkers([]));
   }, []);
 
   const departments = ['all', ...new Set(workers.map(w => w.department).filter(Boolean))];

@@ -17,13 +17,13 @@ const normalizeWorker = (worker, index) => ({
 });
 
 const ResultsScreen = ({ onDashboard, onNav, theme, onToggleTheme }) => {
-  const [workers, setWorkers] = useState(demoWorkers);
+  const [workers, setWorkers] = useState([]);
   const [filter, setFilter] = useState('flagged');
 
   useEffect(() => {
     getWorkers()
-      .then(data => setWorkers(data.length ? data.map(normalizeWorker) : demoWorkers))
-      .catch(() => setWorkers(demoWorkers));
+      .then(data => setWorkers(data.length ? data.map(normalizeWorker) : []))
+      .catch(() => setWorkers([]));
   }, []);
 
   const flagged = workers.filter(worker => worker.status === 'FLAGGED');
@@ -49,64 +49,74 @@ const ResultsScreen = ({ onDashboard, onNav, theme, onToggleTheme }) => {
         </div>
 
         <div className="page-pad detection-layout">
-          <div className="card ai-detail-card">
-            <div className="card-header"><span className="card-title">Flagged Worker Explanation</span><span className="badge badge-red">Payment blocked</span></div>
-            <div className="ai-detail-body">
-              <div className="worker-focus-head">
-                <div>
-                  <strong>{selected.name}</strong>
-                  <span>{selected.id} - NIN {selected.nin} - {formatMoney(selected.salary)}</span>
+          {workers.length === 0 ? (
+            <div style={{ width: '100%', textAlign: 'center', padding: '80px 20px', background: 'var(--surface)', borderRadius: '12px', border: '1px dashed var(--border)' }}>
+              <i className="ti ti-shield-search" style={{ fontSize: '40px', color: 'var(--text3)', marginBottom: '16px', display: 'block' }} />
+              <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)' }}>No anomalies detected yet</div>
+              <div style={{ fontSize: '14px', marginTop: '8px', color: 'var(--text3)' }}>Upload a payroll dataset to begin AI fraud analysis.</div>
+            </div>
+          ) : (
+            <>
+              <div className="card ai-detail-card">
+                <div className="card-header"><span className="card-title">Flagged Worker Explanation</span><span className="badge badge-red">Payment blocked</span></div>
+                <div className="ai-detail-body">
+                  <div className="worker-focus-head">
+                    <div>
+                      <strong>{selected.name}</strong>
+                      <span>{selected.id} - NIN {selected.nin} - {formatMoney(selected.salary)}</span>
+                    </div>
+                    <div className="confidence-pill">{selected.score}%</div>
+                  </div>
+                  <div className="confidence-track large"><div style={{ width: `${selected.score}%` }} /></div>
+                  <div className="reason-list expanded">
+                    {selected.reasons.map(reason => (
+                      <div key={reason.flag} className={`reason-row ${reason.severity}`}>
+                        <div><span>{reason.flag}</span><small>{reason.detail}</small></div>
+                        <b>{reason.severity}</b>
+                        <em>{reason.contribution}%</em>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="decision-actions">
+                    <button className="btn btn-ghost">Override and verify</button>
+                    <button className="btn btn-primary">Confirm ghost and block pay</button>
+                  </div>
                 </div>
-                <div className="confidence-pill">{selected.score}%</div>
               </div>
-              <div className="confidence-track large"><div style={{ width: `${selected.score}%` }} /></div>
-              <div className="reason-list expanded">
-                {selected.reasons.map(reason => (
-                  <div key={reason.flag} className={`reason-row ${reason.severity}`}>
-                    <div><span>{reason.flag}</span><small>{reason.detail}</small></div>
-                    <b>{reason.severity}</b>
-                    <em>{reason.contribution}%</em>
-                  </div>
-                ))}
-              </div>
-              <div className="decision-actions">
-                <button className="btn btn-ghost">Override and verify</button>
-                <button className="btn btn-primary">Confirm ghost and block pay</button>
-              </div>
-            </div>
-          </div>
 
-          <div className="card">
-            <div className="card-header">
-              <span className="card-title">Worker Scores</span>
-              <div className="filter-tabs compact-tabs">
-                {[
-                  { id: 'all', label: 'All', count: workers.length },
-                  { id: 'flagged', label: 'Flagged', count: flagged.length },
-                  { id: 'cleared', label: 'Cleared', count: workers.length - flagged.length },
-                ].map(item => (
-                  <div key={item.id} className={`filter-tab ${filter === item.id ? 'active' : ''}`} onClick={() => setFilter(item.id)}>
-                    {item.label}<span className="filter-count">{item.count}</span>
+              <div className="card">
+                <div className="card-header">
+                  <span className="card-title">Worker Scores</span>
+                  <div className="filter-tabs compact-tabs">
+                    {[
+                      { id: 'all', label: 'All', count: workers.length },
+                      { id: 'flagged', label: 'Flagged', count: flagged.length },
+                      { id: 'cleared', label: 'Cleared', count: workers.length - flagged.length },
+                    ].map(item => (
+                      <div key={item.id} className={`filter-tab ${filter === item.id ? 'active' : ''}`} onClick={() => setFilter(item.id)}>
+                        {item.label}<span className="filter-count">{item.count}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
+                <table className="tbl">
+                  <thead>
+                    <tr><th>Worker</th><th>AI score</th><th>Top reason</th><th>Payment</th></tr>
+                  </thead>
+                  <tbody>
+                    {display.map(worker => (
+                      <tr key={worker.id}>
+                        <td>{worker.name}</td>
+                        <td><span style={{ color: worker.score >= 60 ? 'var(--red-bright)' : 'var(--green)', fontWeight: 700 }}>{worker.score}%</span></td>
+                        <td>{worker.reasons[0]?.flag || 'Low risk pattern'}</td>
+                        <td>{worker.status === 'FLAGGED' ? <span className="badge badge-red">Blocked</span> : <span className="badge badge-green">Queued</span>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            </div>
-            <table className="tbl">
-              <thead>
-                <tr><th>Worker</th><th>AI score</th><th>Top reason</th><th>Payment</th></tr>
-              </thead>
-              <tbody>
-                {display.map(worker => (
-                  <tr key={worker.id}>
-                    <td>{worker.name}</td>
-                    <td><span style={{ color: worker.score >= 60 ? 'var(--red-bright)' : 'var(--green)', fontWeight: 700 }}>{worker.score}%</span></td>
-                    <td>{worker.reasons[0]?.flag || 'Low risk pattern'}</td>
-                    <td>{worker.status === 'FLAGGED' ? <span className="badge badge-red">Blocked</span> : <span className="badge badge-green">Queued</span>}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>

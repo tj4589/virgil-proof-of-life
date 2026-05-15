@@ -4,13 +4,13 @@ import { Sidebar } from '../components/Sidebar';
 import { demoWorkers, formatMoney } from '../lib/demoData';
 
 const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
-  const [workers, setWorkers] = useState(demoWorkers);
+  const [workers, setWorkers] = useState([]);
   const [releasing, setReleasing] = useState(false);
 
   useEffect(() => {
     getWorkers()
-      .then(data => setWorkers(data.length ? data : demoWorkers))
-      .catch(() => setWorkers(demoWorkers));
+      .then(data => setWorkers(data.length ? data : []))
+      .catch(() => setWorkers([]));
   }, []);
 
   const cleared = workers.filter(worker => worker.status !== 'FLAGGED');
@@ -23,8 +23,8 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
     try {
       await releasePayments();
       getWorkers()
-        .then(data => setWorkers(data.length ? data : demoWorkers))
-        .catch(() => setWorkers(demoWorkers));
+        .then(data => setWorkers(data.length ? data : []))
+        .catch(() => setWorkers([]));
       alert('Payments released via Squad API');
     } catch (e) {
       alert(e.message);
@@ -56,42 +56,49 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
         </div>
 
         <div className="page-pad">
-          <div className="payment-summary">
-            {[
-              { label: 'Queued for Squad', amt: formatMoney(totalSalary), sub: `For ${cleared.length} verified workers`, icon: 'ti-clock', c: 'var(--amber)' },
-              { label: 'Blocked Amount', amt: formatMoney(flaggedSalary), sub: `${flagged.length} high-risk workers held`, icon: 'ti-lock-dollar', c: 'var(--red-bright)' },
-              { label: 'Previously Released', amt: 'NGN 1.4B', sub: 'With transaction references', icon: 'ti-circle-check', c: 'var(--green)' },
-            ].map((item, i) => (
-              <div key={i} className="pay-card">
-                <div className="pay-card-top">
-                  <span className="pay-card-label">{item.label}</span>
-                  <i className={`ti ${item.icon}`} style={{ fontSize: '16px', color: item.c }} />
-                </div>
-                <div className="pay-card-amt" style={{ color: item.c }}>{item.amt}</div>
-                <div className="pay-card-sub">{item.sub}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="card">
-            <div className="card-header"><span className="card-title">Squad Payment Gate</span><span className="mini-link">Verified records only</span></div>
-            <table className="tbl">
-              <thead>
-                <tr><th>Batch</th><th>Workers</th><th>Amount</th><th>Status</th><th>Date</th></tr>
-              </thead>
-              <tbody>
-                {batches.map(batch => (
-                  <tr key={batch.name}>
-                    <td>{batch.name}</td>
-                    <td>{batch.workers.toLocaleString()}</td>
-                    <td style={{ fontWeight: 600, color: 'var(--text)' }}>{batch.amount}</td>
-                    <td>{batch.status === 'on-hold' ? <span className="badge badge-amber">Awaiting release</span> : <span className="badge badge-green">Completed</span>}</td>
-                    <td>{batch.date}</td>
-                  </tr>
+          {workers.length === 0 ? (
+            <div style={{ width: '100%', textAlign: 'center', padding: '80px 20px', background: 'var(--surface)', borderRadius: '12px', border: '1px dashed var(--border)' }}>
+              <i className="ti ti-credit-card" style={{ fontSize: '40px', color: 'var(--text3)', marginBottom: '16px', display: 'block' }} />
+              <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)' }}>No payment batches queued</div>
+              <div style={{ fontSize: '14px', marginTop: '8px', color: 'var(--text3)' }}>Analyze payroll records to release funds via Squad API.</div>
+            </div>
+          ) : (
+            <>
+              <div className="payment-summary">
+                {[
+                  { label: 'Queued for Squad', amt: formatMoney(totalSalary), sub: `For ${cleared.length} verified workers`, icon: 'ti-clock', c: 'var(--amber)' },
+                  { label: 'Blocked Amount', amt: formatMoney(flaggedSalary), sub: `${flagged.length} high-risk workers held`, icon: 'ti-lock-dollar', c: 'var(--red-bright)' },
+                ].map((item, i) => (
+                  <div key={i} className="pay-card">
+                    <div className="pay-card-top">
+                      <span className="pay-card-label">{item.label}</span>
+                      <i className={`ti ${item.icon}`} style={{ fontSize: '16px', color: item.c }} />
+                    </div>
+                    <div className="pay-card-amt" style={{ color: item.c }}>{item.amt}</div>
+                    <div className="pay-card-sub">{item.sub}</div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </div>
+
+              <div className="card">
+                <div className="card-header"><span className="card-title">Squad Payment Gate</span><span className="mini-link">Verified records only</span></div>
+                <table className="tbl">
+                  <thead>
+                    <tr><th>Batch</th><th>Workers</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>May 2026 Batch</td>
+                      <td>{cleared.length}</td>
+                      <td style={{ fontWeight: 600, color: 'var(--text)' }}>{formatMoney(totalSalary)}</td>
+                      <td><span className="badge badge-amber">Awaiting release</span></td>
+                      <td>May 14, 2026</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

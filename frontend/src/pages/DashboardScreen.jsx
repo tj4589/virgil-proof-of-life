@@ -34,7 +34,8 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
   }, []);
 
   const handleLoadDemo = () => {
-    setWorkers(demoWorkers);
+    localStorage.setItem('virgil_demo_mode', 'true');
+    window.location.reload();
   };
 
   const metrics = getDemoMetrics(workers);
@@ -207,6 +208,7 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
               </div>
             </div>
           </div>
+        </div>
         )}
       </div>
     </div>
