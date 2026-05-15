@@ -49,7 +49,7 @@ export default function App() {
   
   if (screen === 'auth')      return <AuthScreen      onLogin={() => {
     const isSetup = localStorage.getItem('virgil_setup') === 'true';
-    setScreen(isSetup ? 'dashboard' : 'onboard');
+    setScreen(isSetup ? 'sysinit' : 'onboard');
   }} theme={theme} onToggleTheme={toggleTheme} />;
 
   if (screen === 'onboard')   return <OnboardingScreen onComplete={() => {
