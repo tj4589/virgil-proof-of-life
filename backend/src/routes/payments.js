@@ -3,12 +3,18 @@ const router = express.Router();
 const { Worker, AuditEntry, PaymentTransaction } = require('../models');
 const squadService = require('../services/squadService');
 
+const getActiveBatch = async () => {
+  const latest = await Worker.findOne({ order: [['createdAt', 'DESC']] });
+  return latest?.batch || null;
+};
+
 // Release batch payment
 router.post('/release-batch', async (req, res) => {
   try {
     const { forceMock = false } = req.body || {};
+    const activeBatch = await getActiveBatch();
     const workers = await Worker.findAll({
-      where: { status: 'VERIFIED' }
+      where: activeBatch ? { status: 'VERIFIED', batch: activeBatch } : { status: 'VERIFIED' }
     });
 
     const results = [];
@@ -53,30 +59,26 @@ router.post('/release-batch', async (req, res) => {
 // Stats route
 router.get('/stats', async (req, res) => {
   try {
-    const total = await Worker.count();
-    const flagged = await Worker.count({ where: { status: 'FLAGGED' } });
-    const paid = await Worker.count({ where: { status: 'PAID' } });
-    
-    // Aggregation for amounts
-    const stats = await Worker.findAll({
-      attributes: [
-        'status',
-        [Worker.sequelize.fn('SUM', Worker.sequelize.col('salary')), 'totalAmount']
-      ],
-      group: ['status']
-    });
-    
-    const amountMap = {};
-    stats.forEach(s => {
-        amountMap[s.status] = parseFloat(s.get('totalAmount'));
-    });
+    const activeBatch = await getActiveBatch();
+    const where = activeBatch ? { batch: activeBatch } : {};
+    const workers = await Worker.findAll({ where });
+    const activeWorkerIds = new Set(workers.map(w => w.id));
+    const transactions = await PaymentTransaction.findAll();
+    const flagged = workers.filter(w => w.status === 'FLAGGED');
+    const verified = workers.filter(w => w.status === 'VERIFIED');
+    const paid = workers.filter(w => w.status === 'PAID' || w.status === 'CONFIRMED');
     
     res.json({
-      totalWorkers: total,
-      flaggedCount: flagged,
-      paidCount: paid,
-      blockedAmount: amountMap['FLAGGED'] || 0,
-      releasedAmount: amountMap['PAID'] || 0
+      batch: activeBatch,
+      totalWorkers: workers.length,
+      flaggedCount: flagged.length,
+      verifiedCount: verified.length,
+      paidCount: paid.length,
+      blockedAmount: flagged.reduce((sum, w) => sum + Number(w.salary || 0), 0),
+      queuedAmount: verified.reduce((sum, w) => sum + Number(w.salary || 0), 0),
+      releasedAmount: transactions
+        .filter(tx => activeWorkerIds.has(tx.workerId) && (tx.status === 'SUCCESS' || tx.status === 'CONFIRMED'))
+        .reduce((sum, tx) => sum + Number(tx.amount || 0), 0)
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

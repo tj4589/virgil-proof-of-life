@@ -1,46 +1,41 @@
 import { useState, useEffect } from 'react';
 import { getWorkers, releasePayments, getPaymentStats } from '../lib/api';
 import { Sidebar } from '../components/Sidebar';
-import { demoWorkers, formatMoney } from '../lib/demoData';
+import { formatMoney } from '../lib/workerState';
 
 const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
   const [workers, setWorkers] = useState([]);
+  const [stats, setStats] = useState(null);
   const [releasing, setReleasing] = useState(false);
-  const [releasedAmount, setReleasedAmount] = useState(0);
 
   useEffect(() => {
     getWorkers()
       .then(data => setWorkers(data.length ? data : []))
       .catch(() => setWorkers([]));
     getPaymentStats()
-      .then(stats => setReleasedAmount(stats.releasedAmount || 0))
-      .catch(() => setReleasedAmount(0));
+      .then(data => setStats(data))
+      .catch(() => setStats(null));
   }, []);
 
-  const cleared = workers.filter(worker => worker.status !== 'FLAGGED');
+  const cleared = workers.filter(worker => worker.status === 'VERIFIED');
   const flagged = workers.filter(worker => worker.status === 'FLAGGED');
-  const totalSalary = cleared.reduce((sum, worker) => sum + (worker.salary || 0), 0);
-  const flaggedSalary = flagged.reduce((sum, worker) => sum + (worker.salary || 0), 0);
+  const totalSalary = stats?.queuedAmount ?? cleared.reduce((sum, worker) => sum + (worker.salary || 0), 0);
+  const flaggedSalary = stats?.blockedAmount ?? flagged.reduce((sum, worker) => sum + (worker.salary || 0), 0);
+  const releasedAmount = stats?.releasedAmount ?? 0;
 
   const handleRelease = async () => {
     setReleasing(true);
     try {
       await releasePayments();
-      getWorkers()
-        .then(data => setWorkers(data.length ? data : []))
-        .catch(() => setWorkers([]));
+      const [nextWorkers, nextStats] = await Promise.all([getWorkers(), getPaymentStats()]);
+      setWorkers(nextWorkers.length ? nextWorkers : []);
+      setStats(nextStats);
       alert('Payments released via Squad API');
     } catch (e) {
       alert(e.message);
     }
     setReleasing(false);
   };
-
-  const batches = [
-    { name: 'May 2026 Batch', workers: cleared.length, amount: formatMoney(totalSalary), status: 'on-hold', date: 'May 14, 2026' },
-    { name: 'Apr 2026 Batch', workers: 22100, amount: 'NGN 251.7M', status: 'completed', date: 'Apr 14, 2026' },
-    { name: 'Mar 2026 Batch', workers: 21800, amount: 'NGN 245.7M', status: 'completed', date: 'Mar 14, 2026' },
-  ];
 
   return (
     <div className="screen on" style={{ flexDirection: 'row' }}>

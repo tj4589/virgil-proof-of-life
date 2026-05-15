@@ -215,6 +215,7 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
     setPhase('uploading');
     try {
       await uploadWorkers(workers);
+      localStorage.setItem('virgil_last_upload_count', String(workers.length));
       setPhase('done');
       setTimeout(onUpload, 1200);
     } catch (e) {
@@ -275,7 +276,7 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
                       <input
                         ref={fileRef}
                         type="file"
-                        accept=".csv,.xlsx,.xls"
+                        accept=".csv"
                         style={{ display: 'none' }}
                         onChange={e => handleFile(e.target.files[0])}
                       />
@@ -289,7 +290,7 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
                       <div className="upload-drop-title">
                         {dragOver ? 'Release to upload' : 'Drag and drop your payroll file'}
                       </div>
-                      <div className="upload-drop-sub">or click to browse — CSV, Excel supported</div>
+                      <div className="upload-drop-sub">or click to browse - CSV supported</div>
                       <button className="btn btn-primary" onClick={e => { e.stopPropagation(); fileRef.current?.click(); }}>
                         <i className="ti ti-file-upload" /> Choose file
                       </button>

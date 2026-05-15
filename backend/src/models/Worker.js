@@ -4,7 +4,7 @@ const { sequelize } = require('../config/db');
 const Worker = sequelize.define('Worker', {
   id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
   batch: { type: DataTypes.STRING, defaultValue: 'BATCH_1' },
-  staffId: { type: DataTypes.STRING, unique: true, allowNull: false },
+  staffId: { type: DataTypes.STRING, allowNull: false },
   firstName: { type: DataTypes.STRING, allowNull: false },
   lastName: { type: DataTypes.STRING, allowNull: false },
   email: { type: DataTypes.STRING },
@@ -17,7 +17,7 @@ const Worker = sequelize.define('Worker', {
   department: { type: DataTypes.STRING },
   status: { type: DataTypes.STRING, defaultValue: 'PENDING' },
   aiConfidence: { type: DataTypes.FLOAT },
-  aiReasons: { type: DataTypes.JSONB }, // PG supports JSONB
+  aiReasons: { type: DataTypes.JSON },
   lastVerified: { type: DataTypes.DATE }
 });
 

@@ -10,16 +10,10 @@ export const uploadWorkers = async (workers) => {
   return res.json();
 };
 
-import { demoWorkers } from './demoData';
-
 export const getWorkers = async () => {
   const res = await fetch(`${API_URL}/workers`);
   if (!res.ok) throw new Error('Failed to fetch workers');
-  const data = await res.json();
-  if (data.length === 0 && localStorage.getItem('virgil_demo_mode') === 'true') {
-    return demoWorkers;
-  }
-  return data;
+  return res.json();
 };
 
 export const releasePayments = async () => {
@@ -35,8 +29,14 @@ export const getPaymentStats = async () => {
 };
 
 export const getStats = async () => {
-  const res = await fetch(`${API_URL}/payments/stats`);
+  const res = await fetch(`${API_URL}/workers/stats/summary`);
   if (!res.ok) throw new Error('Failed to fetch stats');
+  return res.json();
+};
+
+export const getAuditLog = async () => {
+  const res = await fetch(`${API_URL}/workers/audit/log`);
+  if (!res.ok) throw new Error('Failed to fetch audit log');
   return res.json();
 };
 

@@ -7,12 +7,13 @@ const processingSteps = [
   { icon: 'ti-calendar-stats', label: 'Cross-checking attendance anomalies...', detail: 'Scanning for inactive biometric and absence patterns' },
   { icon: 'ti-shield-search', label: 'Verifying payment integrity...', detail: 'Checking salary bands, grade levels and outliers' },
   { icon: 'ti-brain', label: 'Building trust profiles...', detail: 'Assigning multi-signal composite risk scores' },
-  { icon: 'ti-lock-dollar', label: 'Risk scoring workers...', detail: 'RandomForest model evaluating 8 fraud dimensions' },
+  { icon: 'ti-lock-dollar', label: 'Risk scoring workers...', detail: 'Isolation Forest model evaluating payroll anomaly signals' },
 ];
 
 const AILoadingScreen = ({ onComplete, theme, onToggleTheme }) => {
   const [pct, setPct] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const recordCount = Number(localStorage.getItem('virgil_last_upload_count') || 0);
 
   useEffect(() => {
     const t = setInterval(() => {
@@ -58,7 +59,7 @@ const AILoadingScreen = ({ onComplete, theme, onToggleTheme }) => {
 
             <div className="ai-loading-progress-wrap">
               <div className="ai-loading-meta">
-                <span>24,532 records</span>
+                <span>{recordCount ? recordCount.toLocaleString() : 'Payroll'} records</span>
                 <span>{Math.round(pct)}% complete</span>
               </div>
               <div className="ai-prog-track">
@@ -121,7 +122,7 @@ const AILoadingScreen = ({ onComplete, theme, onToggleTheme }) => {
 
             <div className="ai-loading-footer">
               <i className="ti ti-shield-lock" style={{ color: 'var(--accent)', fontSize: 13 }} />
-              <span>All analysis is performed locally. No payroll data leaves your environment.</span>
+              <span>Payroll data is scored by the configured VIRGIL backend and AI service.</span>
             </div>
           </div>
         </div>

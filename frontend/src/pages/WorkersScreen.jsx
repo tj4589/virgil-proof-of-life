@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from '../components/Sidebar';
-import { demoWorkers, formatMoney } from '../lib/demoData';
+import { formatMoney, normalizeReason } from '../lib/workerState';
 import { getWorkers } from '../lib/api';
 import { useEffect } from 'react';
 
-const fallbackScore = (i) => 55 + ((i * 17) % 41);
 const normalizeWorker = (w, i) => ({
   id: w.id || w.staffId || `VIR-${100000 + i}`,
   name: w.name || `${w.firstName || 'Worker'} ${w.lastName || i + 1}`,
@@ -13,8 +12,8 @@ const normalizeWorker = (w, i) => ({
   nin: w.nin || '—',
   salary: Number(w.salary || 0),
   status: w.status || 'VERIFIED',
-  score: w.score || w.aiConfidence || fallbackScore(i),
-  reasons: w.reasons || (w.aiReasons ? (Array.isArray(w.aiReasons) ? w.aiReasons : []) : (w.status === 'FLAGGED' ? demoWorkers[2].reasons : [])),
+  score: Number(w.aiConfidence ?? w.score ?? 0),
+  reasons: Array.isArray(w.aiReasons) ? w.aiReasons.map(normalizeReason).filter(Boolean) : [],
   squadRef: w.squadRef || null,
   bankAccount: w.bankAccount || w.bank_account || '—',
 });
@@ -23,6 +22,7 @@ const RISK_LEVELS = [
   { id: 'all', label: 'All' },
   { id: 'FLAGGED', label: 'Flagged' },
   { id: 'VERIFIED', label: 'Verified' },
+  { id: 'PAID', label: 'Paid' },
 ];
 
 const WorkerModal = ({ worker, onClose }) => (
@@ -48,7 +48,7 @@ const WorkerModal = ({ worker, onClose }) => (
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span className={`badge ${worker.status === 'FLAGGED' ? 'badge-red' : 'badge-green'}`}>
-            {worker.status === 'FLAGGED' ? 'Ghost Risk' : 'Verified'}
+            {worker.status === 'FLAGGED' ? 'Ghost Risk' : worker.status}
           </span>
           <button className="modal-close" onClick={onClose}><i className="ti ti-x" /></button>
         </div>
@@ -63,7 +63,7 @@ const WorkerModal = ({ worker, onClose }) => (
               <div style={{ width: `${worker.score}%`, background: worker.score >= 60 ? 'var(--accent)' : 'var(--success)' }} />
             </div>
             <div className="modal-score-verdict">
-              {worker.score >= 80 ? 'HIGH RISK — Payment blocked' : worker.score >= 60 ? 'ELEVATED — Needs review' : 'LOW RISK — Payment cleared'}
+              {worker.score >= 80 ? 'HIGH RISK - Payment blocked' : worker.score >= 60 ? 'ELEVATED - Needs review' : 'LOW RISK - Payment cleared'}
             </div>
           </div>
           <div className="worker-modal-meta">
@@ -71,7 +71,7 @@ const WorkerModal = ({ worker, onClose }) => (
               { label: 'NIN', val: worker.nin },
               { label: 'Salary', val: formatMoney(worker.salary) },
               { label: 'Bank Account', val: worker.bankAccount },
-              { label: 'Squad Ref', val: worker.squadRef || 'Not released' },
+              { label: 'Squad Ref', val: worker.squadRef || (worker.status === 'PAID' || worker.status === 'CONFIRMED' ? 'Recorded in payment ledger' : 'Not released') },
             ].map(({ label, val }) => (
               <div key={label} className="worker-modal-field">
                 <span>{label}</span>
@@ -245,13 +245,15 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
                     <td>{formatMoney(worker.salary)}</td>
                     <td>
                       <span className={`badge ${worker.status === 'FLAGGED' ? 'badge-red' : 'badge-green'}`}>
-                        {worker.status === 'FLAGGED' ? 'Flagged' : 'Verified'}
+                        {worker.status === 'FLAGGED' ? 'Flagged' : worker.status}
                       </span>
                     </td>
                     <td>
                       {worker.status === 'FLAGGED'
                         ? <span className="badge badge-red">Blocked</span>
-                        : <span className="badge badge-green">Queued</span>
+                        : worker.status === 'VERIFIED'
+                          ? <span className="badge badge-amber">Queued</span>
+                          : <span className="badge badge-green">Released</span>
                       }
                     </td>
                     <td>

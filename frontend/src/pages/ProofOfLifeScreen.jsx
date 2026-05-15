@@ -20,7 +20,8 @@ const ProofOfLifeScreen = ({ theme, onToggleTheme }) => {
 
   useEffect(() => {
     if (step === 'camera') {
-      setPrompt(prompts[Math.floor(Math.random() * prompts.length)]);
+      const promptIndex = Math.abs(staffId.split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0)) % prompts.length;
+      setPrompt(prompts[promptIndex]);
       
       // Simulate webcam initialization
       navigator.mediaDevices.getUserMedia({ video: true })
@@ -38,16 +39,19 @@ const ProofOfLifeScreen = ({ theme, onToggleTheme }) => {
     if (step === 'analyzing') {
       submitPol();
     }
+
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject && step === 'camera') {
+        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      }
+    };
   }, [step]);
 
   const submitPol = async () => {
     try {
-      // Simulate API call with a random confidence between 70 and 99
-      const confidence = Math.floor(Math.random() * 30) + 70;
       const res = await verifyPol({
         staffId: staffId.toUpperCase(),
-        confidence,
-        livenessPassed: confidence > 75
+        livenessPassed: otp.length >= 4
       });
       setResult(res.status);
       setStep('result');

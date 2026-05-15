@@ -1,30 +1,20 @@
 import { useEffect, useState } from 'react';
-import { getWorkers } from '../lib/api';
+import { getAuditLog, getStats, getWorkers } from '../lib/api';
 import { Sidebar } from '../components/Sidebar';
-import { aiSignals, auditEntries, demoWorkers, formatMoney, getDemoMetrics } from '../lib/demoData';
-
-const fallbackScore = (index) => 55 + ((index * 17) % 41);
-
-const normalizeWorker = (worker, index) => ({
-  id: worker.id || worker.staffId || `VIR-${100000 + index}`,
-  name: worker.name || `${worker.firstName || 'Worker'} ${worker.lastName || index + 1}`,
-  department: worker.department || 'Unassigned',
-  nin: worker.nin,
-  salary: worker.salary || 0,
-  status: worker.status || 'VERIFIED',
-  score: worker.score || worker.aiConfidence || fallbackScore(index),
-  reasons: worker.reasons || (worker.aiReasons ? (Array.isArray(worker.aiReasons) ? worker.aiReasons : []) : (worker.status === 'FLAGGED' ? demoWorkers[2].reasons : [])),
-  squadRef: worker.squadRef || null,
-});
+import { computeMetrics, formatMoney, normalizeWorker, signalCountsFromWorkers } from '../lib/workerState';
 
 const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
   const [workers, setWorkers] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [auditLog, setAuditLog] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getWorkers()
-      .then(data => {
+    Promise.all([getWorkers(), getStats().catch(() => null), getAuditLog().catch(() => [])])
+      .then(([data, summary, audit]) => {
         setWorkers(data.length ? data.map(normalizeWorker) : []);
+        setStats(summary);
+        setAuditLog(audit);
         setIsLoading(false);
       })
       .catch(() => {
@@ -34,12 +24,26 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
   }, []);
 
   const handleLoadDemo = () => {
-    localStorage.setItem('virgil_demo_mode', 'true');
-    window.location.reload();
+    onUpload();
   };
 
-  const metrics = getDemoMetrics(workers);
-  const topFlagged = workers.filter(worker => worker.status === 'FLAGGED')[0] || demoWorkers[2];
+  const localMetrics = computeMetrics(workers);
+  const metrics = {
+    total: stats?.totalWorkers ?? localMetrics.total,
+    flagged: stats?.flaggedCount ?? localMetrics.flagged,
+    verified: stats?.verifiedCount ?? localMetrics.verified,
+    blockedAmount: stats?.blockedAmount ?? localMetrics.blockedAmount,
+    integrity: stats?.integrity ?? localMetrics.integrity,
+  };
+  const topFlagged = workers.filter(worker => worker.status === 'FLAGGED').sort((a, b) => b.score - a.score)[0];
+  const signals = stats?.signalCounts?.length
+    ? stats.signalCounts.map(signal => ({
+      label: signal.label,
+      value: signal.count,
+      severity: signal.count > 1 ? 'high' : 'medium',
+      detail: `${signal.count} active worker${signal.count === 1 ? '' : 's'} affected`
+    }))
+    : signalCountsFromWorkers(workers);
 
   const aiStages = [
     { icon: 'ti-file-upload', label: 'Batch intake', detail: 'CSV payroll records normalized' },
@@ -117,11 +121,11 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
             <div className="ai-orb-card">
               <div className="ai-orb">
                 <i className="ti ti-brain" />
-                <span>{topFlagged.score}%</span>
+                <span>{topFlagged?.score ?? 0}%</span>
               </div>
               <div className="ai-orb-meta">
                 <strong>Ghost probability</strong>
-                <span>{topFlagged.name} blocked by Squad gate</span>
+                <span>{topFlagged ? `${topFlagged.name} blocked by Squad gate` : 'No active anomalies in this dataset'}</span>
               </div>
             </div>
           </section>
@@ -162,7 +166,7 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
             <div className="card">
               <div className="card-header"><span className="card-title">Fraud Signals</span><button className="text-button" onClick={() => onNav('detection')}>Open AI results</button></div>
               <div className="signal-stack">
-                {aiSignals.map(signal => (
+                {signals.length ? signals.map(signal => (
                   <div key={signal.label} className={`signal-card ${signal.severity}`}>
                     <div>
                       <strong>{signal.label}</strong>
@@ -170,7 +174,7 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
                     </div>
                     <b>{signal.value}</b>
                   </div>
-                ))}
+                )) : <div className="muted-copy" style={{ padding: 16 }}>No AI anomaly signals in the active dataset.</div>}
               </div>
             </div>
 
@@ -178,14 +182,14 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
               <div className="card-header"><span className="card-title">AI Explanation Focus</span><span className="badge badge-red">Blocked</span></div>
               <div className="worker-focus-head">
                 <div>
-                  <strong>{topFlagged.name}</strong>
-                  <span>{topFlagged.id} - {topFlagged.department}</span>
+                  <strong>{topFlagged?.name || 'No flagged worker'}</strong>
+                  <span>{topFlagged ? `${topFlagged.id} - ${topFlagged.department}` : 'Active dataset is currently clear'}</span>
                 </div>
-                <div className="confidence-pill">{topFlagged.score}%</div>
+                <div className="confidence-pill">{topFlagged?.score ?? 0}%</div>
               </div>
-              <div className="confidence-track"><div style={{ width: `${topFlagged.score}%` }} /></div>
+              <div className="confidence-track"><div style={{ width: `${topFlagged?.score ?? 0}%` }} /></div>
               <div className="reason-list">
-                {(topFlagged.reasons || []).map(reason => (
+                {(topFlagged?.reasons || []).map(reason => (
                   <div key={reason.flag} className={`reason-row ${reason.severity}`}>
                     <span>{reason.flag}</span>
                     <small>{reason.detail}</small>
@@ -197,9 +201,9 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
             <div className="card">
               <div className="card-header"><span className="card-title">Audit Pulse</span><button className="text-button" onClick={() => onNav('audit')}>View audit</button></div>
               <div className="audit-mini">
-                {auditEntries.slice(0, 5).map(entry => (
-                  <div key={`${entry.time}-${entry.action}`} className={`audit-mini-row ${entry.status}`}>
-                    <span>{entry.time}</span>
+                {auditLog.slice(0, 5).map(entry => (
+                  <div key={`${entry.id}-${entry.action}`} className={`audit-mini-row ${entry.status}`}>
+                    <span>{new Date(entry.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     <div>
                       <strong>{entry.action}</strong>
                       <small>{entry.detail}</small>

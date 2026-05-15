@@ -1,20 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getWorkers } from '../lib/api';
 import { Sidebar } from '../components/Sidebar';
-import { demoWorkers, formatMoney } from '../lib/demoData';
-
-const fallbackScore = (index) => 55 + ((index * 17) % 41);
-
-const normalizeWorker = (worker, index) => ({
-  id: worker.id || worker.staffId || `VIR-${100000 + index}`,
-  name: worker.name || `${worker.firstName || 'Worker'} ${worker.lastName || index + 1}`,
-  department: worker.department || 'Unassigned',
-  nin: worker.nin,
-  salary: worker.salary || 0,
-  status: worker.status || 'VERIFIED',
-  score: worker.score || worker.aiConfidence || fallbackScore(index),
-  reasons: worker.reasons || (worker.status === 'FLAGGED' ? demoWorkers[2].reasons : []),
-});
+import { formatMoney, normalizeWorker } from '../lib/workerState';
 
 const ResultsScreen = ({ onDashboard, onNav, theme, onToggleTheme }) => {
   const [workers, setWorkers] = useState([]);
@@ -27,9 +14,9 @@ const ResultsScreen = ({ onDashboard, onNav, theme, onToggleTheme }) => {
   }, []);
 
   const flagged = workers.filter(worker => worker.status === 'FLAGGED');
-  const selected = flagged[0] || demoWorkers[2];
+  const selected = flagged.sort((a, b) => b.score - a.score)[0];
   const display = filter === 'flagged' ? flagged
-    : filter === 'cleared' ? workers.filter(worker => worker.status !== 'FLAGGED')
+    : filter === 'cleared' ? workers.filter(worker => ['VERIFIED', 'PAID', 'CONFIRMED'].includes(worker.status))
     : workers;
 
   return (
@@ -60,16 +47,16 @@ const ResultsScreen = ({ onDashboard, onNav, theme, onToggleTheme }) => {
               <div className="card ai-detail-card">
                 <div className="card-header"><span className="card-title">Flagged Worker Explanation</span><span className="badge badge-red">Payment blocked</span></div>
                 <div className="ai-detail-body">
-                  <div className="worker-focus-head">
+                  {selected ? <div className="worker-focus-head">
                     <div>
                       <strong>{selected.name}</strong>
                       <span>{selected.id} - NIN {selected.nin} - {formatMoney(selected.salary)}</span>
                     </div>
                     <div className="confidence-pill">{selected.score}%</div>
-                  </div>
-                  <div className="confidence-track large"><div style={{ width: `${selected.score}%` }} /></div>
+                  </div> : <div className="muted-copy">No flagged workers in the active dataset.</div>}
+                  <div className="confidence-track large"><div style={{ width: `${selected?.score || 0}%` }} /></div>
                   <div className="reason-list expanded">
-                    {selected.reasons.map(reason => (
+                    {(selected?.reasons || []).map(reason => (
                       <div key={reason.flag} className={`reason-row ${reason.severity}`}>
                         <div><span>{reason.flag}</span><small>{reason.detail}</small></div>
                         <b>{reason.severity}</b>
