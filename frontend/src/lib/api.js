@@ -16,6 +16,16 @@ export const getWorkers = async () => {
   return res.json();
 };
 
+export const updateWorkerStatus = async (id, status) => {
+  const res = await fetch(`${API_URL}/workers/${id}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status }),
+  });
+  if (!res.ok) throw new Error('Failed to update worker status');
+  return res.json();
+};
+
 export const releasePayments = async () => {
   const res = await fetch(`${API_URL}/payments/release-batch`, { method: 'POST' });
   if (!res.ok) throw new Error('Release failed');

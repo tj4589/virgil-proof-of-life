@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import List
 import numpy as np
 from sklearn.ensemble import IsolationForest
 import random
@@ -8,7 +9,6 @@ import uvicorn
 
 app = FastAPI(title="GhostDetect ML Service")
 
-# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,91 +17,236 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 class WorkerRecord(BaseModel):
     nin_count: int = 1
     account_count: int = 1
     salary_zscore: float = 0.0
     missing_score: int = 0
+    attendance_score: float = 90.0       # 0-100; < 20 = strong ghost signal
+    days_since_verification: float = 14.0 # 0-999; > 90 = suspicious
 
-# --- ML Model Initialization ---
-# We use an Unsupervised Isolation Forest to detect multivariate anomalies
-# that simple rule-based heuristics might miss (e.g. slight Z-score + 2 shared accounts).
-model = IsolationForest(n_estimators=100, contamination=0.1, random_state=42)
 
-# Generate baseline training data (synthetic representation of "normal" workers vs "ghost" workers)
-X_train = []
+# ---------------------------------------------------------------------------
+# 6-feature IsolationForest
+# Features: [nin_count, account_count, salary_zscore, missing_score,
+#            attendance_score, days_since_verification]
+# ---------------------------------------------------------------------------
+rng = np.random.default_rng(42)
+model = IsolationForest(n_estimators=150, contamination=0.12, random_state=42)
+
+X_train: List[List[float]] = []
+
+# Normal workers — tight clusters around expected values
 for _ in range(5000):
-    # Normal worker
-    X_train.append([1, 1, np.random.normal(0, 0.5), 0])
-for _ in range(500):
-    # Ghost worker anomalies
     X_train.append([
-        random.choice([1, 2, 3]), 
-        random.choice([1, 2, 4]), 
-        np.random.normal(2.5, 1.0), 
-        random.choice([0, 1, 2])
+        1,
+        1,
+        float(rng.normal(0, 0.4)),
+        0,
+        float(np.clip(rng.normal(90, 8), 60, 100)),
+        float(np.clip(rng.normal(14, 7), 1, 60)),
     ])
 
-# Pre-train the model in memory
-print("Training IsolationForest model on 5,500 baseline records...")
+# Ghost / anomalous workers — four distinct fraud archetypes
+for _ in range(700):
+    pattern = random.choice(["duplicate_account", "inactive_ghost", "salary_fraud", "mixed"])
+
+    if pattern == "duplicate_account":
+        X_train.append([
+            float(random.choice([1, 2])),
+            float(random.randint(2, 5)),
+            float(rng.normal(0.4, 0.5)),
+            float(random.choice([0, 1])),
+            float(np.clip(rng.normal(35, 20), 0, 100)),
+            float(np.clip(rng.normal(100, 50), 0, 999)),
+        ])
+    elif pattern == "inactive_ghost":
+        X_train.append([
+            1,
+            1,
+            float(rng.normal(0, 0.4)),
+            float(random.choice([1, 2])),
+            float(np.clip(rng.normal(5, 5), 0, 20)),
+            float(np.clip(rng.normal(250, 60), 90, 999)),
+        ])
+    elif pattern == "salary_fraud":
+        X_train.append([
+            float(random.choice([1, 2])),
+            1,
+            float(rng.normal(3.2, 1.0)),
+            0,
+            float(np.clip(rng.normal(75, 15), 40, 100)),
+            float(np.clip(rng.normal(25, 15), 1, 90)),
+        ])
+    else:  # mixed — subtle combination the rules alone might miss
+        X_train.append([
+            float(random.choice([1, 2, 3])),
+            float(random.choice([1, 2, 3])),
+            float(rng.normal(1.8, 0.8)),
+            float(random.choice([0, 1, 2])),
+            float(np.clip(rng.normal(22, 12), 0, 60)),
+            float(np.clip(rng.normal(180, 60), 60, 999)),
+        ])
+
+print(f"Training IsolationForest on {len(X_train)} samples across 4 ghost archetypes...")
 model.fit(X_train)
-print("Model trained and ready.")
+print("Model ready — 6-feature anomaly detection active.")
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _iso_catch_probability(features: np.ndarray) -> float:
+    """Return 0-100 probability estimate from IsolationForest decision score.
+    Negative decision_function values → more anomalous."""
+    raw = model.decision_function(features)[0]
+    # Typical range: -0.5 (anomaly) to +0.3 (normal). Map to 0-100 ghost probability.
+    prob = max(0.0, min(100.0, 50.0 - raw * 120.0))
+    return prob
+
+
+# ---------------------------------------------------------------------------
+# Routes
+# ---------------------------------------------------------------------------
 
 @app.get("/")
 async def root():
-    return {"status": "ok", "model_type": "IsolationForest", "trained_samples": len(X_train)}
+    return {
+        "status": "ok",
+        "model": "IsolationForest",
+        "features": 6,
+        "training_samples": len(X_train),
+    }
+
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy", "model_ready": True}
+
 
 @app.post("/predict")
 async def predict(worker: WorkerRecord):
-    # Construct feature vector
     features = np.array([[
-        worker.nin_count, 
-        worker.account_count, 
-        worker.salary_zscore, 
-        worker.missing_score
+        worker.nin_count,
+        worker.account_count,
+        worker.salary_zscore,
+        worker.missing_score,
+        worker.attendance_score,
+        worker.days_since_verification,
     ]])
-    
-    # Predict anomaly (-1 is anomaly, 1 is normal)
-    prediction = model.predict(features)[0]
-    
-    # Calculate an anomaly score (lower is more abnormal, so we invert it for a confidence percentage)
-    raw_score = model.decision_function(features)[0]
-    
-    # Convert raw score (-0.5 to 0.5 usually) into a 0-100% confidence scale of being a ghost worker
-    # Negative raw_score means highly likely anomaly (ghost)
-    base_confidence = 50 - (raw_score * 100)
-    prob = max(0.0, min(100.0, base_confidence))
-    
-    reasons = []
-    
-    # Enhance explainability using SHAP-like heuristic breakdowns
-    if worker.nin_count > 1:
-        reasons.append(f'NIN duplicated across {worker.nin_count} profiles (High Risk)')
-        prob += 15
-    if worker.account_count > 1:
-        reasons.append(f'Bank account shared by {worker.account_count} profiles (Critical Risk)')
-        prob += 20
-    if abs(worker.salary_zscore) > 2.0:
-        reasons.append(f'Salary deviates heavily from workforce mean (Z-Score: {round(worker.salary_zscore, 2)})')
-        prob += 10
-    if worker.missing_score > 0:
-        reasons.append(f'Profile is missing {worker.missing_score} mandatory HR fields')
-        prob += 5
-        
-    prob = min(99.9, prob)
-    
-    # If the IsolationForest explicitly flagged it as -1, ensure it's categorized as a GHOST
-    if prediction == -1 and prob < 60:
-        prob = 65.0
-        reasons.append('Isolation Forest ML algorithm detected complex multivariate anomaly')
 
-    label = 'GHOST' if prob >= 60 else 'VERIFIED'
-    
+    iso_prediction = model.predict(features)[0]   # -1 anomaly, 1 normal
+    iso_prob = _iso_catch_probability(features)
+
+    # ------------------------------------------------------------------
+    # Rule-based scoring — each rule maps to an explicit ghost signal.
+    # Contributions are the ground-truth % we report; IsolationForest
+    # acts as a catch-all for subtle multi-feature patterns the rules miss.
+    # ------------------------------------------------------------------
+    rules_score = 0.0
+    reasons = []
+
+    # 1. Shared NIN
+    if worker.nin_count > 1:
+        contrib = min(18, 10 + (worker.nin_count - 2) * 4)
+        reasons.append({
+            "flag": f"NIN shared by {worker.nin_count} payroll profiles",
+            "severity": "high",
+            "contribution": contrib,
+        })
+        rules_score += contrib
+
+    # 2. Shared bank account (strongest single signal)
+    if worker.account_count > 1:
+        contrib = min(25, 15 + (worker.account_count - 2) * 4)
+        reasons.append({
+            "flag": f"Bank account linked to {worker.account_count} separate employees",
+            "severity": "high",
+            "contribution": contrib,
+        })
+        rules_score += contrib
+
+    # 3. Salary outlier
+    if abs(worker.salary_zscore) > 2.0:
+        zscore_label = round(worker.salary_zscore, 2)
+        contrib = min(18, int(abs(worker.salary_zscore) * 4))
+        reasons.append({
+            "flag": f"Salary anomaly detected — Z-score {zscore_label} vs workforce mean",
+            "severity": "medium" if abs(worker.salary_zscore) < 3.0 else "high",
+            "contribution": contrib,
+        })
+        rules_score += contrib
+
+    # 4. Missing mandatory fields
+    if worker.missing_score > 0:
+        contrib = worker.missing_score * 6
+        reasons.append({
+            "flag": f"{worker.missing_score} mandatory HR field{'s' if worker.missing_score > 1 else ''} absent from profile",
+            "severity": "medium",
+            "contribution": contrib,
+        })
+        rules_score += contrib
+
+    # 5. Attendance anomaly (< 20% marks inactive / ghost status)
+    if worker.attendance_score < 20:
+        contrib = 20 if worker.attendance_score < 10 else 14
+        reasons.append({
+            "flag": f"Attendance critically low at {round(worker.attendance_score, 1)}%",
+            "severity": "high",
+            "contribution": contrib,
+        })
+        rules_score += contrib
+    elif worker.attendance_score < 40:
+        contrib = 8
+        reasons.append({
+            "flag": f"Below-average attendance ({round(worker.attendance_score, 1)}%) recorded",
+            "severity": "medium",
+            "contribution": contrib,
+        })
+        rules_score += contrib
+
+    # 6. Stale biometric / verification date
+    if worker.days_since_verification > 180:
+        contrib = 15
+        reasons.append({
+            "flag": f"Biometric verification not updated in {int(worker.days_since_verification)} days",
+            "severity": "high",
+            "contribution": contrib,
+        })
+        rules_score += contrib
+    elif worker.days_since_verification > 90:
+        contrib = 8
+        reasons.append({
+            "flag": f"Last verified {int(worker.days_since_verification)} days ago — verification overdue",
+            "severity": "medium",
+            "contribution": contrib,
+        })
+        rules_score += contrib
+
+    # ------------------------------------------------------------------
+    # IsolationForest catch-all: fires ONLY when no strong rules triggered
+    # This prevents double-counting while still catching subtle anomalies.
+    # ------------------------------------------------------------------
+    if rules_score < 25 and iso_prediction == -1 and iso_prob > 55:
+        ml_contrib = round(min(28, iso_prob - 40), 1)
+        reasons.append({
+            "flag": "Multivariate anomaly cluster detected by ML (no single dominant rule)",
+            "severity": "medium",
+            "contribution": ml_contrib,
+        })
+        rules_score += ml_contrib
+
+    final_score = min(99.9, rules_score)
+    label = "GHOST" if final_score >= 60 else "VERIFIED"
+
     return {
-        'label': label,
-        'confidence': round(prob, 1),
-        'reasons': reasons
+        "label": label,
+        "confidence": round(final_score, 1),
+        "reasons": reasons,
     }
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

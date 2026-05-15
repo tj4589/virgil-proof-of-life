@@ -59,11 +59,11 @@ const DEMO_DATASETS = [
     id: 'chicago_salaries_export',
     name: 'External Workforce Records Sample',
     type: 'Simulated External Source',
-    workers: 800,
+    workers: publicHR.count,
     complexity: 'Medium',
-    density: '5.0% Anomaly Density',
-    desc: 'Simulated external workforce dataset. Tests actual field mapping behavior.',
-    external: true
+    density: '~8% Anomaly Density',
+    desc: 'Simulated external HR export with non-standard column names. Triggers field-mapping UI.',
+    csv: publicHR.csv
   },
   {
     id: 'demo_clean_payroll',
@@ -124,7 +124,7 @@ function applyMappingAndFormat(headers, rows, mapping) {
       salary: parseFloat(getVal('salary')) || 0,
       bankAccount: getVal('account_number') || '',
       nin: `10000000${String(i).padStart(2, '0')}`,
-      attendanceScore: parseFloat(getVal('attendance_score')) || 0,
+      attendanceScore: (() => { const v = getVal('attendance_score'); return v !== '' && v != null ? (parseFloat(v) || 0) : 90; })(),
       lastVerified: getVal('last_verification') || null,
     };
   });
@@ -188,21 +188,8 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
     processRawData('sample-payroll-may-2026.csv', ghostPayroll.csv);
   };
 
-  const handleLoadDataset = async (ds) => {
-    if (ds.external) {
-      setPhase('uploading');
-      try {
-        const res = await fetch('/real-hr-data.csv');
-        const text = await res.text();
-        setPhase('idle');
-        processRawData(ds.id + '.csv', text);
-      } catch (e) {
-        alert('Failed to fetch dataset from web.');
-        setPhase('idle');
-      }
-    } else {
-      processRawData(ds.id + '.csv', ds.csv);
-    }
+  const handleLoadDataset = (ds) => {
+    processRawData(ds.id + '.csv', ds.csv);
   };
 
   const confirmMapping = () => {

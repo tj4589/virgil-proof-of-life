@@ -7,32 +7,40 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
   const [workers, setWorkers] = useState([]);
   const [stats, setStats] = useState(null);
   const [releasing, setReleasing] = useState(false);
+  const [toast, setToast] = useState(null); // { text, type }
 
-  useEffect(() => {
-    getWorkers()
-      .then(data => setWorkers(data.length ? data : []))
-      .catch(() => setWorkers([]));
-    getPaymentStats()
-      .then(data => setStats(data))
-      .catch(() => setStats(null));
-  }, []);
+  const now = new Date();
+  const batchLabel = now.toLocaleDateString('en-NG', { month: 'long', year: 'numeric' });
+  const batchDate = now.toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' });
 
-  const cleared = workers.filter(worker => worker.status === 'VERIFIED');
-  const flagged = workers.filter(worker => worker.status === 'FLAGGED');
-  const totalSalary = stats?.queuedAmount ?? cleared.reduce((sum, worker) => sum + (worker.salary || 0), 0);
-  const flaggedSalary = stats?.blockedAmount ?? flagged.reduce((sum, worker) => sum + (worker.salary || 0), 0);
-  const releasedAmount = stats?.releasedAmount ?? 0;
+  const showToast = (text, type = 'success') => {
+    setToast({ text, type });
+    setTimeout(() => setToast(null), 4500);
+  };
+
+  const reload = () => Promise.all([
+    getWorkers().then(d => setWorkers(d.length ? d : [])).catch(() => {}),
+    getPaymentStats().then(d => setStats(d)).catch(() => {}),
+  ]);
+
+  useEffect(() => { reload(); }, []);
+
+  const cleared = workers.filter(w => w.status === 'VERIFIED');
+  const flagged  = workers.filter(w => w.status === 'FLAGGED');
+  const paid     = workers.filter(w => w.status === 'PAID' || w.status === 'CONFIRMED');
+  const totalSalary   = stats?.queuedAmount   ?? cleared.reduce((s, w) => s + (w.salary || 0), 0);
+  const flaggedSalary = stats?.blockedAmount  ?? flagged.reduce((s, w)  => s + (w.salary || 0), 0);
+  const releasedAmount = stats?.releasedAmount ?? paid.reduce((s, w) => s + (w.salary || 0), 0);
 
   const handleRelease = async () => {
+    if (releasing || cleared.length === 0) return;
     setReleasing(true);
     try {
-      await releasePayments();
-      const [nextWorkers, nextStats] = await Promise.all([getWorkers(), getPaymentStats()]);
-      setWorkers(nextWorkers.length ? nextWorkers : []);
-      setStats(nextStats);
-      alert('Payments released via Squad API');
+      const result = await releasePayments();
+      await reload();
+      showToast(`${result.released} payment${result.released !== 1 ? 's' : ''} released via Squad API.`);
     } catch (e) {
-      alert(e.message);
+      showToast(e.message || 'Payment release failed.', 'error');
     }
     setReleasing(false);
   };
@@ -47,12 +55,36 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
             <div className="topbar-sub">Squad releases verified salaries and holds flagged records</div>
           </div>
           <div className="topbar-right">
-            <span className="batch-tag">May 2026 Batch</span>
-            <button className="btn btn-primary" onClick={handleRelease} disabled={releasing}>
-              <i className="ti ti-send" />{releasing ? 'Releasing...' : 'Release Verified Payments'}
+            <span className="batch-tag">{batchLabel} Batch</span>
+            <button
+              className="btn btn-primary"
+              onClick={handleRelease}
+              disabled={releasing || cleared.length === 0}
+            >
+              <i className="ti ti-send" />
+              {releasing ? 'Releasing...' : `Release ${cleared.length} Verified Payments`}
             </button>
           </div>
         </div>
+
+        {toast && (
+          <div style={{
+            margin: '0 24px',
+            padding: '12px 16px',
+            borderRadius: '8px',
+            fontSize: '13px',
+            fontWeight: 500,
+            background: toast.type === 'error' ? 'rgba(215,38,56,0.12)' : 'rgba(34,197,94,0.12)',
+            border: `1px solid ${toast.type === 'error' ? 'rgba(215,38,56,0.3)' : 'rgba(34,197,94,0.3)'}`,
+            color: toast.type === 'error' ? 'var(--red-bright)' : 'var(--green)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}>
+            <i className={`ti ${toast.type === 'error' ? 'ti-alert-circle' : 'ti-circle-check'}`} />
+            {toast.text}
+          </div>
+        )}
 
         <div className="page-pad">
           {workers.length === 0 ? (
@@ -65,9 +97,9 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
             <>
               <div className="payment-summary">
                 {[
-                  { label: 'Queued for Squad', amt: formatMoney(totalSalary), sub: `For ${cleared.length} verified workers`, icon: 'ti-clock', c: 'var(--amber)' },
-                  { label: 'Blocked Amount', amt: formatMoney(flaggedSalary), sub: `${flagged.length} high-risk workers held`, icon: 'ti-lock-dollar', c: 'var(--red-bright)' },
-                  { label: 'Previously Released', amt: releasedAmount > 0 ? formatMoney(releasedAmount) : '—', sub: releasedAmount > 0 ? 'With Squad transaction references' : 'No payments released yet', icon: 'ti-circle-check', c: 'var(--green)' },
+                  { label: 'Queued for Squad', amt: formatMoney(totalSalary), sub: `${cleared.length} verified worker${cleared.length !== 1 ? 's' : ''} ready`, icon: 'ti-clock', c: 'var(--amber)' },
+                  { label: 'Blocked Amount', amt: formatMoney(flaggedSalary), sub: `${flagged.length} high-risk worker${flagged.length !== 1 ? 's' : ''} held`, icon: 'ti-lock-dollar', c: 'var(--red-bright)' },
+                  { label: 'Previously Released', amt: releasedAmount > 0 ? formatMoney(releasedAmount) : '—', sub: releasedAmount > 0 ? `${paid.length} worker${paid.length !== 1 ? 's' : ''} paid via Squad` : 'No payments released yet', icon: 'ti-circle-check', c: 'var(--green)' },
                 ].map((item, i) => (
                   <div key={i} className="pay-card">
                     <div className="pay-card-top">
@@ -88,11 +120,15 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
                   </thead>
                   <tbody>
                     <tr>
-                      <td>May 2026 Batch</td>
+                      <td>{batchLabel} Batch</td>
                       <td>{cleared.length}</td>
                       <td style={{ fontWeight: 600, color: 'var(--text)' }}>{formatMoney(totalSalary)}</td>
-                      <td><span className="badge badge-amber">Awaiting release</span></td>
-                      <td>May 14, 2026</td>
+                      <td>
+                        {cleared.length === 0
+                          ? <span className="badge badge-green">All Released</span>
+                          : <span className="badge badge-amber">Awaiting release</span>}
+                      </td>
+                      <td>{batchDate}</td>
                     </tr>
                   </tbody>
                 </table>

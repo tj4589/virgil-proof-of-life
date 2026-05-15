@@ -134,7 +134,7 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
   });
 
   const flagged = workers.filter(w => w.status === 'FLAGGED');
-  const verified = workers.filter(w => w.status !== 'FLAGGED');
+  const verified = workers.filter(w => w.status === 'VERIFIED');
   const blockedAmount = flagged.reduce((s, w) => s + w.salary, 0);
 
   return (
