@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react';
-import { getWorkers, releasePayments } from '../lib/api';
+import { getWorkers, releasePayments, getPaymentStats } from '../lib/api';
 import { Sidebar } from '../components/Sidebar';
 import { demoWorkers, formatMoney } from '../lib/demoData';
 
 const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
   const [workers, setWorkers] = useState([]);
   const [releasing, setReleasing] = useState(false);
+  const [releasedAmount, setReleasedAmount] = useState(0);
 
   useEffect(() => {
     getWorkers()
       .then(data => setWorkers(data.length ? data : []))
       .catch(() => setWorkers([]));
+    getPaymentStats()
+      .then(stats => setReleasedAmount(stats.releasedAmount || 0))
+      .catch(() => setReleasedAmount(0));
   }, []);
 
   const cleared = workers.filter(worker => worker.status !== 'FLAGGED');
@@ -68,6 +72,7 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
                 {[
                   { label: 'Queued for Squad', amt: formatMoney(totalSalary), sub: `For ${cleared.length} verified workers`, icon: 'ti-clock', c: 'var(--amber)' },
                   { label: 'Blocked Amount', amt: formatMoney(flaggedSalary), sub: `${flagged.length} high-risk workers held`, icon: 'ti-lock-dollar', c: 'var(--red-bright)' },
+                  { label: 'Previously Released', amt: releasedAmount > 0 ? formatMoney(releasedAmount) : '—', sub: releasedAmount > 0 ? 'With Squad transaction references' : 'No payments released yet', icon: 'ti-circle-check', c: 'var(--green)' },
                 ].map((item, i) => (
                   <div key={i} className="pay-card">
                     <div className="pay-card-top">

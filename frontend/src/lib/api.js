@@ -24,7 +24,13 @@ export const getWorkers = async () => {
 
 export const releasePayments = async () => {
   const res = await fetch(`${API_URL}/payments/release-batch`, { method: 'POST' });
-  if (!res.ok) throw new Error('Failed to release payments');
+  if (!res.ok) throw new Error('Release failed');
+  return res.json();
+};
+
+export const getPaymentStats = async () => {
+  const res = await fetch(`${API_URL}/payments/stats`);
+  if (!res.ok) throw new Error('Failed to fetch payment stats');
   return res.json();
 };
 
