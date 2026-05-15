@@ -4,8 +4,7 @@
  * VIRGIL uses Squad's Transfer/Disbursement API to release verified salaries.
  * The organization has a funded Squad business account. VIRGIL authorizes
  * and initiates disbursements only for workers that have passed AI verification.
- *
- * Virtual account creation is NOT part of this flow.
+ * It also supports creating Virtual Accounts for verified workers.
  */
 
 const fetch = require('node-fetch');
@@ -18,6 +17,42 @@ const headers = {
   'Authorization': `Bearer ${SQUAD_KEY}`,
   'Content-Type':  'application/json',
 };
+
+/**
+ * Create a virtual account per verified worker.
+ * @param {object} worker - Verified worker record
+ */
+async function createWorkerAccount(worker) {
+  if (SQUAD_MODE === 'live_sandbox' && SQUAD_KEY) {
+    try {
+      const res = await fetch(`${SQUAD_BASE}/virtual-account`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          customer_identifier: worker.id || worker._id,
+          first_name: worker.firstName || worker.name.split(' ')[0],
+          last_name: worker.lastName || worker.name.split(' ').slice(1).join(' '),
+          mobile_num: worker.phone || '08000000000',
+          email: worker.email || `worker${worker.id}@virgil.local`,
+          bvn: worker.bvn || '12345678901',
+        })
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(`[SQUAD] Virtual account creation failed: ${error.message}`);
+      throw new Error(`LIVE_SANDBOX virtual account creation failed: ${error.message}`);
+    }
+  } else {
+    // MOCK_FALLBACK mode
+    console.warn(`[SQUAD] Running in MOCK_FALLBACK mode. Simulating virtual account creation for ${worker.id}.`);
+    return {
+      status: 200,
+      success: true,
+      message: "Simulated Virtual Account Created (MOCK_FALLBACK mode)",
+      data: { virtual_account_number: "0123456789" }
+    };
+  }
+}
 
 /**
  * Initiate a salary disbursement to a verified worker's bank account.
@@ -107,4 +142,4 @@ async function verifyTransaction(reference, forceMock = false) {
   }
 }
 
-module.exports = { releaseSalaryPayment, verifyTransaction };
+module.exports = { createWorkerAccount, releaseSalaryPayment, verifyTransaction };

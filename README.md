@@ -25,7 +25,7 @@ HR uploads CSV → AI scores every worker → Verified: Squad pays → Flagged: 
 ```
 
 1. **HR uploads** a payroll batch (CSV or manual entry)
-2. **AI engine** scores every worker — flags anomalies across 8 fraud signals in real time
+2. **AI engine** scores every worker — flags anomalies across 6 fraud signals in real time
 3. **Verified workers** → Squad API releases salary payment immediately
 4. **Flagged workers** → Payment blocked, HR alerted for manual review
 5. **Full audit trail** — every decision, every payment, immutably logged
@@ -62,7 +62,7 @@ HR uploads CSV → AI scores every worker → Verified: Squad pays → Flagged: 
 
 ## AI Fraud Signals
 
-The RandomForest model scores every worker on **8 signals**:
+The Isolation Forest and relationship detection system scores every worker on **6 signals**:
 
 | Signal | Description |
 |--------|-------------|
@@ -70,12 +70,10 @@ The RandomForest model scores every worker on **8 signals**:
 | `account_count` | Single bank account linked to multiple workers |
 | `salary_zscore` | Salary deviation from department average |
 | `missing_score` | Count of absent critical fields |
-| Biometric history | Days since last biometric verification |
-| Attendance anomaly | Gaps in attendance records |
-| Payroll tenure | New record with inflated salary |
-| Department mismatch | Role-to-grade inconsistency |
+| `attendance_score` | Gaps or critically low attendance records |
+| `days_since_verification`| Days since last biometric verification |
 
-> Model accuracy: **100% F1-score** on synthetic training data (1,000 labelled records)
+> Model accuracy: **Isolation Forest trained on distinct fraud archetypes**
 
 ---
 
@@ -104,7 +102,7 @@ GET  /payments/stats
 |-------|-----------|
 | Frontend | React 18, Vite, Framer Motion |
 | Backend | Node.js, Express, Sequelize |
-| AI Service | Python 3, FastAPI, scikit-learn (RandomForest) |
+| AI Service | Python 3, FastAPI, scikit-learn (Isolation Forest) |
 | OCR | Tesseract via pytesseract |
 | Database | SQLite (offline-ready, zero config) |
 | Payments | Squad API |
@@ -157,7 +155,6 @@ npm run dev
 ```bash
 cd ai
 pip install -r requirements.txt
-python model/train.py       # Train the model first
 python -m uvicorn api:app --reload
 # → http://localhost:8000
 ```
@@ -188,9 +185,6 @@ virgil-proof-of-life/
 │       └── services/      # aiService, squadService
 ├── ai/                    # Python FastAPI AI microservice
 │   ├── api.py             # FastAPI endpoints
-│   ├── model/
-│   │   ├── train.py       # RandomForest training script
-│   │   └── ghost_detector.pkl  # Trained model (gitignored)
 │   └── requirements.txt
 └── docs/                  # Architecture diagrams, demo script
 ```
@@ -205,7 +199,7 @@ See [`docs/demo-script.md`](docs/demo-script.md) for the full 5-minute demo walk
 1. Open `http://localhost:5173`
 2. Watch the cinematic splash → click through onboarding
 3. On Dashboard → click **"Upload payroll"**
-4. Upload `docs/sample-payroll.csv`
+4. Upload `demo_clean_payroll.csv` or `demo_public_hr.csv`
 5. AI scores all workers → Results screen shows flagged ghosts
 6. Navigate to **Payments** → release verified salaries via Squad
 7. Check **Audit Trail** → every action logged
