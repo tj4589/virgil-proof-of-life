@@ -18,13 +18,24 @@ const normalizeWorker = (worker, index) => ({
 });
 
 const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
-  const [workers, setWorkers] = useState(demoWorkers);
+  const [workers, setWorkers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getWorkers()
-      .then(data => setWorkers(data.length ? data.map(normalizeWorker) : demoWorkers))
-      .catch(() => setWorkers(demoWorkers));
+      .then(data => {
+        setWorkers(data.length ? data.map(normalizeWorker) : []);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setWorkers([]);
+        setIsLoading(false);
+      });
   }, []);
+
+  const handleLoadDemo = () => {
+    setWorkers(demoWorkers);
+  };
 
   const metrics = getDemoMetrics(workers);
   const topFlagged = workers.filter(worker => worker.status === 'FLAGGED')[0] || demoWorkers[2];
@@ -46,14 +57,51 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
             <div className="topbar-sub">AI payroll verification and Squad payment gating</div>
           </div>
           <div className="topbar-right">
-            <span className="batch-tag">May 2026 Batch</span>
-            <button className="btn-icon" onClick={onUpload} title="Upload payroll"><i className="ti ti-upload" /></button>
-            <button className="btn-icon" title="Refresh"><i className="ti ti-refresh" /></button>
-            <button className="btn-icon" title="Notifications"><i className="ti ti-bell" /></button>
+            <span className="batch-tag">System Ready</span>
+            {workers.length > 0 && (
+              <button className="btn-icon" onClick={onUpload} title="Upload payroll"><i className="ti ti-upload" /></button>
+            )}
           </div>
         </div>
 
-        <div className="overview-shell">
+        {isLoading ? (
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <i className="ti ti-loader" style={{ fontSize: '24px', color: 'var(--red)', animation: 'spin 1s linear infinite' }} />
+          </div>
+        ) : workers.length === 0 ? (
+          <div className="empty-dashboard" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '80px 20px' }}>
+            <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(215,38,56,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+              <i className="ti ti-file-analytics" style={{ fontSize: '32px', color: 'var(--red)' }} />
+            </div>
+            <h2 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--text)', marginBottom: '12px', letterSpacing: '-0.5px' }}>No payroll datasets have been analyzed yet.</h2>
+            <p style={{ fontSize: '15px', color: 'var(--text3)', maxWidth: '400px', lineHeight: 1.6, marginBottom: '32px' }}>
+              Upload a payroll dataset to begin workforce verification and payroll integrity analysis.
+            </p>
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <button className="btn btn-primary" onClick={onUpload}><i className="ti ti-upload" /> Upload Payroll Dataset</button>
+              <button className="btn" style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--text)', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 500 }} onClick={handleLoadDemo}>View Demo Dataset</button>
+            </div>
+            
+            <div style={{ marginTop: '80px', padding: '24px', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', maxWidth: '500px', width: '100%', textAlign: 'left' }}>
+              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '20px' }}>System Readiness</div>
+              <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', marginBottom: '20px' }}>
+                <i className="ti ti-brain" style={{ color: 'var(--red)', fontSize: '20px', padding: '8px', background: 'rgba(215,38,56,0.1)', borderRadius: '8px' }} />
+                <div>
+                  <div style={{ fontSize: '14px', color: 'var(--text)', fontWeight: 500 }}>AI Analysis Engine: Standby</div>
+                  <div style={{ fontSize: '13px', color: 'var(--text3)', marginTop: '4px' }}>Ready to ingest and score CSV records.</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                <i className="ti ti-lock-dollar" style={{ color: 'var(--green)', fontSize: '20px', padding: '8px', background: 'rgba(34,197,94,0.1)', borderRadius: '8px' }} />
+                <div>
+                  <div style={{ fontSize: '14px', color: 'var(--text)', fontWeight: 500 }}>Squad API Gateway: Connected</div>
+                  <div style={{ fontSize: '13px', color: 'var(--text3)', marginTop: '4px' }}>Awaiting verification signals to release funds.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="overview-shell">
           <section className="ai-hero">
             <div className="ai-hero-copy">
               <span className="eyebrow">Proof of Life Engine</span>
@@ -159,7 +207,7 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
