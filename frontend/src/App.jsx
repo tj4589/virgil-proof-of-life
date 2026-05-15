@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import SplashScreen     from './pages/SplashScreen';
 import AuthScreen       from './pages/AuthScreen';
 import OnboardingScreen from './pages/OnboardingScreen';
+import SystemInitializationScreen from './pages/SystemInitializationScreen';
 import DashboardScreen  from './pages/DashboardScreen';
 import UploadScreen     from './pages/UploadScreen';
 import AILoadingScreen  from './pages/AILoadingScreen';
@@ -53,8 +54,10 @@ export default function App() {
 
   if (screen === 'onboard')   return <OnboardingScreen onComplete={() => {
     localStorage.setItem('virgil_setup', 'true');
-    setScreen('dashboard');
+    setScreen('sysinit');
   }} theme={theme} onToggleTheme={toggleTheme} />;
+
+  if (screen === 'sysinit')   return <SystemInitializationScreen onComplete={() => setScreen('dashboard')} />;
   if (screen === 'upload')    return <UploadScreen    onUpload={() => setScreen('loading')} onNav={handleNav} theme={theme} onToggleTheme={toggleTheme} />;
   if (screen === 'loading')   return <AILoadingScreen onComplete={() => setScreen('results')} theme={theme} onToggleTheme={toggleTheme} />;
   if (screen === 'results')   return <ResultsScreen   onDashboard={() => setScreen('dashboard')} onNav={handleNav} theme={theme} onToggleTheme={toggleTheme} />;
