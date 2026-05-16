@@ -66,7 +66,7 @@ async function releaseSalaryPayment(worker, amount, forceMock = false) {
   const transaction_reference = `VIRGIL-SALARY-${worker.id}-${Date.now()}`;
 
   if (!forceMock && SQUAD_MODE === 'live_sandbox' && SQUAD_KEY) {
-    const url = `${SQUAD_BASE}/payout/initiate`;
+    const url = `${SQUAD_BASE}/payout/transfer`; 
     
     const payload = {
       transaction_reference,
@@ -80,7 +80,7 @@ async function releaseSalaryPayment(worker, amount, forceMock = false) {
 
     try {
       console.log(`[SQUAD] Calling LIVE Payout: ${url}`);
-
+      
       const res = await fetch(url, {
         method: 'POST',
         headers,
@@ -89,24 +89,25 @@ async function releaseSalaryPayment(worker, amount, forceMock = false) {
 
       const data = await res.json();
 
-      if (!res.ok || data.success === false) {
-        console.warn(`[SQUAD] Live payment rejected (${res.status}): ${data.message || 'Unknown error'}. Using simulated fallback.`);
-        // Fall through to simulated path below
-      } else {
-        console.log(`[SQUAD] ✅ Success:`, data.message || 'Payment initiated');
-        return data;
+      if (!res.ok) {
+        console.error(`[SQUAD] API Error [${res.status}] at ${url}:`, data);
+        return { success: false, status: res.status, message: data.message || 'Squad API Error' };
       }
+
+      console.log(`[SQUAD] ✅ Success:`, data.message || 'Payment initiated');
+      return { ...data, success: true };
     } catch (error) {
-      console.warn(`[SQUAD] Live sandbox unreachable (${error.message}). Using simulated fallback.`);
+      console.error(`[SQUAD] Network error at ${url}: ${error.message}`);
+      return { success: false, error: error.message };
     }
   }
 
-  // Simulated fallback — used when Squad rejects/is unreachable (demo & sandbox mode)
-  console.warn(`[SQUAD] Simulating payment for worker ${worker.id}.`);
+  // Only run mock if explicitly requested or no keys present
+  console.warn(`[SQUAD] Running in MOCK_FALLBACK mode for worker ${worker.id}.`);
   return {
     status: 200,
     success: true,
-    message: "Simulated Success (fallback)",
+    message: "Simulated Success (MOCK_FALLBACK)",
     data: { transaction_reference }
   };
 }
