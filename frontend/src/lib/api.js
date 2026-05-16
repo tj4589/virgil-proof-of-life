@@ -25,7 +25,10 @@ export const uploadWorkers = async (workers) => {
 export const getWorkers = async ({ limit = 200, offset = 0 } = {}) => {
   const res = await fetch(`${API_URL}/workers?limit=${limit}&offset=${offset}`);
   if (!res.ok) throw new Error('Failed to fetch workers');
-  return res.json();
+  const data = await res.json();
+  // Handle both old array response and new object response for backward compatibility
+  if (Array.isArray(data)) return { workers: data, total: data.length, stats: null };
+  return data;
 };
 
 export const updateWorkerStatus = async (id, status) => {

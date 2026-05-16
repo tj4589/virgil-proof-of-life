@@ -123,10 +123,18 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
   const [deptFilter, setDeptFilter] = useState('all');
   const [selected, setSelected] = useState(null);
 
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    getWorkers()
-      .then(data => setWorkers(data.length ? data.map(normalizeWorker) : []))
-      .catch(() => setWorkers([]));
+    setLoading(true);
+    getWorkers({ limit: 5000 })
+      .then(res => {
+        setWorkers(res.workers?.length ? res.workers.map(normalizeWorker) : []);
+        setStats(res.stats);
+      })
+      .catch(() => setWorkers([]))
+      .finally(() => setLoading(false));
   }, []);
 
   const departments = ['all', ...new Set(workers.map(w => w.department).filter(Boolean))];
@@ -138,9 +146,11 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
     return matchQuery && matchRisk && matchDept;
   });
 
-  const flagged = workers.filter(w => w.status === 'FLAGGED');
-  const verified = workers.filter(w => w.status === 'VERIFIED');
-  const blockedAmount = flagged.reduce((s, w) => s + w.salary, 0);
+  const flaggedCount = stats?.flagged ?? workers.filter(w => w.status === 'FLAGGED').length;
+  const verifiedCount = stats?.verified ?? workers.filter(w => w.status === 'VERIFIED').length;
+  const paidCount = stats?.paid ?? workers.filter(w => ['PAID', 'CONFIRMED'].includes(w.status)).length;
+  const totalCount = stats?.total ?? workers.length;
+  const blockedAmount = stats?.blockedAmount ?? 0;
 
   return (
     <div className="screen on" style={{ flexDirection: 'row' }}>
@@ -168,13 +178,13 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
           {/* Summary row */}
           <div className="tab-summary-grid" style={{ marginBottom: 16 }}>
             <div className="tab-summary-card">
-              <span>Total workers</span><strong>{workers.length}</strong>
+              <span>Total workers</span><strong>{totalCount.toLocaleString()}</strong>
             </div>
             <div className="tab-summary-card">
-              <span>Verified</span><strong className="green">{verified.length}</strong>
+              <span>Verified</span><strong className="green">{verifiedCount.toLocaleString()}</strong>
             </div>
             <div className="tab-summary-card">
-              <span>Flagged</span><strong className="red">{flagged.length}</strong>
+              <span>Flagged</span><strong className="red">{flaggedCount.toLocaleString()}</strong>
             </div>
             <div className="tab-summary-card">
               <span>Funds held</span><strong>{formatMoney(blockedAmount)}</strong>
@@ -184,18 +194,22 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
           {/* Filter bar */}
           <div className="workers-filter-bar">
             <div className="filter-tabs">
-              {RISK_LEVELS.map(lvl => (
-                <div
-                  key={lvl.id}
-                  className={`filter-tab ${riskFilter === lvl.id ? 'active' : ''}`}
-                  onClick={() => setRiskFilter(lvl.id)}
-                >
-                  {lvl.label}
-                  <span className="filter-count">
-                    {lvl.id === 'all' ? workers.length : workers.filter(w => w.status === lvl.id).length}
-                  </span>
-                </div>
-              ))}
+              {RISK_LEVELS.map(lvl => {
+                const count = lvl.id === 'all' ? totalCount 
+                           : lvl.id === 'FLAGGED' ? flaggedCount 
+                           : lvl.id === 'VERIFIED' ? verifiedCount 
+                           : lvl.id === 'PAID' ? paidCount : 0;
+                return (
+                  <div
+                    key={lvl.id}
+                    className={`filter-tab ${riskFilter === lvl.id ? 'active' : ''}`}
+                    onClick={() => setRiskFilter(lvl.id)}
+                  >
+                    {lvl.label}
+                    <span className="filter-count">{count.toLocaleString()}</span>
+                  </div>
+                );
+              })}
             </div>
             <select
               className="workers-dept-select"

@@ -18,22 +18,30 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
     setTimeout(() => setToast(null), 4500);
   };
 
-  const reload = () => Promise.all([
-    getWorkers().then(d => setWorkers(d.length ? d : [])).catch(() => {}),
-    getPaymentStats().then(d => setStats(d)).catch(() => {}),
-  ]);
+  const reload = async () => {
+    try {
+      const [workersData, statsData] = await Promise.all([
+        getWorkers({ limit: 1000 }), // Sample list for the table
+        getPaymentStats()
+      ]);
+      setWorkers(workersData.workers || []);
+      setStats(statsData);
+    } catch (e) {
+      console.error('Reload failed:', e);
+    }
+  };
 
   useEffect(() => { reload(); }, []);
 
-  const cleared = workers.filter(w => w.status === 'VERIFIED');
-  const flagged  = workers.filter(w => w.status === 'FLAGGED');
-  const paid     = workers.filter(w => w.status === 'PAID' || w.status === 'CONFIRMED');
-  const totalSalary   = stats?.queuedAmount   ?? cleared.reduce((s, w) => s + (w.salary || 0), 0);
-  const flaggedSalary = stats?.blockedAmount  ?? flagged.reduce((s, w)  => s + (w.salary || 0), 0);
-  const releasedAmount = stats?.releasedAmount ?? paid.reduce((s, w) => s + (w.salary || 0), 0);
+  const totalSalary   = stats?.queuedAmount   ?? 0;
+  const flaggedSalary = stats?.blockedAmount  ?? 0;
+  const releasedAmount = stats?.releasedAmount ?? 0;
+  const clearedCount = stats?.verifiedCount ?? 0;
+  const flaggedCount = stats?.flaggedCount ?? 0;
+  const paidCount = stats?.paidCount ?? 0;
 
   const handleRelease = async () => {
-    if (releasing || cleared.length === 0) return;
+    if (releasing || clearedCount === 0) return;
     setReleasing(true);
     try {
       const result = await releasePayments();
@@ -41,8 +49,9 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
       showToast(`${result.released} payment${result.released !== 1 ? 's' : ''} released via Squad API.`);
     } catch (e) {
       showToast(e.message || 'Payment release failed.', 'error');
+    } finally {
+      setReleasing(false);
     }
-    setReleasing(false);
   };
 
   return (
@@ -59,10 +68,10 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
             <button
               className="btn btn-primary"
               onClick={handleRelease}
-              disabled={releasing || cleared.length === 0}
+              disabled={releasing || clearedCount === 0}
             >
               <i className="ti ti-send" />
-              {releasing ? 'Releasing...' : `Release ${cleared.length} Verified Payments`}
+              {releasing ? 'Releasing...' : `Release ${clearedCount.toLocaleString()} Verified Payments`}
             </button>
           </div>
         </div>
@@ -97,9 +106,9 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
             <>
               <div className="payment-summary">
                 {[
-                  { label: 'Queued for Squad', amt: formatMoney(totalSalary), sub: `${cleared.length} verified worker${cleared.length !== 1 ? 's' : ''} ready`, icon: 'ti-clock', c: 'var(--amber)' },
-                  { label: 'Blocked Amount', amt: formatMoney(flaggedSalary), sub: `${flagged.length} high-risk worker${flagged.length !== 1 ? 's' : ''} held`, icon: 'ti-lock-dollar', c: 'var(--red-bright)' },
-                  { label: 'Previously Released', amt: releasedAmount > 0 ? formatMoney(releasedAmount) : '—', sub: releasedAmount > 0 ? `${paid.length} worker${paid.length !== 1 ? 's' : ''} paid via Squad` : 'No payments released yet', icon: 'ti-circle-check', c: 'var(--green)' },
+                  { label: 'Queued for Squad', amt: formatMoney(totalSalary), sub: `${clearedCount.toLocaleString()} verified worker${clearedCount !== 1 ? 's' : ''} ready`, icon: 'ti-clock', c: 'var(--amber)' },
+                  { label: 'Blocked Amount', amt: formatMoney(flaggedSalary), sub: `${flaggedCount.toLocaleString()} high-risk worker${flaggedCount !== 1 ? 's' : ''} held`, icon: 'ti-lock-dollar', c: 'var(--red-bright)' },
+                  { label: 'Previously Released', amt: releasedAmount > 0 ? formatMoney(releasedAmount) : '—', sub: releasedAmount > 0 ? `${paidCount.toLocaleString()} worker${paidCount !== 1 ? 's' : ''} paid via Squad` : 'No payments released yet', icon: 'ti-circle-check', c: 'var(--green)' },
                 ].map((item, i) => (
                   <div key={i} className="pay-card">
                     <div className="pay-card-top">
@@ -121,10 +130,10 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
                   <tbody>
                     <tr>
                       <td>{batchLabel} Batch</td>
-                      <td>{cleared.length}</td>
+                      <td>{clearedCount.toLocaleString()}</td>
                       <td style={{ fontWeight: 600, color: 'var(--text)' }}>{formatMoney(totalSalary)}</td>
                       <td>
-                        {cleared.length === 0
+                        {clearedCount === 0
                           ? <span className="badge badge-green">All Released</span>
                           : <span className="badge badge-amber">Awaiting release</span>}
                       </td>

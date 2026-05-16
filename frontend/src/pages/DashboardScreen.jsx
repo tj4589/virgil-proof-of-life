@@ -10,9 +10,13 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([getWorkers(), getStats().catch(() => null), getAuditLog().catch(() => [])])
-      .then(([data, summary, audit]) => {
-        setWorkers(data.length ? data.map(normalizeWorker) : []);
+    Promise.all([
+      getWorkers({ limit: 50 }), // Dashboard only needs a small sample for the UI
+      getStats().catch(() => null), 
+      getAuditLog().catch(() => [])
+    ])
+      .then(([res, summary, audit]) => {
+        setWorkers(res.workers?.length ? res.workers.map(normalizeWorker) : []);
         setStats(summary);
         setAuditLog(audit);
         setIsLoading(false);
@@ -27,23 +31,22 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
     onUpload();
   };
 
-  const localMetrics = computeMetrics(workers);
   const metrics = {
-    total: stats?.totalWorkers ?? localMetrics.total,
-    flagged: stats?.flaggedCount ?? localMetrics.flagged,
-    verified: stats?.verifiedCount ?? localMetrics.verified,
-    blockedAmount: stats?.blockedAmount ?? localMetrics.blockedAmount,
-    integrity: stats?.integrity ?? localMetrics.integrity,
+    total: stats?.total ?? 0,
+    flagged: stats?.flagged ?? 0,
+    verified: stats?.verified ?? 0,
+    blockedAmount: stats?.blockedAmount ?? 0,
+    integrity: stats?.total > 0 ? Math.round(((stats.verified + stats.paid) / stats.total) * 100) : 0,
   };
   const topFlagged = workers.filter(worker => worker.status === 'FLAGGED').sort((a, b) => b.score - a.score)[0];
-  const signals = stats?.signalCounts?.length
-    ? stats.signalCounts.map(signal => ({
+  const signals = stats?.signals?.length
+    ? stats.signals.map(signal => ({
       label: signal.label,
       value: signal.count,
-      severity: signal.count > 1 ? 'high' : 'medium',
-      detail: `${signal.count} active worker${signal.count === 1 ? '' : 's'} affected`
+      severity: signal.count > 10 ? 'high' : signal.count > 0 ? 'medium' : 'low',
+      detail: `${signal.count.toLocaleString()} active worker${signal.count === 1 ? '' : 's'} affected`
     }))
-    : signalCountsFromWorkers(workers);
+    : [];
 
   const aiStages = [
     { icon: 'ti-file-upload', label: 'Batch intake', detail: 'CSV payroll records normalized' },

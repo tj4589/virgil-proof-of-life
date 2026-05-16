@@ -218,36 +218,122 @@ router.post('/upload', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const where = await buildWorkerWhere(req.query);
-    const limit = Math.min(parseInt(req.query.limit || '5000', 10), 5000);
+    const limit = Math.min(parseInt(req.query.limit || '200', 10), 5000);
     const offset = parseInt(req.query.offset || '0', 10);
-    const workers = await Worker.findAll({ where, order: [['createdAt', 'DESC']], limit, offset });
-    res.json(workers);
+    
+    const { count, rows: workers } = await Worker.findAndCountAll({ 
+      where, 
+      order: [['createdAt', 'DESC']], 
+      limit, 
+      offset 
+    });
+
+    // Also get quick stats for the UI tabs
+    const stats = await getQuickStats(where);
+
+    res.json({ workers, total: count, stats });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
+async function getQuickStats(where) {
+  const [total, flagged, verified, paid] = await Promise.all([
+    Worker.count({ where }),
+    Worker.count({ where: { ...where, status: 'FLAGGED' } }),
+    Worker.count({ where: { ...where, status: 'VERIFIED' } }),
+    Worker.count({ where: { ...where, status: { [require('sequelize').Op.in]: ['PAID', 'CONFIRMED'] } } })
+  ]);
+  return { total, flagged, verified, paid };
+}
+
 // Aggregate stats for dashboard
 router.get('/stats/summary', async (req, res) => {
   try {
+    const { Sequelize, Op } = require('sequelize');
     const where = await buildWorkerWhere(req.query);
-    const workers = await Worker.findAll({ where });
-    const flagged = workers.filter(w => w.status === 'FLAGGED');
-    const verified = workers.filter(w => w.status === 'VERIFIED');
-    const paid = workers.filter(w => w.status === 'PAID' || w.status === 'CONFIRMED');
-    const cleared = workers.filter(w => ['VERIFIED', 'PAID', 'CONFIRMED'].includes(w.status));
-
-    const signalCounts = {};
-    workers.forEach(worker => {
-      const reasons = Array.isArray(worker.aiReasons) ? worker.aiReasons : [];
-      reasons.forEach(reason => {
-        const key = reason.flag || reason.detail || 'AI anomaly signal';
-        signalCounts[key] = (signalCounts[key] || 0) + 1;
-      });
+    
+    // Use DB-side aggregation for speed with 5000+ records
+    const counts = await Worker.findAll({
+      where,
+      attributes: [
+        'status',
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count'],
+        [Sequelize.fn('SUM', Sequelize.col('salary')), 'totalSalary']
+      ],
+      group: ['status']
     });
 
-    const departmentMap = {};
-    workers.forEach(worker => {
+    const stats = {
+      total: 0,
+      flagged: 0,
+      verified: 0,
+      paid: 0,
+      cleared: 0,
+      blockedAmount: 0,
+      queuedAmount: 0,
+      releasedAmount: 0,
+      departmentStats: [],
+      signals: []
+    };
+
+    counts.forEach(c => {
+      const count = parseInt(c.get('count'), 10);
+      const salary = parseFloat(c.get('totalSalary') || 0);
+      stats.total += count;
+      if (c.status === 'FLAGGED') {
+        stats.flagged = count;
+        stats.blockedAmount = salary;
+      } else if (c.status === 'VERIFIED') {
+        stats.verified = count;
+        stats.queuedAmount = salary;
+        stats.cleared += count;
+      } else if (c.status === 'PAID' || c.status === 'CONFIRMED') {
+        stats.paid = count;
+        stats.releasedAmount += salary;
+        stats.cleared += count;
+      }
+    });
+
+    // Get department breakdown
+    const deptStats = await Worker.findAll({
+      where,
+      attributes: [
+        'department',
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']
+      ],
+      group: ['department']
+    });
+    stats.departmentStats = deptStats.map(d => ({ 
+      label: d.department || 'Unassigned', 
+      count: parseInt(d.get('count'), 10) 
+    }));
+
+    // Get signals (reasons) — this still requires some memory work but we can optimize
+    // For large scale, we only sample or aggregate the most common ones
+    const workersWithReasons = await Worker.findAll({
+      where: { ...where, status: 'FLAGGED' },
+      attributes: ['aiReasons'],
+      limit: 1000 // Sample for speed
+    });
+
+    const signalMap = {};
+    workersWithReasons.forEach(w => {
+      const reasons = Array.isArray(w.aiReasons) ? w.aiReasons : [];
+      reasons.forEach(r => {
+        const key = r.flag || 'AI anomaly signal';
+        signalMap[key] = (signalMap[key] || 0) + 1;
+      });
+    });
+    stats.signals = Object.entries(signalMap)
+      .map(([label, count]) => ({ label, count }))
+      .sort((a, b) => b.count - a.count);
+
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
       const dept = worker.department || 'Unassigned';
       if (!departmentMap[dept]) departmentMap[dept] = { dept, workers: 0, flagged: 0, riskTotal: 0 };
       departmentMap[dept].workers += 1;

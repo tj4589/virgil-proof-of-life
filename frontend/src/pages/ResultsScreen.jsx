@@ -9,9 +9,14 @@ const ResultsScreen = ({ onDashboard, onNav, theme, onToggleTheme }) => {
   const [actionMsg, setActionMsg] = useState(null); // { text, type }
   const [acting, setActing] = useState(false);
 
+  const [stats, setStats] = useState(null);
+
   const loadWorkers = () =>
-    getWorkers()
-      .then(data => setWorkers(data.length ? data.map(normalizeWorker) : []))
+    getWorkers({ limit: 500 }) // Preview more workers in results
+      .then(res => {
+        setWorkers(res.workers?.length ? res.workers.map(normalizeWorker) : []);
+        setStats(res.stats);
+      })
       .catch(() => setWorkers([]));
 
   useEffect(() => { loadWorkers(); }, []);
@@ -52,6 +57,10 @@ const ResultsScreen = ({ onDashboard, onNav, theme, onToggleTheme }) => {
   const display = filter === 'flagged' ? flagged
     : filter === 'cleared' ? workers.filter(worker => ['VERIFIED', 'PAID', 'CONFIRMED'].includes(worker.status))
     : workers;
+
+  const totalCount = stats?.total ?? workers.length;
+  const flaggedCount = stats?.flagged ?? flagged.length;
+  const clearedCount = stats?.verified ?? (totalCount - flaggedCount);
 
   return (
     <div className="screen on" style={{ flexDirection: 'row' }}>
@@ -151,12 +160,12 @@ const ResultsScreen = ({ onDashboard, onNav, theme, onToggleTheme }) => {
                   <span className="card-title">Worker Scores</span>
                   <div className="filter-tabs compact-tabs">
                     {[
-                      { id: 'all', label: 'All', count: workers.length },
-                      { id: 'flagged', label: 'Flagged', count: flagged.length },
-                      { id: 'cleared', label: 'Cleared', count: workers.length - flagged.length },
+                      { id: 'all', label: 'All', count: totalCount },
+                      { id: 'flagged', label: 'Flagged', count: flaggedCount },
+                      { id: 'cleared', label: 'Cleared', count: clearedCount },
                     ].map(item => (
                       <div key={item.id} className={`filter-tab ${filter === item.id ? 'active' : ''}`} onClick={() => setFilter(item.id)}>
-                        {item.label}<span className="filter-count">{item.count}</span>
+                        {item.label}<span className="filter-count">{item.count.toLocaleString()}</span>
                       </div>
                     ))}
                   </div>
