@@ -6,6 +6,8 @@ import numpy as np
 from sklearn.ensemble import IsolationForest
 import random
 import uvicorn
+import os
+import time
 
 app = FastAPI(title="GhostDetect ML Service")
 
@@ -89,9 +91,9 @@ for _ in range(700):
             float(np.clip(rng.normal(180, 60), 60, 999)),
         ])
 
-print(f"Training IsolationForest on {len(X_train)} samples across 4 ghost archetypes...")
+print(f"[{time.ctime()}] Training IsolationForest on {len(X_train)} samples...")
 model.fit(X_train)
-print("Model ready — 6-feature anomaly detection active.")
+print(f"[{time.ctime()}] Model ready — 6-feature anomaly detection active.")
 
 
 # ---------------------------------------------------------------------------
@@ -364,4 +366,6 @@ def predict_batch(workers: List[WorkerRecord]):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    print(f"[{time.ctime()}] Starting VIRGIL AI on port {port}...")
+    uvicorn.run(app, host="0.0.0.0", port=port)
