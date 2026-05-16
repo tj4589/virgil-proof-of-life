@@ -10,21 +10,17 @@ const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      getWorkers({ limit: 50 }), // Dashboard only needs a small sample for the UI
-      getStats().catch(() => null), 
-      getAuditLog().catch(() => [])
-    ])
-      .then(([res, summary, audit]) => {
-        setWorkers(res.workers?.length ? res.workers.map(normalizeWorker) : []);
-        setStats(summary);
-        setAuditLog(audit);
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setWorkers([]);
-        setIsLoading(false);
-      });
+    // Load Stats first (Fastest/Highest Priority)
+    getStats().then(setStats).catch(console.error);
+
+    // Load Workers
+    getWorkers({ limit: 12 }).then(res => {
+      setWorkers(res.workers?.length ? res.workers.map(normalizeWorker) : []);
+    }).catch(console.error);
+
+    // Load Audit Log
+    getAuditLog().then(setAuditLog).catch(console.error)
+    .finally(() => setIsLoading(false));
   }, []);
 
   const handleLoadDemo = () => {

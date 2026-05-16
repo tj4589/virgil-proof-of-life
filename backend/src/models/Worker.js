@@ -22,6 +22,12 @@ const Worker = sequelize.define('Worker', {
   anomalyScore: { type: DataTypes.FLOAT },
   aiReasons: { type: DataTypes.JSON },
   lastVerified: { type: DataTypes.DATE }
+}, {
+  indexes: [
+    { fields: ['batch'] },
+    { fields: ['status'] },
+    { fields: ['staffId'] }
+  ]
 });
 
 module.exports = Worker;

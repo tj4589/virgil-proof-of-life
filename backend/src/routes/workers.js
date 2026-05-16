@@ -314,7 +314,7 @@ router.get('/stats/summary', async (req, res) => {
     const workersWithReasons = await Worker.findAll({
       where: { ...where, status: 'FLAGGED' },
       attributes: ['aiReasons'],
-      limit: 1000 // Sample for speed
+      limit: 200 // Sample for speed
     });
 
     const signalMap = {};
