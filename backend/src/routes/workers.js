@@ -106,42 +106,45 @@ router.post('/upload', async (req, res) => {
       };
     });
 
-    // 2. Score all workers in one massively fast vectorized batch request
-    const aiScores = await aiService.scoreWorkersBatch(workerFeatures);
-    const scoredFlagged = aiScores.filter(score => (score.status === 'FLAGGED') || (score.label === 'GHOST'));
-    const anomalyScores = aiScores.map(score => Number(score.anomaly_score ?? score.isolation_score ?? score.risk_score ?? score.confidence ?? 0));
+    // 2. Score all workers in chunks to prevent timeouts
+    const AI_CHUNK_SIZE = 500;
+    const aiScores = [];
     
-    console.log('[UPLOAD DEBUG] feature_names: ["nin_count", "account_count", "salary_zscore", "missing_score", "attendance_score", "days_since_verification"]');
-    if (workerFeatures.length > 0) {
-      console.log(`[UPLOAD DEBUG] first_worker_features: ${JSON.stringify(workerFeatures[0])}`);
-    }
-    console.log(
-      `[UPLOAD DEBUG] AI returned records=${aiScores.length} flagged=${scoredFlagged.length} ` +
-      `anomaly_score_range=${anomalyScores.length ? Math.min(...anomalyScores).toFixed(1) : 'n/a'}..${anomalyScores.length ? Math.max(...anomalyScores).toFixed(1) : 'n/a'}`
-    );
-    if (scoredFlagged[0]) {
-      console.log('[UPLOAD DEBUG] sample flagged AI result:', JSON.stringify(scoredFlagged[0]));
-    } else {
-      const topScore = aiScores.reduce((best, item) => (
-        Number(item.risk_score ?? item.confidence ?? 0) > Number(best?.risk_score ?? best?.confidence ?? -1) ? item : best
-      ), null);
-      console.warn('[UPLOAD DEBUG] no flagged workers from AI. Top score:', JSON.stringify(topScore));
-      console.warn('[UPLOAD DEBUG] sample features:', JSON.stringify(workerFeatures.slice(0, 3)));
+    console.log(`[UPLOAD] Starting AI analysis for ${workers.length} workers in chunks of ${AI_CHUNK_SIZE}...`);
+    
+    for (let i = 0; i < workerFeatures.length; i += AI_CHUNK_SIZE) {
+      const featureChunk = workerFeatures.slice(i, i + AI_CHUNK_SIZE);
+      try {
+        const chunkResults = await aiService.scoreWorkersBatch(featureChunk);
+        aiScores.push(...chunkResults);
+        console.log(`[UPLOAD] AI progress: ${aiScores.length}/${workers.length} scored...`);
+      } catch (err) {
+        console.error(`[UPLOAD] AI chunk failed at offset ${i}:`, err.message);
+        // Fallback for failed chunk
+        const fallback = featureChunk.map(() => ({ 
+          status: 'NEEDS REVIEW', 
+          confidence: 0, 
+          reasons: [{ flag: 'AI Service Timeout', severity: 'medium', contribution: 0 }] 
+        }));
+        aiScores.push(...fallback);
+      }
     }
 
     // 3. Chunk DB inserts to prevent SQLite locking
-    const BATCH_SIZE = 100;
-    for (let i = 0; i < workers.length; i += BATCH_SIZE) {
-      const chunk = workers.slice(i, i + BATCH_SIZE);
-      const scoreChunk = aiScores.slice(i, i + BATCH_SIZE);
+    const DB_CHUNK_SIZE = 100;
+    for (let i = 0; i < workers.length; i += DB_CHUNK_SIZE) {
+      const chunk = workers.slice(i, i + DB_CHUNK_SIZE);
+      const scoreChunk = aiScores.slice(i, i + DB_CHUNK_SIZE);
 
       const processedChunk = chunk.map((w, localIndex) => {
         const absoluteIndex = i + localIndex;
-        const acct = w.bankAccount || w.bank_account || w.account_number || '';
-        const salary = Number(w.salary || 0);
-        const score = scoreChunk[localIndex] || { label: 'ERROR', status: 'NEEDS REVIEW', confidence: 0, reasons: [{ flag: 'AI score missing for worker', severity: 'high', contribution: 0 }] };
-        const status = score.status || (score.label === 'GHOST' ? 'FLAGGED' : score.label === 'ERROR' ? 'NEEDS REVIEW' : 'VERIFIED');
-        const riskScore = Number(score.risk_score ?? score.confidence ?? 0);
+        const score = scoreChunk[localIndex] || { 
+          status: 'NEEDS REVIEW', 
+          confidence: 0, 
+          reasons: [{ flag: 'AI score missing', severity: 'medium', contribution: 0 }] 
+        };
+        
+        const status = score.status || (score.label === 'GHOST' ? 'FLAGGED' : 'VERIFIED');
 
         return {
           batch: activeBatch,
