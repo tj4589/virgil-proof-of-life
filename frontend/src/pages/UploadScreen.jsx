@@ -362,9 +362,10 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
       setUploadProgress(prev => prev < 90 ? prev + Math.random() * 8 : prev);
     }, 400);
 
-    // 90-second timeout to prevent permanent hang
+    // Scale timeout with dataset size — allow ~40ms per worker, minimum 90s
+    const timeoutMs = Math.max(90000, workers.length * 40);
     const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Upload timed out. The server is taking too long. Please try again.')), 90000)
+      setTimeout(() => reject(new Error('Upload timed out. The server is taking too long. Please try again.')), timeoutMs)
     );
 
     try {
