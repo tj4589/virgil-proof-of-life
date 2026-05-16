@@ -68,10 +68,13 @@ async function releaseSalaryPayment(worker, amount, forceMock = false) {
   if (!forceMock && SQUAD_MODE === 'live_sandbox' && SQUAD_KEY) {
     const url = `${SQUAD_BASE}/payout/transfer`; 
     
+    // SQUAD requires a 6-character NIP code (bank_code)
+    let bank_code = String(worker.bankCode || '058').padStart(6, '0');
+    
     const payload = {
       transaction_reference,
       amount:                Math.round(amount * 100), // KOBO
-      bank_code:             worker.bankCode || '058',
+      bank_code,
       account_number:        worker.bankAccount,
       account_name:          worker.name || `${worker.firstName} ${worker.lastName}`,
       currency_id:           'NGN',
