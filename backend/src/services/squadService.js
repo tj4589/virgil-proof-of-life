@@ -68,7 +68,7 @@ async function releaseSalaryPayment(worker, amount, forceMock = false) {
   // Use real Squad API if mode is live_sandbox, key exists, and not forcing mock
   if (!forceMock && SQUAD_MODE === 'live_sandbox' && SQUAD_KEY) {
     try {
-      const res = await fetch(`${SQUAD_BASE}/disbursement/single`, {
+      const res = await fetch(`${SQUAD_BASE}/payout/transfer`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
