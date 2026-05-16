@@ -1,5 +1,18 @@
 const express = require('express');
 const router = express.Router();
+
+/**
+ * Smart field inference helper for CSV/JSON ingestion.
+ * Tries a list of aliases to find a value in an object.
+ */
+function inferField(obj, aliases) {
+  for (const alias of aliases) {
+    if (obj[alias] !== undefined && obj[alias] !== null && obj[alias] !== '') {
+      return obj[alias];
+    }
+  }
+  return null;
+}
 const multer = require('multer');
 const { Worker, AuditEntry, PaymentTransaction } = require('../models');
 const aiService = require('../services/aiService');
@@ -136,40 +149,61 @@ router.post('/upload', async (req, res) => {
       const chunk = workers.slice(i, i + DB_CHUNK_SIZE);
       const scoreChunk = aiScores.slice(i, i + DB_CHUNK_SIZE);
 
-      const processedChunk = chunk.map((w, localIndex) => {
-        const absoluteIndex = i + localIndex;
-        const acct = w.bankAccount || w.bank_account || w.account_number || '';
-        const salary = Number(w.salary || 0);
-        const score = scoreChunk[localIndex] || { 
-          status: 'NEEDS REVIEW', 
-          confidence: 0, 
-          reasons: [{ flag: 'AI score missing', severity: 'medium', contribution: 0 }] 
+      const processedChunk = [];
+      
+      // LOG INFERENCE ONCE PER BATCH
+      if (i === 0 && workers.length > 0) {
+        const first = workers[0];
+        const fields = {
+          bankAccount: ['bankAccount', 'bank_account', 'account_number', 'acct_no', 'account'].find(a => first[a]),
+          salary: ['salary', 'monthly_pay', 'base_salary', 'amount'].find(a => first[a]),
+          nin: ['nin', 'identity_no', 'national_id'].find(a => first[a])
         };
-        
-        const status = score.status || (score.label === 'GHOST' ? 'FLAGGED' : 'VERIFIED');
-        const riskScore = Number(score.risk_score ?? score.confidence ?? 0);
+        console.log('[UPLOAD] Smart Inference Mapping:', JSON.stringify(fields));
+      }
 
-        return {
-          batch: activeBatch,
-          staffId: w.staffId || `STF-${activeBatch}-${absoluteIndex + 1}`,
-          firstName: w.firstName || w.name?.split(' ')[0] || 'Unknown',
-          lastName: w.lastName || w.name?.split(' ').slice(1).join(' ') || 'Unknown',
-          email: w.email || '',
-          phone: w.phone || '',
-          nin: w.nin,
-          bvn: w.bvn,
-          bankAccount: acct,
-          bankCode: w.bankCode || w.bank_code || w.bank_id || '058',
-          salary,
-          department: w.department || null,
-          status,
-          aiConfidence: riskScore,
-          trustScore: Number(score.trust_score ?? Math.max(0, 100 - riskScore)),
-          riskLevel: score.risk_level || (riskScore >= 70 ? 'HIGH' : riskScore >= 50 ? 'MEDIUM' : 'LOW'),
-          anomalyScore: Number(score.anomaly_score ?? score.isolation_score ?? riskScore),
-          aiReasons: (score.reasons || []).map(normalizeReason),
-          lastVerified: w.lastVerified || w.last_verification || null,
-        };
+      chunk.forEach((w, localIndex) => {
+        try {
+          const absoluteIndex = i + localIndex;
+          
+          const bankAccount = inferField(w, ['bankAccount', 'bank_account', 'account_number', 'acct_no', 'account']) || '';
+          const salary = Number(inferField(w, ['salary', 'monthly_pay', 'base_salary', 'amount']) || 0);
+          const nin = inferField(w, ['nin', 'identity_no', 'national_id']);
+          const bankCode = w.bankCode || w.bank_code || w.bank_id || '058';
+
+          const score = scoreChunk[localIndex] || { 
+            status: 'NEEDS REVIEW', 
+            confidence: 0, 
+            reasons: [{ flag: 'AI score missing', severity: 'medium', contribution: 0 }] 
+          };
+          
+          const status = score.status || (score.label === 'GHOST' ? 'FLAGGED' : 'VERIFIED');
+          const riskScore = Number(score.risk_score ?? score.confidence ?? 0);
+
+          processedChunk.push({
+            batch: activeBatch,
+            staffId: w.staffId || `STF-${activeBatch}-${absoluteIndex + 1}`,
+            firstName: w.firstName || w.name?.split(' ')[0] || 'Unknown',
+            lastName: w.lastName || w.name?.split(' ').slice(1).join(' ') || 'Unknown',
+            email: w.email || '',
+            phone: w.phone || '',
+            nin,
+            bvn: w.bvn || '',
+            bankAccount,
+            bankCode,
+            salary,
+            department: w.department || null,
+            status,
+            aiConfidence: riskScore,
+            trustScore: Number(score.trust_score ?? Math.max(0, 100 - riskScore)),
+            riskLevel: score.risk_level || (riskScore >= 70 ? 'HIGH' : riskScore >= 50 ? 'MEDIUM' : 'LOW'),
+            anomalyScore: Number(score.anomaly_score ?? score.isolation_score ?? riskScore),
+            aiReasons: (score.reasons || []).map(normalizeReason),
+            lastVerified: w.lastVerified || w.last_verification || null,
+          });
+        } catch (err) {
+          console.error(`[UPLOAD] Skipping malformed record at index ${i + localIndex}:`, err.message);
+        }
       });
 
       // Deduplicate: delete any existing records with the same staffIds
