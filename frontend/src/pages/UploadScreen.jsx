@@ -46,44 +46,44 @@ const largeScale = generatePayrollDataset(1500, 0.08); // Kept reasonable to pre
 
 const DEMO_DATASETS = [
   {
-    id: 'demo_ghost_workers',
-    name: 'Ghost Worker Simulation Dataset',
-    type: 'Generated Synthetic',
-    workers: ghostPayroll.count,
-    complexity: 'High',
-    density: ((ghostPayroll.anomalies / ghostPayroll.count) * 100).toFixed(1) + '% Anomaly Density',
-    desc: 'Includes duplicate accounts, inactive workers, and salary mismatches.',
-    csv: ghostPayroll.csv
+    id: 'kaggle_la_payroll_clean',
+    name: 'Public Payroll Benchmark Dataset',
+    type: 'External Dataset Import',
+    workers: 2000,
+    complexity: 'Low',
+    density: '0% Anomaly Density',
+    desc: 'Source: Kaggle — Los Angeles Payroll. Clean public payroll records adapted for testing.',
+    url: '/datasets/adapted_la_payroll.csv'
   },
   {
-    id: 'chicago_salaries_export',
-    name: 'External Workforce Records Sample',
-    type: 'Simulated External Source',
-    workers: publicHR.count,
-    complexity: 'Medium',
+    id: 'kaggle_la_payroll_fraud',
+    name: 'Public Payroll Benchmark + VIRGIL Fraud Simulation',
+    type: 'External Source + Fraud Injected',
+    workers: 2000,
+    complexity: 'High',
     density: '~8% Anomaly Density',
-    desc: 'Simulated external HR export with non-standard column names. Triggers field-mapping UI.',
-    csv: publicHR.csv
+    desc: 'Source: Kaggle — Los Angeles Payroll. Includes controlled fraud injection (duplicate accounts, inactive workers) by VIRGIL.',
+    url: '/datasets/adapted_la_payroll_fraud.csv'
+  },
+  {
+    id: 'kaggle_hr_attrition',
+    name: 'Public HR Attrition Benchmark',
+    type: 'External Dataset Import',
+    workers: 1470,
+    complexity: 'Medium',
+    density: '~16% Attrition Rate',
+    desc: 'Source: Kaggle — HR Analytics. Useful for testing workforce structure, inactive status, and tenure behavior.',
+    url: '/datasets/adapted_hr_analytics.csv'
   },
   {
     id: 'demo_clean_payroll',
-    name: 'Clean Payroll Baseline',
+    name: 'Internal Calibration Baseline',
     type: 'Generated Synthetic',
-    workers: cleanPayroll.count,
+    workers: 10,
     complexity: 'Low',
     density: '0% Anomaly Density',
-    desc: 'Perfectly verified baseline dataset for calibration testing.',
-    csv: cleanPayroll.csv
-  },
-  {
-    id: 'demo_large_scale',
-    name: 'Large-Scale Stress Test',
-    type: 'Generated Synthetic',
-    workers: largeScale.count,
-    complexity: 'Extreme',
-    density: ((largeScale.anomalies / largeScale.count) * 100).toFixed(1) + '% Anomaly Density',
-    desc: 'Heavy adversarial payload to test VIRGIL throughput limits.',
-    csv: largeScale.csv
+    desc: 'Perfectly verified baseline dataset fetched dynamically from the filesystem.',
+    url: '/datasets/demo_clean_payroll.csv'
   }
 ];
 
@@ -91,19 +91,25 @@ const EXPECTED_FIELDS = [
   { id: 'worker_id', label: 'Worker ID' },
   { id: 'full_name', label: 'Full Name' },
   { id: 'department', label: 'Department' },
+  { id: 'job_role', label: 'Job Role' },
   { id: 'salary', label: 'Salary (NGN)' },
-  { id: 'account_number', label: 'Account Number' },
   { id: 'attendance_score', label: 'Attendance Score' },
+  { id: 'employment_status', label: 'Employment Status' },
+  { id: 'tenure', label: 'Tenure (Years)' },
+  { id: 'account_number', label: 'Account Number' },
   { id: 'last_verification', label: 'Last Verification Date' }
 ];
 
 const FIELD_ALIASES = {
-  worker_id: ['emp_id', 'employee_id', 'staff_id', 'personnel_no', 'worker_no', 'id_number'],
+  worker_id: ['emp_id', 'employee_id', 'staff_id', 'personnel_no', 'worker_no', 'id_number', 'record_nbr'],
   full_name: ['employee_name', 'staff_name', 'name', 'worker_name', 'first_name'],
-  department: ['division', 'unit', 'ministry_section', 'dept', 'agency'],
-  salary: ['monthly_pay', 'wage', 'gross_income', 'compensation', 'amount', 'net_pay', 'basic_salary', 'pay'],
+  department: ['division', 'unit', 'ministry_section', 'dept', 'agency', 'department_title'],
+  job_role: ['job_title', 'position', 'role', 'designation', 'job_class'],
+  salary: ['monthly_pay', 'wage', 'gross_income', 'compensation', 'amount', 'net_pay', 'basic_salary', 'pay', 'regular_pay', 'monthlyincome'],
   account_number: ['acct_no', 'acct_num', 'bank_account', 'account_no', 'bank_acct'],
   attendance_score: ['days_present', 'attendance', 'present_days', 'score', 'days_worked'],
+  employment_status: ['status', 'employment_type', 'attrition', 'active_status'],
+  tenure: ['years_at_company', 'length_of_service', 'service_years', 'years_worked'],
   last_verification: ['last_check', 'verification_date', 'last_verified', 'date_verified', 'last_scan']
 };
 
@@ -202,9 +208,12 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
   const [rawRows, setRawRows] = useState([]);
   const [mapping, setMapping] = useState({});
   const [confidences, setConfidences] = useState({});
+  const [previewLimit, setPreviewLimit] = useState(12);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const processRawData = (name, text) => {
     try {
+      setPreviewLimit(12);
       setFileName(name);
       const { headers, rows } = rawParseCSV(text);
       setRawHeaders(headers);
@@ -258,8 +267,19 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
     processRawData('sample-payroll-may-2026.csv', ghostPayroll.csv);
   };
 
-  const handleLoadDataset = (ds) => {
-    processRawData(ds.id + '.csv', ds.csv);
+  const handleLoadDataset = async (ds) => {
+    if (ds.url) {
+      try {
+        const res = await fetch(ds.url);
+        if (!res.ok) throw new Error('Network error loading dataset');
+        const text = await res.text();
+        processRawData(ds.id + '.csv', text);
+      } catch (err) {
+        alert("Failed to fetch dynamic dataset: " + err.message);
+      }
+    } else {
+      processRawData(ds.id + '.csv', ds.csv);
+    }
   };
 
   const confirmMapping = () => {
@@ -270,12 +290,28 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
 
   const handleUpload = async () => {
     setPhase('uploading');
+    setUploadProgress(0);
+    
+    // Simulate progress ticks while waiting for backend
+    const progressInterval = setInterval(() => {
+      setUploadProgress(prev => prev < 90 ? prev + Math.random() * 8 : prev);
+    }, 400);
+
+    // 90-second timeout to prevent permanent hang
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Upload timed out. The server is taking too long. Please try again.')), 90000)
+    );
+
     try {
-      await uploadWorkers(workers);
+      await Promise.race([uploadWorkers(workers), timeout]);
+      clearInterval(progressInterval);
+      setUploadProgress(100);
       localStorage.setItem('virgil_last_upload_count', String(workers.length));
       setPhase('done');
       setTimeout(onUpload, 1200);
     } catch (e) {
+      clearInterval(progressInterval);
+      setUploadProgress(0);
       alert(e.message);
       setPhase('preview');
     }
@@ -526,7 +562,7 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {workers.slice(0, 12).map((w, i) => (
+                        {workers.slice(0, previewLimit).map((w, i) => (
                           <tr key={w.staffId || i}>
                             <td style={{ fontFamily: 'monospace', fontSize: 11 }}>{w.staffId}</td>
                             <td>{w.name}</td>
@@ -543,10 +579,11 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
                             <td style={{ fontSize: 11, color: 'var(--muted)' }}>{w.lastVerified || '—'}</td>
                           </tr>
                         ))}
-                        {workers.length > 12 && (
-                          <tr>
-                            <td colSpan={7} style={{ textAlign: 'center', color: 'var(--muted)', padding: '12px' }}>
-                              + {workers.length - 12} more records
+                        {workers.length > previewLimit && (
+                          <tr onClick={() => setPreviewLimit(prev => prev + 50)} style={{ cursor: 'pointer', background: 'rgba(215, 38, 56, 0.05)', transition: 'background 0.2s' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(215, 38, 56, 0.1)'} onMouseLeave={e => e.currentTarget.style.background = 'rgba(215, 38, 56, 0.05)'}>
+                            <td colSpan={7} style={{ textAlign: 'center', color: 'var(--red)', padding: '16px', fontWeight: 600, border: '1px dashed var(--red)' }}>
+                              <i className="ti ti-download" style={{ marginRight: 8 }} />
+                              Load {Math.min(50, workers.length - previewLimit)} more records (out of {workers.length - previewLimit} remaining)
                             </td>
                           </tr>
                         )}
@@ -576,8 +613,26 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
                 </motion.div>
                 <div className="upload-processing-text">
                   <strong>{phase === 'done' ? 'Analysis Complete' : 'Uploading to VIRGIL...'}</strong>
-                  <span>{phase === 'done' ? 'Routing to AI results' : `Processing ${workers.length} payroll records`}</span>
+                  <span>{phase === 'done' ? 'Routing to AI results' : `Processing ${workers.length.toLocaleString()} payroll records`}</span>
                 </div>
+                {phase === 'uploading' && (
+                  <>
+                    <div style={{ width: '280px', height: '4px', background: 'var(--border)', borderRadius: '4px', overflow: 'hidden', marginTop: '16px' }}>
+                      <motion.div
+                        style={{ height: '100%', background: 'var(--red)', borderRadius: '4px' }}
+                        animate={{ width: `${uploadProgress}%` }}
+                        transition={{ duration: 0.4 }}
+                      />
+                    </div>
+                    <span style={{ fontSize: 11, color: 'var(--muted)', marginTop: 8 }}>{Math.round(uploadProgress)}% — AI scoring in progress</span>
+                    <button
+                      style={{ marginTop: 24, fontSize: 12, color: 'var(--muted)', background: 'none', border: '1px solid var(--border)', borderRadius: 6, padding: '6px 14px', cursor: 'pointer' }}
+                      onClick={() => setPhase('preview')}
+                    >
+                      Cancel upload
+                    </button>
+                  </>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

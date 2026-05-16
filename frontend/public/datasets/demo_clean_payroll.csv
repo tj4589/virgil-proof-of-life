@@ -1,0 +1,7 @@
+worker_id,full_name,department,salary,account_number,attendance_score,last_verification
+VIR-90001,Adewale Johnson,Finance,180000,0081234501,98,2026-04-30
+VIR-90002,Ngozi Eze,Health,205000,0081234502,95,2026-04-28
+VIR-90003,Ghost Record 3,Unassigned,999999,0123456789,0,2025-10-01
+VIR-90004,Fatima Bello,Education,164000,0081234504,91,2026-04-29
+VIR-90005,Ghost Record 5,Unassigned,999999,0123456789,12,2025-09-15
+VIR-90006,Kwame Mensah,Works,158000,0081234506,88,2026-04-27

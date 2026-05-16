@@ -1,0 +1,5 @@
+emp_id,employee_name,dept,monthly_pay,acct_num,days_present,last_check
+HR-901,Public Worker 1,Sanitation,120000,0099991111,20,2026-01-10
+HR-902,Public Worker 2,Transport,140000,0099992222,22,2026-01-12
+HR-903,Ghost Record A,Transport,140000,0099992222,2,2025-01-12
+HR-904,Public Worker 4,Education,160000,0099994444,21,2026-01-15

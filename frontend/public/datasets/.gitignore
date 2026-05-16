@@ -1,0 +1,6 @@
+# Raw Kaggle source files — too large for GitHub
+frontend/public/datasets/la_payroll_payroll.csv
+frontend/public/datasets/la_payroll_processed-payroll.csv
+frontend/public/datasets/la_payroll_train-test-payroll.csv
+frontend/public/datasets/attrition_MFG10YearTerminationData.csv
+frontend/public/datasets/hr_analytics_HR-Employee-Attrition.csv

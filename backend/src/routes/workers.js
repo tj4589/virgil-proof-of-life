@@ -70,45 +70,55 @@ router.post('/upload', async (req, res) => {
 
     const today = new Date();
 
-    const BATCH_SIZE = 50;
+    // 1. Prepare all features for the batch AI request
+    const workerFeatures = workers.map((w) => {
+      const acct = w.bankAccount || w.bank_account || '';
+      const salary = Number(w.salary || 0);
+      const ninCount = w.nin ? (batchNinFreq[w.nin] || 1) : 1;
+      const accountCount = acct ? (batchAcctFreq[acct] || 1) : 1;
+      const salaryZscore = salary > 0 ? (salary - avgSalary) / stdSalary : 0;
+
+      let missingScore = 0;
+      if (!w.department) missingScore++;
+      if (!w.lastVerified) missingScore++;
+      if (!salary || salary === 0) missingScore++;
+
+      const attendanceScore = (w.attendanceScore != null && w.attendanceScore !== '')
+        ? Math.max(0, Math.min(100, Number(w.attendanceScore)))
+        : 90;
+
+      let daysSinceVerification = 365;
+      if (w.lastVerified) {
+        const verifiedDate = new Date(w.lastVerified);
+        if (!isNaN(verifiedDate)) {
+          daysSinceVerification = Math.max(0, Math.floor((today - verifiedDate) / 86400000));
+        }
+      }
+
+      return {
+        nin_count: ninCount,
+        account_count: accountCount,
+        salary_zscore: salaryZscore,
+        missing_score: missingScore,
+        attendance_score: attendanceScore,
+        days_since_verification: daysSinceVerification,
+      };
+    });
+
+    // 2. Score all workers in one massively fast vectorized batch request
+    const aiScores = await aiService.scoreWorkersBatch(workerFeatures);
+
+    // 3. Chunk DB inserts to prevent SQLite locking
+    const BATCH_SIZE = 100;
     for (let i = 0; i < workers.length; i += BATCH_SIZE) {
       const chunk = workers.slice(i, i + BATCH_SIZE);
+      const scoreChunk = aiScores.slice(i, i + BATCH_SIZE);
 
-      const chunkPromises = chunk.map(async (w, localIndex) => {
+      const processedChunk = chunk.map((w, localIndex) => {
         const absoluteIndex = i + localIndex;
         const acct = w.bankAccount || w.bank_account || '';
         const salary = Number(w.salary || 0);
-        const ninCount = w.nin ? (batchNinFreq[w.nin] || 1) : 1;
-        const accountCount = acct ? (batchAcctFreq[acct] || 1) : 1;
-        const salaryZscore = salary > 0 ? (salary - avgSalary) / stdSalary : 0;
-
-        let missingScore = 0;
-        if (!w.department) missingScore++;
-        if (!w.lastVerified) missingScore++;
-        if (!salary || salary === 0) missingScore++;
-
-        // Attendance score: 0-100. Default 90 (neutral) when not supplied.
-        const attendanceScore = (w.attendanceScore != null && w.attendanceScore !== '')
-          ? Math.max(0, Math.min(100, Number(w.attendanceScore)))
-          : 90;
-
-        // Days since last verification. Default 365 when never verified.
-        let daysSinceVerification = 365;
-        if (w.lastVerified) {
-          const verifiedDate = new Date(w.lastVerified);
-          if (!isNaN(verifiedDate)) {
-            daysSinceVerification = Math.max(0, Math.floor((today - verifiedDate) / 86400000));
-          }
-        }
-
-        const score = await aiService.scoreWorker({
-          nin_count: ninCount,
-          account_count: accountCount,
-          salary_zscore: salaryZscore,
-          missing_score: missingScore,
-          attendance_score: attendanceScore,
-          days_since_verification: daysSinceVerification,
-        });
+        const score = scoreChunk[localIndex] || { label: 'VERIFIED', confidence: 99.0, reasons: [] };
 
         return {
           batch: activeBatch,
@@ -129,8 +139,6 @@ router.post('/upload', async (req, res) => {
           lastVerified: w.lastVerified ? new Date(w.lastVerified) : null,
         };
       });
-
-      const processedChunk = await Promise.all(chunkPromises);
 
       // Deduplicate: delete any existing records with the same staffIds
       const staffIds = processedChunk.map(w => w.staffId).filter(Boolean);
@@ -166,11 +174,13 @@ router.post('/upload', async (req, res) => {
   }
 });
 
-// Get all workers (current batch by default)
+// Get workers (current batch by default) — paginated
 router.get('/', async (req, res) => {
   try {
     const where = await buildWorkerWhere(req.query);
-    const workers = await Worker.findAll({ where, order: [['createdAt', 'DESC']] });
+    const limit = Math.min(parseInt(req.query.limit || '200', 10), 500);
+    const offset = parseInt(req.query.offset || '0', 10);
+    const workers = await Worker.findAll({ where, order: [['createdAt', 'DESC']], limit, offset });
     res.json(workers);
   } catch (error) {
     res.status(500).json({ error: error.message });

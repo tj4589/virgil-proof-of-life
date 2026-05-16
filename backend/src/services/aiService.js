@@ -66,4 +66,21 @@ async function scoreWorker(workerData) {
   }
 }
 
-module.exports = { scoreWorker };
+async function scoreWorkersBatch(workersData) {
+  try {
+    const res = await fetch(`${AI_URL}/predict/batch`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(workersData),
+      timeout: AI_TIMEOUT_MS * 5, // Give batch requests more time
+    });
+
+    if (!res.ok) throw new Error(`AI service returned HTTP ${res.status}`);
+    return await res.json();
+  } catch (error) {
+    console.warn(`[AI] Batch service unreachable (${error.message}). Using rule-based fallback.`);
+    return workersData.map(ruleFallback);
+  }
+}
+
+module.exports = { scoreWorker, scoreWorkersBatch };

@@ -1,0 +1,1471 @@
+worker_id,full_name,department,job_role,salary,tenure,employment_status,account_number,attendance_score,last_verification
+HRA-1,Staff 1,Sales,Sales Executive,71916,6,Terminated,0122000000,80,2026-04-15
+HRA-2,Staff 2,Research & Development,Research Scientist,61560,10,Active,0122000001,81,2026-04-15
+HRA-4,Staff 4,Research & Development,Laboratory Technician,25080,0,Terminated,0122000002,82,2026-04-15
+HRA-5,Staff 5,Research & Development,Research Scientist,34908,8,Active,0122000003,89,2026-04-15
+HRA-7,Staff 7,Research & Development,Laboratory Technician,41616,2,Active,0122000004,96,2026-04-15
+HRA-8,Staff 8,Research & Development,Laboratory Technician,36816,7,Active,0122000005,96,2026-04-15
+HRA-10,Staff 10,Research & Development,Laboratory Technician,32040,1,Active,0122000006,95,2026-04-15
+HRA-11,Staff 11,Research & Development,Laboratory Technician,32316,1,Active,0122000007,93,2026-04-15
+HRA-12,Staff 12,Research & Development,Manufacturing Director,114312,9,Active,0122000008,85,2026-04-15
+HRA-13,Staff 13,Research & Development,Healthcare Representative,62844,7,Active,0122000009,85,2026-04-15
+HRA-14,Staff 14,Research & Development,Laboratory Technician,29112,5,Active,0122000010,82,2026-04-15
+HRA-15,Staff 15,Research & Development,Laboratory Technician,50316,9,Active,0122000011,82,2026-04-15
+HRA-16,Staff 16,Research & Development,Research Scientist,34932,5,Active,0122000012,92,2026-04-15
+HRA-18,Staff 18,Research & Development,Laboratory Technician,31932,2,Active,0122000013,84,2026-04-15
+HRA-19,Staff 19,Research & Development,Laboratory Technician,24336,4,Terminated,0122000014,86,2026-04-15
+HRA-20,Staff 20,Research & Development,Manufacturing Director,119760,10,Active,0122000015,89,2026-04-15
+HRA-21,Staff 21,Research & Development,Research Scientist,39576,6,Active,0122000016,87,2026-04-15
+HRA-22,Staff 22,Research & Development,Laboratory Technician,35220,1,Active,0122000017,87,2026-04-15
+HRA-23,Staff 23,Sales,Manager,185124,25,Active,0122000018,97,2026-04-15
+HRA-24,Staff 24,Research & Development,Research Scientist,47328,3,Active,0122000019,87,2026-04-15
+HRA-26,Staff 26,Research & Development,Manufacturing Director,48132,4,Active,0122000020,87,2026-04-15
+HRA-27,Staff 27,Sales,Sales Representative,40884,5,Terminated,0122000021,85,2026-04-15
+HRA-28,Staff 28,Research & Development,Research Director,143928,12,Active,0122000022,96,2026-04-15
+HRA-30,Staff 30,Research & Development,Research Scientist,14784,0,Active,0122000023,90,2026-04-15
+HRA-31,Staff 31,Research & Development,Research Scientist,35520,4,Terminated,0122000024,97,2026-04-15
+HRA-32,Staff 32,Research & Development,Manager,229128,14,Active,0122000025,92,2026-04-15
+HRA-33,Staff 33,Research & Development,Research Scientist,47028,10,Terminated,0122000026,83,2026-04-15
+HRA-35,Staff 35,Sales,Sales Executive,81900,9,Active,0122000027,98,2026-04-15
+HRA-36,Staff 36,Research & Development,Healthcare Representative,122976,22,Active,0122000028,99,2026-04-15
+HRA-38,Staff 38,Sales,Manager,227364,2,Active,0122000029,93,2026-04-15
+HRA-39,Staff 39,Research & Development,Laboratory Technician,29952,1,Active,0122000030,93,2026-04-15
+HRA-40,Staff 40,Research & Development,Healthcare Representative,77580,4,Active,0122000031,80,2026-04-15
+HRA-41,Staff 41,Research & Development,Laboratory Technician,26472,10,Active,0122000032,97,2026-04-15
+HRA-42,Staff 42,Sales,Sales Representative,25032,1,Terminated,0122000033,90,2026-04-15
+HRA-45,Staff 45,Research & Development,Research Scientist,27516,2,Terminated,0122000034,99,2026-04-15
+HRA-46,Staff 46,Research & Development,Research Scientist,31740,5,Active,0122000035,99,2026-04-15
+HRA-47,Staff 47,Sales,Sales Representative,32196,3,Terminated,0122000036,85,2026-04-15
+HRA-49,Staff 49,Sales,Sales Representative,24168,2,Active,0122000037,80,2026-04-15
+HRA-51,Staff 51,Research & Development,Research Scientist,41028,1,Active,0122000038,98,2026-04-15
+HRA-52,Staff 52,Sales,Sales Executive,64512,5,Active,0122000039,85,2026-04-15
+HRA-53,Staff 53,Research & Development,Laboratory Technician,23412,1,Active,0122000040,83,2026-04-15
+HRA-54,Staff 54,Research & Development,Laboratory Technician,28092,1,Active,0122000041,95,2026-04-15
+HRA-55,Staff 55,Research & Development,Laboratory Technician,27516,1,Terminated,0122000042,83,2026-04-15
+HRA-56,Staff 56,Sales,Sales Executive,104712,9,Active,0122000043,93,2026-04-15
+HRA-57,Staff 57,Research & Development,Laboratory Technician,48132,12,Active,0122000044,81,2026-04-15
+HRA-58,Staff 58,Research & Development,Research Director,234540,22,Terminated,0122000045,95,2026-04-15
+HRA-60,Staff 60,Sales,Sales Executive,54816,9,Active,0122000046,85,2026-04-15
+HRA-61,Staff 61,Research & Development,Research Scientist,36264,1,Active,0122000047,83,2026-04-15
+HRA-62,Staff 62,Sales,Sales Executive,69264,9,Active,0122000048,91,2026-04-15
+HRA-63,Staff 63,Research & Development,Laboratory Technician,27228,1,Active,0122000049,94,2026-04-15
+HRA-64,Staff 64,Research & Development,Laboratory Technician,64572,1,Terminated,0122000050,91,2026-04-15
+HRA-65,Staff 65,Research & Development,Laboratory Technician,41292,2,Terminated,0122000051,99,2026-04-15
+HRA-68,Staff 68,Sales,Sales Executive,65448,4,Active,0122000052,97,2026-04-15
+HRA-70,Staff 70,Research & Development,Healthcare Representative,118608,4,Active,0122000053,80,2026-04-15
+HRA-72,Staff 72,Sales,Sales Executive,49884,2,Active,0122000054,91,2026-04-15
+HRA-73,Staff 73,Research & Development,Research Director,161496,15,Active,0122000055,96,2026-04-15
+HRA-74,Staff 74,Sales,Sales Executive,108828,9,Active,0122000056,94,2026-04-15
+HRA-75,Staff 75,Research & Development,Laboratory Technician,48168,2,Active,0122000057,94,2026-04-15
+HRA-76,Staff 76,Research & Development,Laboratory Technician,70980,7,Active,0122000058,89,2026-04-15
+HRA-77,Staff 77,Research & Development,Manufacturing Director,71916,7,Active,0122000059,87,2026-04-15
+HRA-78,Staff 78,Research & Development,Manufacturing Director,73944,9,Active,0122000060,93,2026-04-15
+HRA-79,Staff 79,Research & Development,Laboratory Technician,28872,10,Active,0122000061,90,2026-04-15
+HRA-80,Staff 80,Research & Development,Research Director,224880,27,Active,0122000062,99,2026-04-15
+HRA-81,Staff 81,Sales,Sales Executive,91644,21,Active,0122000063,98,2026-04-15
+HRA-83,Staff 83,Research & Development,Healthcare Representative,121152,17,Active,0122000064,95,2026-04-15
+HRA-84,Staff 84,Research & Development,Manager,177072,5,Active,0122000065,96,2026-04-15
+HRA-85,Staff 85,Research & Development,Manufacturing Director,77988,6,Active,0122000066,82,2026-04-15
+HRA-86,Staff 86,Research & Development,Research Scientist,116688,1,Active,0122000067,94,2026-04-15
+HRA-88,Staff 88,Research & Development,Research Scientist,26328,3,Active,0122000068,88,2026-04-15
+HRA-90,Staff 90,Research & Development,Research Scientist,40656,1,Terminated,0122000069,88,2026-04-15
+HRA-91,Staff 91,Sales,Sales Executive,65676,4,Active,0122000070,84,2026-04-15
+HRA-94,Staff 94,Research & Development,Research Scientist,32436,5,Active,0122000071,94,2026-04-15
+HRA-95,Staff 95,Research & Development,Research Scientist,30012,1,Active,0122000072,91,2026-04-15
+HRA-96,Staff 96,Research & Development,Research Scientist,74640,10,Active,0122000073,86,2026-04-15
+HRA-97,Staff 97,Research & Development,Laboratory Technician,36456,1,Active,0122000074,86,2026-04-15
+HRA-98,Staff 98,Research & Development,Manufacturing Director,53088,11,Active,0122000075,88,2026-04-15
+HRA-100,Staff 100,Sales,Sales Executive,51744,15,Active,0122000076,91,2026-04-15
+HRA-101,Staff 101,Research & Development,Research Director,158940,0,Active,0122000077,92,2026-04-15
+HRA-102,Staff 102,Research & Development,Research Director,163968,5,Active,0122000078,92,2026-04-15
+HRA-103,Staff 103,Human Resources,Human Resources,60252,4,Active,0122000079,91,2026-04-15
+HRA-104,Staff 104,Research & Development,Laboratory Technician,61512,10,Active,0122000080,85,2026-04-15
+HRA-105,Staff 105,Research & Development,Research Scientist,34308,6,Active,0122000081,95,2026-04-15
+HRA-106,Staff 106,Sales,Sales Executive,122868,1,Active,0122000082,84,2026-04-15
+HRA-107,Staff 107,Research & Development,Research Scientist,63948,13,Active,0122000083,97,2026-04-15
+HRA-110,Staff 110,Research & Development,Manufacturing Director,51900,5,Active,0122000084,83,2026-04-15
+HRA-112,Staff 112,Research & Development,Manufacturing Director,87120,6,Active,0122000085,91,2026-04-15
+HRA-113,Staff 113,Sales,Sales Representative,27864,0,Active,0122000086,91,2026-04-15
+HRA-116,Staff 116,Research & Development,Laboratory Technician,24900,4,Active,0122000087,89,2026-04-15
+HRA-117,Staff 117,Research & Development,Healthcare Representative,49824,11,Active,0122000088,97,2026-04-15
+HRA-118,Staff 118,Sales,Sales Executive,115428,9,Terminated,0122000089,97,2026-04-15
+HRA-119,Staff 119,Research & Development,Healthcare Representative,162036,22,Active,0122000090,88,2026-04-15
+HRA-120,Staff 120,Sales,Sales Executive,65292,10,Active,0122000091,90,2026-04-15
+HRA-121,Staff 121,Sales,Sales Executive,62508,11,Active,0122000092,80,2026-04-15
+HRA-124,Staff 124,Research & Development,Healthcare Representative,128076,10,Active,0122000093,83,2026-04-15
+HRA-125,Staff 125,Sales,Sales Executive,60120,11,Active,0122000094,83,2026-04-15
+HRA-126,Staff 126,Research & Development,Research Director,162588,4,Active,0122000095,91,2026-04-15
+HRA-128,Staff 128,Sales,Sales Executive,59988,3,Active,0122000096,88,2026-04-15
+HRA-129,Staff 129,Sales,Sales Executive,50652,5,Active,0122000097,95,2026-04-15
+HRA-131,Staff 131,Sales,Sales Executive,166464,37,Active,0122000098,85,2026-04-15
+HRA-132,Staff 132,Research & Development,Laboratory Technician,24504,3,Active,0122000099,94,2026-04-15
+HRA-133,Staff 133,Human Resources,Human Resources,24876,3,Terminated,0122000100,83,2026-04-15
+HRA-134,Staff 134,Research & Development,Research Scientist,35472,1,Active,0122000101,87,2026-04-15
+HRA-137,Staff 137,Research & Development,Laboratory Technician,35112,1,Terminated,0122000102,92,2026-04-15
+HRA-138,Staff 138,Research & Development,Research Scientist,57708,16,Active,0122000103,86,2026-04-15
+HRA-139,Staff 139,Research & Development,Healthcare Representative,61956,1,Active,0122000104,84,2026-04-15
+HRA-140,Staff 140,Human Resources,Manager,226128,3,Active,0122000105,96,2026-04-15
+HRA-141,Staff 141,Research & Development,Research Director,218064,8,Active,0122000106,85,2026-04-15
+HRA-142,Staff 142,Sales,Sales Executive,68928,6,Terminated,0122000107,83,2026-04-15
+HRA-143,Staff 143,Research & Development,Research Scientist,34668,2,Active,0122000108,92,2026-04-15
+HRA-144,Staff 144,Research & Development,Laboratory Technician,34452,0,Active,0122000109,84,2026-04-15
+HRA-145,Staff 145,Research & Development,Healthcare Representative,89808,13,Active,0122000110,97,2026-04-15
+HRA-147,Staff 147,Research & Development,Laboratory Technician,72888,9,Terminated,0122000111,87,2026-04-15
+HRA-148,Staff 148,Human Resources,Manager,207936,5,Active,0122000112,90,2026-04-15
+HRA-150,Staff 150,Research & Development,Laboratory Technician,33288,5,Active,0122000113,98,2026-04-15
+HRA-151,Staff 151,Research & Development,Research Scientist,54060,1,Active,0122000114,81,2026-04-15
+HRA-152,Staff 152,Sales,Sales Executive,89136,5,Active,0122000115,87,2026-04-15
+HRA-153,Staff 153,Research & Development,Manager,139572,11,Active,0122000116,87,2026-04-15
+HRA-154,Staff 154,Sales,Sales Executive,116856,9,Active,0122000117,95,2026-04-15
+HRA-155,Staff 155,Research & Development,Laboratory Technician,34020,1,Active,0122000118,91,2026-04-15
+HRA-158,Staff 158,Sales,Manager,203508,25,Active,0122000119,83,2026-04-15
+HRA-159,Staff 159,Research & Development,Research Scientist,31356,10,Active,0122000120,98,2026-04-15
+HRA-160,Staff 160,Sales,Sales Executive,73752,7,Active,0122000121,85,2026-04-15
+HRA-161,Staff 161,Research & Development,Research Scientist,59556,5,Terminated,0122000122,85,2026-04-15
+HRA-162,Staff 162,Research & Development,Research Director,234444,20,Active,0122000123,84,2026-04-15
+HRA-163,Staff 163,Sales,Sales Executive,74064,7,Terminated,0122000124,90,2026-04-15
+HRA-164,Staff 164,Research & Development,Research Scientist,28416,5,Active,0122000125,84,2026-04-15
+HRA-165,Staff 165,Research & Development,Healthcare Representative,123744,40,Terminated,0122000126,84,2026-04-15
+HRA-167,Staff 167,Sales,Sales Representative,20100,0,Terminated,0122000127,98,2026-04-15
+HRA-169,Staff 169,Research & Development,Laboratory Technician,30276,2,Active,0122000128,82,2026-04-15
+HRA-170,Staff 170,Research & Development,Manufacturing Director,78804,15,Active,0122000129,92,2026-04-15
+HRA-171,Staff 171,Research & Development,Research Scientist,56868,3,Active,0122000130,93,2026-04-15
+HRA-174,Staff 174,Sales,Sales Executive,110496,2,Active,0122000131,88,2026-04-15
+HRA-175,Staff 175,Sales,Sales Executive,54708,2,Terminated,0122000132,85,2026-04-15
+HRA-176,Staff 176,Sales,Sales Executive,98268,9,Active,0122000133,89,2026-04-15
+HRA-177,Staff 177,Human Resources,Human Resources,35304,8,Active,0122000134,89,2026-04-15
+HRA-178,Staff 178,Research & Development,Manufacturing Director,59292,3,Active,0122000135,84,2026-04-15
+HRA-179,Staff 179,Research & Development,Manufacturing Director,127800,4,Terminated,0122000136,87,2026-04-15
+HRA-182,Staff 182,Sales,Sales Executive,70824,15,Active,0122000137,83,2026-04-15
+HRA-183,Staff 183,Sales,Sales Executive,103668,2,Active,0122000138,96,2026-04-15
+HRA-184,Staff 184,Human Resources,Human Resources,76164,11,Active,0122000139,92,2026-04-15
+HRA-190,Staff 190,Research & Development,Laboratory Technician,50400,5,Terminated,0122000140,91,2026-04-15
+HRA-192,Staff 192,Research & Development,Research Scientist,41424,6,Active,0122000141,86,2026-04-15
+HRA-193,Staff 193,Research & Development,Research Scientist,51804,3,Active,0122000142,91,2026-04-15
+HRA-194,Staff 194,Research & Development,Research Scientist,31584,5,Active,0122000143,84,2026-04-15
+HRA-195,Staff 195,Sales,Sales Executive,56016,8,Active,0122000144,94,2026-04-15
+HRA-197,Staff 197,Research & Development,Research Scientist,38448,3,Active,0122000145,80,2026-04-15
+HRA-198,Staff 198,Research & Development,Laboratory Technician,32640,5,Active,0122000146,87,2026-04-15
+HRA-199,Staff 199,Research & Development,Manager,206172,7,Active,0122000147,93,2026-04-15
+HRA-200,Staff 200,Research & Development,Laboratory Technician,26856,5,Active,0122000148,82,2026-04-15
+HRA-201,Staff 201,Research & Development,Laboratory Technician,17796,1,Active,0122000149,90,2026-04-15
+HRA-202,Staff 202,Research & Development,Research Scientist,67260,20,Active,0122000150,90,2026-04-15
+HRA-204,Staff 204,Sales,Sales Executive,87540,10,Active,0122000151,96,2026-04-15
+HRA-205,Staff 205,Sales,Sales Representative,27672,7,Active,0122000152,97,2026-04-15
+HRA-206,Staff 206,Research & Development,Laboratory Technician,28176,17,Active,0122000153,84,2026-04-15
+HRA-207,Staff 207,Sales,Sales Executive,107976,9,Active,0122000154,98,2026-04-15
+HRA-208,Staff 208,Research & Development,Manufacturing Director,51828,10,Active,0122000155,90,2026-04-15
+HRA-211,Staff 211,Research & Development,Manufacturing Director,73584,1,Active,0122000156,80,2026-04-15
+HRA-214,Staff 214,Research & Development,Research Scientist,40152,1,Active,0122000157,92,2026-04-15
+HRA-215,Staff 215,Sales,Sales Executive,130260,12,Active,0122000158,95,2026-04-15
+HRA-216,Staff 216,Sales,Sales Representative,26772,4,Active,0122000159,95,2026-04-15
+HRA-217,Staff 217,Research & Development,Research Scientist,27876,2,Active,0122000160,82,2026-04-15
+HRA-218,Staff 218,Research & Development,Research Scientist,24288,2,Active,0122000161,94,2026-04-15
+HRA-221,Staff 221,Research & Development,Research Scientist,32556,5,Active,0122000162,90,2026-04-15
+HRA-223,Staff 223,Research & Development,Healthcare Representative,113268,5,Active,0122000163,88,2026-04-15
+HRA-224,Staff 224,Research & Development,Research Scientist,30792,1,Active,0122000164,83,2026-04-15
+HRA-226,Staff 226,Research & Development,Manager,239112,5,Active,0122000165,86,2026-04-15
+HRA-227,Staff 227,Research & Development,Research Scientist,29412,9,Active,0122000166,88,2026-04-15
+HRA-228,Staff 228,Sales,Sales Executive,113028,10,Active,0122000167,95,2026-04-15
+HRA-230,Staff 230,Sales,Sales Executive,104232,8,Active,0122000168,94,2026-04-15
+HRA-231,Staff 231,Research & Development,Research Scientist,36456,5,Active,0122000169,86,2026-04-15
+HRA-233,Staff 233,Research & Development,Research Scientist,36696,5,Active,0122000170,90,2026-04-15
+HRA-235,Staff 235,Sales,Sales Representative,27900,0,Terminated,0122000171,85,2026-04-15
+HRA-238,Staff 238,Research & Development,Laboratory Technician,25056,8,Active,0122000172,90,2026-04-15
+HRA-239,Staff 239,Research & Development,Laboratory Technician,36864,12,Active,0122000173,92,2026-04-15
+HRA-240,Staff 240,Sales,Sales Executive,60072,5,Active,0122000174,97,2026-04-15
+HRA-241,Staff 241,Research & Development,Research Scientist,51084,2,Active,0122000175,96,2026-04-15
+HRA-242,Staff 242,Research & Development,Research Scientist,30000,3,Active,0122000176,95,2026-04-15
+HRA-243,Staff 243,Research & Development,Laboratory Technician,13224,1,Terminated,0122000177,95,2026-04-15
+HRA-244,Staff 244,Sales,Sales Executive,125436,24,Active,0122000178,97,2026-04-15
+HRA-245,Staff 245,Research & Development,Laboratory Technician,27456,2,Active,0122000179,91,2026-04-15
+HRA-246,Staff 246,Research & Development,Research Scientist,47148,4,Active,0122000180,86,2026-04-15
+HRA-247,Staff 247,Research & Development,Research Scientist,27732,3,Active,0122000181,91,2026-04-15
+HRA-248,Staff 248,Sales,Sales Representative,37680,4,Terminated,0122000182,87,2026-04-15
+HRA-249,Staff 249,Research & Development,Laboratory Technician,44280,3,Active,0122000183,88,2026-04-15
+HRA-250,Staff 250,Research & Development,Manufacturing Director,53400,4,Active,0122000184,84,2026-04-15
+HRA-252,Staff 252,Research & Development,Research Scientist,33072,8,Active,0122000185,86,2026-04-15
+HRA-253,Staff 253,Research & Development,Manager,228396,20,Active,0122000186,84,2026-04-15
+HRA-254,Staff 254,Research & Development,Research Director,224664,24,Active,0122000187,98,2026-04-15
+HRA-256,Staff 256,Research & Development,Manufacturing Director,114564,10,Active,0122000188,89,2026-04-15
+HRA-258,Staff 258,Research & Development,Healthcare Representative,164808,7,Active,0122000189,86,2026-04-15
+HRA-259,Staff 259,Research & Development,Manager,239988,33,Active,0122000190,81,2026-04-15
+HRA-260,Staff 260,Research & Development,Research Scientist,27348,7,Active,0122000191,85,2026-04-15
+HRA-261,Staff 261,Research & Development,Manufacturing Director,70992,1,Terminated,0122000192,92,2026-04-15
+HRA-262,Staff 262,Research & Development,Research Scientist,25068,5,Active,0122000193,83,2026-04-15
+HRA-264,Staff 264,Research & Development,Manager,201504,20,Active,0122000194,94,2026-04-15
+HRA-267,Staff 267,Research & Development,Research Scientist,42768,8,Active,0122000195,92,2026-04-15
+HRA-269,Staff 269,Research & Development,Laboratory Technician,53100,6,Active,0122000196,97,2026-04-15
+HRA-270,Staff 270,Research & Development,Manufacturing Director,63180,5,Active,0122000197,99,2026-04-15
+HRA-271,Staff 271,Research & Development,Manufacturing Director,78636,1,Active,0122000198,91,2026-04-15
+HRA-273,Staff 273,Research & Development,Manufacturing Director,75132,7,Active,0122000199,98,2026-04-15
+HRA-274,Staff 274,Research & Development,Manufacturing Director,51576,2,Active,0122000200,82,2026-04-15
+HRA-275,Staff 275,Research & Development,Manufacturing Director,81648,7,Active,0122000201,83,2026-04-15
+HRA-277,Staff 277,Research & Development,Research Scientist,45780,5,Active,0122000202,80,2026-04-15
+HRA-281,Staff 281,Research & Development,Laboratory Technician,32892,7,Active,0122000203,89,2026-04-15
+HRA-282,Staff 282,Research & Development,Healthcare Representative,80076,1,Terminated,0122000204,85,2026-04-15
+HRA-283,Staff 283,Sales,Sales Executive,91668,10,Terminated,0122000205,82,2026-04-15
+HRA-284,Staff 284,Research & Development,Research Scientist,27936,4,Active,0122000206,88,2026-04-15
+HRA-286,Staff 286,Research & Development,Laboratory Technician,25836,8,Active,0122000207,87,2026-04-15
+HRA-287,Staff 287,Research & Development,Healthcare Representative,58512,3,Active,0122000208,93,2026-04-15
+HRA-288,Staff 288,Research & Development,Healthcare Representative,112752,4,Active,0122000209,91,2026-04-15
+HRA-291,Staff 291,Sales,Sales Executive,124800,14,Terminated,0122000210,83,2026-04-15
+HRA-292,Staff 292,Research & Development,Manufacturing Director,101688,11,Active,0122000211,87,2026-04-15
+HRA-293,Staff 293,Sales,Sales Executive,119772,7,Active,0122000212,87,2026-04-15
+HRA-296,Staff 296,Research & Development,Research Director,149880,10,Active,0122000213,84,2026-04-15
+HRA-297,Staff 297,Research & Development,Research Scientist,31884,5,Terminated,0122000214,87,2026-04-15
+HRA-298,Staff 298,Sales,Manager,163092,1,Active,0122000215,98,2026-04-15
+HRA-299,Staff 299,Sales,Sales Executive,80352,6,Terminated,0122000216,93,2026-04-15
+HRA-300,Staff 300,Research & Development,Research Scientist,24696,6,Terminated,0122000217,97,2026-04-15
+HRA-302,Staff 302,Sales,Sales Executive,106380,19,Active,0122000218,99,2026-04-15
+HRA-303,Staff 303,Sales,Sales Executive,71280,6,Active,0122000219,87,2026-04-15
+HRA-304,Staff 304,Research & Development,Laboratory Technician,70968,13,Active,0122000220,84,2026-04-15
+HRA-305,Staff 305,Research & Development,Research Scientist,31464,3,Active,0122000221,96,2026-04-15
+HRA-306,Staff 306,Research & Development,Research Director,146220,10,Active,0122000222,92,2026-04-15
+HRA-307,Staff 307,Sales,Sales Executive,127308,16,Active,0122000223,80,2026-04-15
+HRA-308,Staff 308,Research & Development,Manufacturing Director,52140,5,Active,0122000224,96,2026-04-15
+HRA-309,Staff 309,Research & Development,Research Scientist,26124,1,Active,0122000225,81,2026-04-15
+HRA-311,Staff 311,Sales,Sales Representative,33516,9,Active,0122000226,89,2026-04-15
+HRA-312,Staff 312,Sales,Sales Executive,95016,11,Active,0122000227,92,2026-04-15
+HRA-314,Staff 314,Sales,Sales Executive,105468,10,Active,0122000228,83,2026-04-15
+HRA-315,Staff 315,Research & Development,Research Scientist,28668,4,Terminated,0122000229,91,2026-04-15
+HRA-316,Staff 316,Research & Development,Laboratory Technician,38544,2,Active,0122000230,99,2026-04-15
+HRA-319,Staff 319,Research & Development,Manager,230784,22,Active,0122000231,80,2026-04-15
+HRA-321,Staff 321,Human Resources,Human Resources,27204,2,Active,0122000232,94,2026-04-15
+HRA-323,Staff 323,Sales,Manager,234204,7,Active,0122000233,95,2026-04-15
+HRA-325,Staff 325,Research & Development,Laboratory Technician,29232,5,Terminated,0122000234,84,2026-04-15
+HRA-327,Staff 327,Sales,Manager,192768,17,Active,0122000235,92,2026-04-15
+HRA-328,Staff 328,Research & Development,Laboratory Technician,32484,9,Terminated,0122000236,91,2026-04-15
+HRA-329,Staff 329,Sales,Manager,228816,33,Active,0122000237,97,2026-04-15
+HRA-330,Staff 330,Sales,Sales Representative,47172,4,Active,0122000238,94,2026-04-15
+HRA-331,Staff 331,Research & Development,Laboratory Technician,44760,3,Terminated,0122000239,92,2026-04-15
+HRA-332,Staff 332,Research & Development,Laboratory Technician,26784,3,Active,0122000240,89,2026-04-15
+HRA-333,Staff 333,Sales,Sales Executive,53580,3,Active,0122000241,89,2026-04-15
+HRA-334,Staff 334,Research & Development,Research Scientist,36864,1,Active,0122000242,96,2026-04-15
+HRA-335,Staff 335,Research & Development,Research Scientist,39828,9,Active,0122000243,97,2026-04-15
+HRA-336,Staff 336,Research & Development,Manager,230424,24,Active,0122000244,89,2026-04-15
+HRA-337,Staff 337,Research & Development,Research Director,164100,2,Active,0122000245,87,2026-04-15
+HRA-338,Staff 338,Research & Development,Research Scientist,34932,2,Active,0122000246,84,2026-04-15
+HRA-339,Staff 339,Research & Development,Manufacturing Director,71484,11,Active,0122000247,93,2026-04-15
+HRA-340,Staff 340,Research & Development,Research Scientist,47040,3,Active,0122000248,98,2026-04-15
+HRA-341,Staff 341,Research & Development,Manufacturing Director,77208,3,Active,0122000249,95,2026-04-15
+HRA-342,Staff 342,Research & Development,Manufacturing Director,120576,1,Terminated,0122000250,99,2026-04-15
+HRA-343,Staff 343,Research & Development,Healthcare Representative,131256,19,Active,0122000251,94,2026-04-15
+HRA-346,Staff 346,Research & Development,Research Scientist,28080,6,Active,0122000252,82,2026-04-15
+HRA-347,Staff 347,Research & Development,Research Scientist,78540,3,Active,0122000253,91,2026-04-15
+HRA-349,Staff 349,Sales,Sales Executive,83172,3,Active,0122000254,97,2026-04-15
+HRA-350,Staff 350,Research & Development,Manufacturing Director,58776,4,Active,0122000255,97,2026-04-15
+HRA-351,Staff 351,Research & Development,Laboratory Technician,31116,9,Active,0122000256,98,2026-04-15
+HRA-352,Staff 352,Research & Development,Research Director,233232,21,Active,0122000257,93,2026-04-15
+HRA-353,Staff 353,Research & Development,Research Scientist,32676,1,Active,0122000258,98,2026-04-15
+HRA-355,Staff 355,Research & Development,Laboratory Technician,41748,5,Terminated,0122000259,86,2026-04-15
+HRA-359,Staff 359,Research & Development,Laboratory Technician,33528,5,Active,0122000260,80,2026-04-15
+HRA-361,Staff 361,Sales,Sales Executive,62988,8,Active,0122000261,94,2026-04-15
+HRA-362,Staff 362,Research & Development,Laboratory Technician,26112,6,Active,0122000262,92,2026-04-15
+HRA-363,Staff 363,Sales,Manager,202464,7,Active,0122000263,87,2026-04-15
+HRA-364,Staff 364,Research & Development,Laboratory Technician,41820,0,Terminated,0122000264,91,2026-04-15
+HRA-366,Staff 366,Sales,Sales Executive,79728,0,Active,0122000265,81,2026-04-15
+HRA-367,Staff 367,Research & Development,Healthcare Representative,66984,9,Active,0122000266,99,2026-04-15
+HRA-369,Staff 369,Research & Development,Healthcare Representative,48000,6,Active,0122000267,85,2026-04-15
+HRA-372,Staff 372,Research & Development,Healthcare Representative,161952,20,Active,0122000268,81,2026-04-15
+HRA-373,Staff 373,Research & Development,Laboratory Technician,38520,15,Active,0122000269,82,2026-04-15
+HRA-374,Staff 374,Research & Development,Manager,228540,36,Active,0122000270,84,2026-04-15
+HRA-376,Staff 376,Research & Development,Manager,142188,10,Terminated,0122000271,87,2026-04-15
+HRA-377,Staff 377,Research & Development,Research Scientist,24840,5,Active,0122000272,94,2026-04-15
+HRA-378,Staff 378,Sales,Sales Executive,78024,5,Active,0122000273,98,2026-04-15
+HRA-379,Staff 379,Research & Development,Research Scientist,38760,3,Active,0122000274,99,2026-04-15
+HRA-380,Staff 380,Research & Development,Research Director,163236,5,Active,0122000275,94,2026-04-15
+HRA-381,Staff 381,Research & Development,Manager,143952,7,Active,0122000276,99,2026-04-15
+HRA-382,Staff 382,Sales,Sales Executive,67260,8,Active,0122000277,98,2026-04-15
+HRA-384,Staff 384,Research & Development,Manufacturing Director,76764,6,Active,0122000278,83,2026-04-15
+HRA-385,Staff 385,Research & Development,Research Director,229728,10,Active,0122000279,93,2026-04-15
+HRA-386,Staff 386,Research & Development,Research Director,211008,5,Active,0122000280,96,2026-04-15
+HRA-387,Staff 387,Sales,Sales Executive,58884,20,Active,0122000281,91,2026-04-15
+HRA-388,Staff 388,Sales,Sales Executive,54648,10,Active,0122000282,86,2026-04-15
+HRA-389,Staff 389,Research & Development,Laboratory Technician,64980,10,Active,0122000283,96,2026-04-15
+HRA-390,Staff 390,Research & Development,Healthcare Representative,56892,5,Active,0122000284,86,2026-04-15
+HRA-391,Staff 391,Research & Development,Research Scientist,25380,17,Active,0122000285,88,2026-04-15
+HRA-392,Staff 392,Research & Development,Laboratory Technician,37932,1,Terminated,0122000286,82,2026-04-15
+HRA-393,Staff 393,Research & Development,Healthcare Representative,68940,2,Active,0122000287,92,2026-04-15
+HRA-394,Staff 394,Research & Development,Laboratory Technician,28476,3,Terminated,0122000288,97,2026-04-15
+HRA-395,Staff 395,Research & Development,Research Scientist,39720,5,Active,0122000289,92,2026-04-15
+HRA-396,Staff 396,Research & Development,Research Director,223980,3,Active,0122000290,99,2026-04-15
+HRA-397,Staff 397,Research & Development,Research Scientist,53820,8,Active,0122000291,97,2026-04-15
+HRA-399,Staff 399,Sales,Sales Representative,33468,2,Active,0122000292,93,2026-04-15
+HRA-401,Staff 401,Sales,Sales Executive,69936,8,Terminated,0122000293,86,2026-04-15
+HRA-403,Staff 403,Research & Development,Research Scientist,27912,4,Active,0122000294,81,2026-04-15
+HRA-404,Staff 404,Sales,Sales Executive,162300,20,Active,0122000295,84,2026-04-15
+HRA-405,Staff 405,Research & Development,Laboratory Technician,17040,0,Terminated,0122000296,91,2026-04-15
+HRA-406,Staff 406,Sales,Sales Executive,96240,11,Active,0122000297,87,2026-04-15
+HRA-407,Staff 407,Research & Development,Laboratory Technician,44256,1,Active,0122000298,95,2026-04-15
+HRA-408,Staff 408,Research & Development,Manufacturing Director,65784,4,Active,0122000299,80,2026-04-15
+HRA-410,Staff 410,Sales,Manager,192180,22,Active,0122000300,84,2026-04-15
+HRA-411,Staff 411,Sales,Sales Representative,14400,0,Active,0122000301,89,2026-04-15
+HRA-412,Staff 412,Research & Development,Healthcare Representative,67932,8,Active,0122000302,88,2026-04-15
+HRA-416,Staff 416,Sales,Sales Executive,83148,8,Active,0122000303,83,2026-04-15
+HRA-417,Staff 417,Research & Development,Healthcare Representative,115356,18,Active,0122000304,91,2026-04-15
+HRA-419,Staff 419,Research & Development,Laboratory Technician,68088,9,Active,0122000305,94,2026-04-15
+HRA-420,Staff 420,Sales,Sales Executive,65808,13,Active,0122000306,98,2026-04-15
+HRA-421,Staff 421,Research & Development,Research Director,144732,10,Active,0122000307,95,2026-04-15
+HRA-422,Staff 422,Research & Development,Healthcare Representative,67920,5,Active,0122000308,97,2026-04-15
+HRA-423,Staff 423,Research & Development,Research Scientist,57852,5,Active,0122000309,86,2026-04-15
+HRA-424,Staff 424,Human Resources,Human Resources,76920,2,Active,0122000310,89,2026-04-15
+HRA-425,Staff 425,Research & Development,Laboratory Technician,62520,24,Active,0122000311,86,2026-04-15
+HRA-426,Staff 426,Research & Development,Research Scientist,32340,2,Active,0122000312,89,2026-04-15
+HRA-428,Staff 428,Research & Development,Manager,142536,10,Active,0122000313,84,2026-04-15
+HRA-429,Staff 429,Research & Development,Manager,204816,21,Active,0122000314,98,2026-04-15
+HRA-430,Staff 430,Research & Development,Laboratory Technician,29460,8,Active,0122000315,91,2026-04-15
+HRA-431,Staff 431,Research & Development,Healthcare Representative,167568,7,Active,0122000316,97,2026-04-15
+HRA-433,Staff 433,Research & Development,Research Scientist,59292,8,Terminated,0122000317,94,2026-04-15
+HRA-434,Staff 434,Research & Development,Research Scientist,29736,4,Active,0122000318,94,2026-04-15
+HRA-436,Staff 436,Sales,Sales Executive,62736,13,Active,0122000319,95,2026-04-15
+HRA-437,Staff 437,Sales,Sales Executive,53736,5,Active,0122000320,87,2026-04-15
+HRA-438,Staff 438,Sales,Sales Executive,90564,7,Active,0122000321,93,2026-04-15
+HRA-439,Staff 439,Research & Development,Research Scientist,60660,7,Active,0122000322,86,2026-04-15
+HRA-440,Staff 440,Research & Development,Research Scientist,41568,3,Terminated,0122000323,98,2026-04-15
+HRA-441,Staff 441,Research & Development,Research Scientist,69300,10,Active,0122000324,86,2026-04-15
+HRA-442,Staff 442,Research & Development,Manufacturing Director,107316,10,Active,0122000325,84,2026-04-15
+HRA-444,Staff 444,Research & Development,Manager,231264,21,Active,0122000326,97,2026-04-15
+HRA-445,Staff 445,Sales,Sales Executive,62856,1,Terminated,0122000327,94,2026-04-15
+HRA-446,Staff 446,Sales,Sales Executive,56184,7,Active,0122000328,87,2026-04-15
+HRA-447,Staff 447,Research & Development,Research Director,219600,3,Active,0122000329,87,2026-04-15
+HRA-448,Staff 448,Research & Development,Laboratory Technician,63084,9,Active,0122000330,85,2026-04-15
+HRA-449,Staff 449,Sales,Sales Executive,76188,5,Active,0122000331,80,2026-04-15
+HRA-450,Staff 450,Research & Development,Research Scientist,58428,4,Active,0122000332,85,2026-04-15
+HRA-451,Staff 451,Research & Development,Healthcare Representative,119820,1,Active,0122000333,91,2026-04-15
+HRA-452,Staff 452,Research & Development,Research Scientist,44364,10,Active,0122000334,94,2026-04-15
+HRA-453,Staff 453,Sales,Sales Executive,89484,4,Active,0122000335,89,2026-04-15
+HRA-454,Staff 454,Research & Development,Laboratory Technician,25428,7,Terminated,0122000336,87,2026-04-15
+HRA-455,Staff 455,Research & Development,Laboratory Technician,47796,3,Active,0122000337,89,2026-04-15
+HRA-456,Staff 456,Sales,Sales Executive,73416,10,Active,0122000338,81,2026-04-15
+HRA-458,Staff 458,Sales,Sales Executive,74568,8,Active,0122000339,83,2026-04-15
+HRA-460,Staff 460,Research & Development,Manufacturing Director,76164,6,Active,0122000340,83,2026-04-15
+HRA-461,Staff 461,Research & Development,Research Director,138120,11,Active,0122000341,86,2026-04-15
+HRA-462,Staff 462,Research & Development,Manufacturing Director,85716,11,Active,0122000342,83,2026-04-15
+HRA-463,Staff 463,Sales,Sales Executive,99216,7,Active,0122000343,85,2026-04-15
+HRA-464,Staff 464,Research & Development,Manufacturing Director,97140,16,Active,0122000344,97,2026-04-15
+HRA-465,Staff 465,Research & Development,Research Scientist,34848,4,Active,0122000345,94,2026-04-15
+HRA-466,Staff 466,Research & Development,Manufacturing Director,72384,5,Active,0122000346,87,2026-04-15
+HRA-467,Staff 467,Sales,Sales Representative,35712,0,Active,0122000347,85,2026-04-15
+HRA-468,Staff 468,Research & Development,Research Director,191904,1,Active,0122000348,88,2026-04-15
+HRA-469,Staff 469,Sales,Sales Executive,55788,4,Active,0122000349,97,2026-04-15
+HRA-470,Staff 470,Human Resources,Human Resources,32352,3,Active,0122000350,94,2026-04-15
+HRA-471,Staff 471,Research & Development,Laboratory Technician,28440,8,Active,0122000351,94,2026-04-15
+HRA-473,Staff 473,Sales,Manager,150048,0,Active,0122000352,80,2026-04-15
+HRA-474,Staff 474,Research & Development,Research Scientist,71688,7,Active,0122000353,99,2026-04-15
+HRA-475,Staff 475,Sales,Sales Executive,56832,2,Active,0122000354,93,2026-04-15
+HRA-476,Staff 476,Sales,Sales Executive,63552,8,Active,0122000355,93,2026-04-15
+HRA-477,Staff 477,Research & Development,Healthcare Representative,81372,1,Active,0122000356,86,2026-04-15
+HRA-478,Staff 478,Sales,Sales Representative,26088,3,Terminated,0122000357,85,2026-04-15
+HRA-479,Staff 479,Sales,Sales Executive,79836,1,Active,0122000358,84,2026-04-15
+HRA-481,Staff 481,Sales,Sales Executive,116388,13,Active,0122000359,98,2026-04-15
+HRA-482,Staff 482,Research & Development,Healthcare Representative,81060,3,Active,0122000360,92,2026-04-15
+HRA-483,Staff 483,Research & Development,Laboratory Technician,26556,7,Active,0122000361,93,2026-04-15
+HRA-484,Staff 484,Sales,Sales Representative,31320,3,Active,0122000362,80,2026-04-15
+HRA-485,Staff 485,Sales,Sales Representative,34212,1,Terminated,0122000363,96,2026-04-15
+HRA-486,Staff 486,Research & Development,Laboratory Technician,41424,5,Active,0122000364,86,2026-04-15
+HRA-487,Staff 487,Research & Development,Manufacturing Director,63096,1,Active,0122000365,98,2026-04-15
+HRA-488,Staff 488,Sales,Sales Executive,112260,8,Terminated,0122000366,80,2026-04-15
+HRA-491,Staff 491,Research & Development,Healthcare Representative,125952,4,Active,0122000367,91,2026-04-15
+HRA-492,Staff 492,Sales,Sales Executive,76560,6,Terminated,0122000368,96,2026-04-15
+HRA-493,Staff 493,Research & Development,Research Scientist,31884,2,Active,0122000369,84,2026-04-15
+HRA-494,Staff 494,Sales,Sales Representative,32592,1,Terminated,0122000370,85,2026-04-15
+HRA-495,Staff 495,Research & Development,Research Scientist,26412,3,Active,0122000371,91,2026-04-15
+HRA-496,Staff 496,Research & Development,Healthcare Representative,78480,1,Active,0122000372,90,2026-04-15
+HRA-497,Staff 497,Research & Development,Laboratory Technician,45792,5,Active,0122000373,82,2026-04-15
+HRA-498,Staff 498,Sales,Sales Executive,63036,7,Active,0122000374,86,2026-04-15
+HRA-499,Staff 499,Research & Development,Healthcare Representative,131580,5,Active,0122000375,99,2026-04-15
+HRA-500,Staff 500,Sales,Sales Executive,59232,7,Active,0122000376,86,2026-04-15
+HRA-501,Staff 501,Research & Development,Research Scientist,30516,2,Active,0122000377,99,2026-04-15
+HRA-502,Staff 502,Sales,Sales Executive,63648,5,Terminated,0122000378,81,2026-04-15
+HRA-505,Staff 505,Research & Development,Manager,199908,5,Active,0122000379,98,2026-04-15
+HRA-507,Staff 507,Sales,Sales Executive,51120,5,Active,0122000380,89,2026-04-15
+HRA-508,Staff 508,Sales,Sales Representative,29712,1,Active,0122000381,81,2026-04-15
+HRA-510,Staff 510,Research & Development,Research Scientist,37224,6,Terminated,0122000382,83,2026-04-15
+HRA-511,Staff 511,Research & Development,Research Scientist,26928,2,Active,0122000383,86,2026-04-15
+HRA-513,Staff 513,Sales,Sales Executive,91152,10,Active,0122000384,90,2026-04-15
+HRA-514,Staff 514,Research & Development,Research Scientist,27420,1,Terminated,0122000385,84,2026-04-15
+HRA-515,Staff 515,Research & Development,Laboratory Technician,36408,18,Active,0122000386,86,2026-04-15
+HRA-516,Staff 516,Sales,Sales Executive,68580,5,Active,0122000387,95,2026-04-15
+HRA-517,Staff 517,Research & Development,Laboratory Technician,30912,5,Active,0122000388,90,2026-04-15
+HRA-518,Staff 518,Research & Development,Manufacturing Director,50364,1,Active,0122000389,87,2026-04-15
+HRA-520,Staff 520,Research & Development,Research Director,172032,25,Active,0122000390,83,2026-04-15
+HRA-521,Staff 521,Research & Development,Laboratory Technician,41376,1,Active,0122000391,96,2026-04-15
+HRA-522,Staff 522,Research & Development,Research Director,232872,4,Active,0122000392,96,2026-04-15
+HRA-523,Staff 523,Sales,Sales Executive,78456,3,Active,0122000393,97,2026-04-15
+HRA-524,Staff 524,Research & Development,Manufacturing Director,51672,13,Active,0122000394,98,2026-04-15
+HRA-525,Staff 525,Research & Development,Laboratory Technician,27096,3,Active,0122000395,94,2026-04-15
+HRA-526,Staff 526,Research & Development,Healthcare Representative,54264,5,Active,0122000396,92,2026-04-15
+HRA-527,Staff 527,Sales,Sales Executive,53844,5,Active,0122000397,90,2026-04-15
+HRA-529,Staff 529,Research & Development,Research Scientist,53388,13,Active,0122000398,91,2026-04-15
+HRA-530,Staff 530,Research & Development,Laboratory Technician,26616,4,Active,0122000399,87,2026-04-15
+HRA-531,Staff 531,Research & Development,Manager,230364,21,Active,0122000400,83,2026-04-15
+HRA-532,Staff 532,Sales,Sales Executive,158544,7,Active,0122000401,82,2026-04-15
+HRA-533,Staff 533,Sales,Sales Executive,78924,5,Active,0122000402,93,2026-04-15
+HRA-534,Staff 534,Sales,Sales Executive,100704,10,Active,0122000403,84,2026-04-15
+HRA-536,Staff 536,Research & Development,Laboratory Technician,54696,10,Active,0122000404,98,2026-04-15
+HRA-538,Staff 538,Research & Development,Laboratory Technician,48372,2,Terminated,0122000405,83,2026-04-15
+HRA-543,Staff 543,Research & Development,Manufacturing Director,95628,5,Active,0122000406,86,2026-04-15
+HRA-544,Staff 544,Research & Development,Research Scientist,31848,2,Active,0122000407,87,2026-04-15
+HRA-546,Staff 546,Research & Development,Manager,198660,5,Active,0122000408,99,2026-04-15
+HRA-547,Staff 547,Research & Development,Research Scientist,54672,5,Active,0122000409,96,2026-04-15
+HRA-548,Staff 548,Research & Development,Manufacturing Director,73092,5,Active,0122000410,80,2026-04-15
+HRA-549,Staff 549,Research & Development,Manager,234792,29,Active,0122000411,93,2026-04-15
+HRA-550,Staff 550,Research & Development,Manufacturing Director,57720,10,Active,0122000412,97,2026-04-15
+HRA-551,Staff 551,Research & Development,Healthcare Representative,54276,6,Active,0122000413,96,2026-04-15
+HRA-554,Staff 554,Sales,Sales Representative,38424,5,Terminated,0122000414,96,2026-04-15
+HRA-555,Staff 555,Sales,Sales Representative,28212,2,Terminated,0122000415,86,2026-04-15
+HRA-556,Staff 556,Research & Development,Laboratory Technician,20424,1,Active,0122000416,98,2026-04-15
+HRA-558,Staff 558,Sales,Manager,216492,20,Active,0122000417,87,2026-04-15
+HRA-560,Staff 560,Research & Development,Research Scientist,34632,3,Active,0122000418,87,2026-04-15
+HRA-562,Staff 562,Research & Development,Laboratory Technician,25164,5,Active,0122000419,87,2026-04-15
+HRA-564,Staff 564,Research & Development,Research Director,143220,10,Active,0122000420,92,2026-04-15
+HRA-565,Staff 565,Research & Development,Research Scientist,30552,2,Terminated,0122000421,91,2026-04-15
+HRA-566,Staff 566,Human Resources,Human Resources,30768,1,Terminated,0122000422,94,2026-04-15
+HRA-567,Staff 567,Sales,Sales Executive,100944,9,Active,0122000423,98,2026-04-15
+HRA-568,Staff 568,Sales,Manager,169416,1,Active,0122000424,83,2026-04-15
+HRA-569,Staff 569,Research & Development,Manager,204552,27,Active,0122000425,93,2026-04-15
+HRA-571,Staff 571,Research & Development,Laboratory Technician,30768,11,Active,0122000426,87,2026-04-15
+HRA-573,Staff 573,Sales,Sales Executive,123192,18,Active,0122000427,88,2026-04-15
+HRA-574,Staff 574,Research & Development,Manufacturing Director,60840,5,Active,0122000428,97,2026-04-15
+HRA-575,Staff 575,Research & Development,Research Director,214332,3,Active,0122000429,93,2026-04-15
+HRA-577,Staff 577,Research & Development,Laboratory Technician,50760,5,Active,0122000430,82,2026-04-15
+HRA-578,Staff 578,Research & Development,Laboratory Technician,45360,1,Active,0122000431,87,2026-04-15
+HRA-579,Staff 579,Research & Development,Research Scientist,33216,7,Active,0122000432,91,2026-04-15
+HRA-580,Staff 580,Sales,Sales Executive,108852,3,Active,0122000433,91,2026-04-15
+HRA-581,Staff 581,Research & Development,Manufacturing Director,127776,13,Active,0122000434,88,2026-04-15
+HRA-582,Staff 582,Research & Development,Manager,163320,7,Terminated,0122000435,96,2026-04-15
+HRA-584,Staff 584,Research & Development,Laboratory Technician,40896,4,Terminated,0122000436,80,2026-04-15
+HRA-585,Staff 585,Sales,Sales Representative,35796,3,Active,0122000437,87,2026-04-15
+HRA-586,Staff 586,Research & Development,Healthcare Representative,91584,8,Active,0122000438,99,2026-04-15
+HRA-587,Staff 587,Research & Development,Healthcare Representative,117888,1,Terminated,0122000439,84,2026-04-15
+HRA-590,Staff 590,Human Resources,Human Resources,119400,3,Terminated,0122000440,83,2026-04-15
+HRA-591,Staff 591,Research & Development,Laboratory Technician,25116,2,Active,0122000441,83,2026-04-15
+HRA-592,Staff 592,Sales,Sales Executive,119760,10,Active,0122000442,82,2026-04-15
+HRA-593,Staff 593,Research & Development,Laboratory Technician,46728,2,Terminated,0122000443,90,2026-04-15
+HRA-595,Staff 595,Sales,Sales Executive,48612,9,Active,0122000444,91,2026-04-15
+HRA-597,Staff 597,Sales,Manager,202020,10,Active,0122000445,94,2026-04-15
+HRA-599,Staff 599,Sales,Sales Executive,74760,14,Active,0122000446,88,2026-04-15
+HRA-600,Staff 600,Sales,Sales Executive,56604,11,Active,0122000447,92,2026-04-15
+HRA-601,Staff 601,Research & Development,Manufacturing Director,158844,20,Active,0122000448,89,2026-04-15
+HRA-602,Staff 602,Research & Development,Laboratory Technician,45060,8,Active,0122000449,80,2026-04-15
+HRA-604,Staff 604,Sales,Sales Executive,78984,6,Active,0122000450,81,2026-04-15
+HRA-605,Staff 605,Research & Development,Manufacturing Director,88872,10,Active,0122000451,96,2026-04-15
+HRA-606,Staff 606,Sales,Sales Executive,57660,8,Active,0122000452,84,2026-04-15
+HRA-608,Staff 608,Human Resources,Human Resources,32892,7,Terminated,0122000453,93,2026-04-15
+HRA-611,Staff 611,Research & Development,Manufacturing Director,51144,3,Active,0122000454,88,2026-04-15
+HRA-612,Staff 612,Research & Development,Research Director,194208,6,Active,0122000455,81,2026-04-15
+HRA-613,Staff 613,Sales,Manager,138684,5,Active,0122000456,82,2026-04-15
+HRA-614,Staff 614,Sales,Sales Representative,22536,0,Terminated,0122000457,89,2026-04-15
+HRA-615,Staff 615,Sales,Sales Executive,131184,1,Active,0122000458,93,2026-04-15
+HRA-616,Staff 616,Research & Development,Healthcare Representative,81732,8,Active,0122000459,82,2026-04-15
+HRA-618,Staff 618,Sales,Sales Executive,51672,0,Active,0122000460,97,2026-04-15
+HRA-620,Staff 620,Sales,Sales Executive,58308,5,Active,0122000461,80,2026-04-15
+HRA-621,Staff 621,Sales,Sales Executive,64044,10,Active,0122000462,90,2026-04-15
+HRA-622,Staff 622,Research & Development,Laboratory Technician,28080,1,Terminated,0122000463,82,2026-04-15
+HRA-623,Staff 623,Research & Development,Manufacturing Director,89892,6,Active,0122000464,81,2026-04-15
+HRA-624,Staff 624,Research & Development,Healthcare Representative,126324,2,Active,0122000465,83,2026-04-15
+HRA-625,Staff 625,Sales,Manager,199140,18,Active,0122000466,96,2026-04-15
+HRA-626,Staff 626,Sales,Sales Executive,106008,9,Active,0122000467,80,2026-04-15
+HRA-630,Staff 630,Research & Development,Research Scientist,66924,10,Active,0122000468,83,2026-04-15
+HRA-631,Staff 631,Sales,Sales Executive,56484,4,Terminated,0122000469,87,2026-04-15
+HRA-632,Staff 632,Sales,Sales Representative,28800,2,Active,0122000470,94,2026-04-15
+HRA-634,Staff 634,Research & Development,Healthcare Representative,117888,1,Active,0122000471,90,2026-04-15
+HRA-635,Staff 635,Research & Development,Manufacturing Director,77364,6,Active,0122000472,94,2026-04-15
+HRA-638,Staff 638,Research & Development,Research Director,234024,31,Active,0122000473,91,2026-04-15
+HRA-639,Staff 639,Research & Development,Research Scientist,32700,6,Active,0122000474,82,2026-04-15
+HRA-641,Staff 641,Sales,Sales Executive,75264,5,Active,0122000475,83,2026-04-15
+HRA-643,Staff 643,Research & Development,Laboratory Technician,25524,1,Active,0122000476,83,2026-04-15
+HRA-644,Staff 644,Human Resources,Manager,218400,32,Active,0122000477,96,2026-04-15
+HRA-645,Staff 645,Sales,Sales Representative,25152,7,Active,0122000478,89,2026-04-15
+HRA-647,Staff 647,Research & Development,Laboratory Technician,34632,6,Terminated,0122000479,91,2026-04-15
+HRA-648,Staff 648,Sales,Sales Representative,24396,1,Terminated,0122000480,92,2026-04-15
+HRA-649,Staff 649,Research & Development,Research Scientist,43464,6,Active,0122000481,80,2026-04-15
+HRA-650,Staff 650,Sales,Sales Executive,50796,3,Terminated,0122000482,88,2026-04-15
+HRA-652,Staff 652,Research & Development,Laboratory Technician,44172,3,Active,0122000483,86,2026-04-15
+HRA-653,Staff 653,Sales,Sales Executive,65520,7,Active,0122000484,89,2026-04-15
+HRA-655,Staff 655,Research & Development,Research Scientist,26244,5,Active,0122000485,84,2026-04-15
+HRA-656,Staff 656,Sales,Sales Executive,115224,3,Active,0122000486,92,2026-04-15
+HRA-657,Staff 657,Research & Development,Research Scientist,34032,1,Active,0122000487,87,2026-04-15
+HRA-659,Staff 659,Research & Development,Healthcare Representative,49068,10,Active,0122000488,98,2026-04-15
+HRA-661,Staff 661,Research & Development,Research Director,199524,1,Active,0122000489,97,2026-04-15
+HRA-662,Staff 662,Research & Development,Research Scientist,31428,0,Active,0122000490,80,2026-04-15
+HRA-663,Staff 663,Research & Development,Laboratory Technician,68148,8,Active,0122000491,80,2026-04-15
+HRA-664,Staff 664,Research & Development,Manager,184824,3,Active,0122000492,83,2026-04-15
+HRA-665,Staff 665,Human Resources,Human Resources,71820,2,Active,0122000493,99,2026-04-15
+HRA-666,Staff 666,Sales,Sales Representative,30948,8,Active,0122000494,82,2026-04-15
+HRA-667,Staff 667,Sales,Sales Representative,36492,4,Terminated,0122000495,83,2026-04-15
+HRA-669,Staff 669,Sales,Sales Representative,41364,3,Active,0122000496,91,2026-04-15
+HRA-671,Staff 671,Research & Development,Manager,234156,2,Active,0122000497,81,2026-04-15
+HRA-675,Staff 675,Research & Development,Research Scientist,33276,2,Active,0122000498,98,2026-04-15
+HRA-677,Staff 677,Sales,Sales Executive,85248,5,Active,0122000499,94,2026-04-15
+HRA-679,Staff 679,Research & Development,Research Scientist,75864,6,Active,0122000500,86,2026-04-15
+HRA-680,Staff 680,Research & Development,Research Scientist,24996,1,Active,0122000501,92,2026-04-15
+HRA-682,Staff 682,Sales,Sales Executive,100572,14,Active,0122000502,86,2026-04-15
+HRA-683,Staff 683,Research & Development,Research Scientist,32292,10,Active,0122000503,98,2026-04-15
+HRA-684,Staff 684,Sales,Sales Executive,51432,1,Terminated,0122000504,84,2026-04-15
+HRA-686,Staff 686,Research & Development,Laboratory Technician,31908,3,Active,0122000505,84,2026-04-15
+HRA-689,Staff 689,Research & Development,Manufacturing Director,113208,10,Active,0122000506,99,2026-04-15
+HRA-690,Staff 690,Sales,Sales Executive,66732,6,Active,0122000507,98,2026-04-15
+HRA-691,Staff 691,Research & Development,Research Scientist,79752,17,Active,0122000508,89,2026-04-15
+HRA-692,Staff 692,Research & Development,Healthcare Representative,92700,13,Active,0122000509,85,2026-04-15
+HRA-698,Staff 698,Human Resources,Human Resources,128700,9,Active,0122000510,86,2026-04-15
+HRA-699,Staff 699,Research & Development,Manufacturing Director,106164,3,Active,0122000511,81,2026-04-15
+HRA-700,Staff 700,Research & Development,Research Scientist,24540,4,Active,0122000512,90,2026-04-15
+HRA-701,Staff 701,Research & Development,Research Scientist,12108,1,Terminated,0122000513,86,2026-04-15
+HRA-702,Staff 702,Research & Development,Research Scientist,40176,10,Terminated,0122000514,85,2026-04-15
+HRA-704,Staff 704,Research & Development,Laboratory Technician,15372,1,Active,0122000515,93,2026-04-15
+HRA-705,Staff 705,Research & Development,Research Scientist,33828,3,Active,0122000516,92,2026-04-15
+HRA-707,Staff 707,Sales,Sales Executive,58212,3,Active,0122000517,90,2026-04-15
+HRA-709,Staff 709,Sales,Sales Executive,48336,7,Active,0122000518,86,2026-04-15
+HRA-710,Staff 710,Research & Development,Research Scientist,32640,10,Active,0122000519,89,2026-04-15
+HRA-712,Staff 712,Sales,Sales Executive,97440,2,Active,0122000520,93,2026-04-15
+HRA-714,Staff 714,Sales,Sales Executive,55764,6,Active,0122000521,93,2026-04-15
+HRA-715,Staff 715,Research & Development,Research Scientist,56160,1,Active,0122000522,83,2026-04-15
+HRA-716,Staff 716,Research & Development,Laboratory Technician,38652,20,Active,0122000523,95,2026-04-15
+HRA-717,Staff 717,Research & Development,Healthcare Representative,103452,8,Active,0122000524,92,2026-04-15
+HRA-720,Staff 720,Sales,Sales Executive,54924,2,Terminated,0122000525,83,2026-04-15
+HRA-721,Staff 721,Research & Development,Healthcare Representative,54636,20,Active,0122000526,82,2026-04-15
+HRA-722,Staff 722,Sales,Sales Executive,64752,10,Active,0122000527,97,2026-04-15
+HRA-723,Staff 723,Sales,Sales Executive,81552,4,Terminated,0122000528,83,2026-04-15
+HRA-724,Staff 724,Research & Development,Healthcare Representative,91500,9,Active,0122000529,85,2026-04-15
+HRA-725,Staff 725,Research & Development,Manufacturing Director,88944,9,Active,0122000530,85,2026-04-15
+HRA-727,Staff 727,Research & Development,Research Director,133908,7,Active,0122000531,92,2026-04-15
+HRA-728,Staff 728,Sales,Sales Executive,59520,7,Active,0122000532,86,2026-04-15
+HRA-729,Staff 729,Sales,Sales Executive,125700,18,Active,0122000533,97,2026-04-15
+HRA-730,Staff 730,Research & Development,Research Director,177768,5,Active,0122000534,88,2026-04-15
+HRA-731,Staff 731,Human Resources,Manager,229692,21,Active,0122000535,95,2026-04-15
+HRA-732,Staff 732,Sales,Sales Executive,64860,2,Active,0122000536,88,2026-04-15
+HRA-733,Staff 733,Research & Development,Manufacturing Director,105516,9,Active,0122000537,85,2026-04-15
+HRA-734,Staff 734,Human Resources,Manager,230268,22,Active,0122000538,99,2026-04-15
+HRA-738,Staff 738,Sales,Sales Representative,46500,2,Active,0122000539,81,2026-04-15
+HRA-741,Staff 741,Research & Development,Research Scientist,26592,7,Terminated,0122000540,90,2026-04-15
+HRA-742,Staff 742,Research & Development,Research Director,140556,8,Active,0122000541,88,2026-04-15
+HRA-743,Staff 743,Research & Development,Manufacturing Director,94332,1,Active,0122000542,93,2026-04-15
+HRA-744,Staff 744,Research & Development,Laboratory Technician,44496,5,Active,0122000543,85,2026-04-15
+HRA-746,Staff 746,Sales,Sales Executive,165240,22,Active,0122000544,83,2026-04-15
+HRA-747,Staff 747,Sales,Sales Executive,63648,8,Active,0122000545,99,2026-04-15
+HRA-749,Staff 749,Sales,Sales Representative,31704,1,Active,0122000546,86,2026-04-15
+HRA-752,Staff 752,Research & Development,Research Scientist,33108,2,Terminated,0122000547,89,2026-04-15
+HRA-754,Staff 754,Sales,Sales Executive,81648,2,Active,0122000548,80,2026-04-15
+HRA-757,Staff 757,Research & Development,Healthcare Representative,73704,5,Active,0122000549,90,2026-04-15
+HRA-758,Staff 758,Research & Development,Laboratory Technician,30000,4,Active,0122000550,85,2026-04-15
+HRA-760,Staff 760,Human Resources,Human Resources,76668,8,Active,0122000551,94,2026-04-15
+HRA-762,Staff 762,Research & Development,Healthcare Representative,133236,10,Active,0122000552,89,2026-04-15
+HRA-763,Staff 763,Research & Development,Research Scientist,28104,4,Active,0122000553,93,2026-04-15
+HRA-764,Staff 764,Research & Development,Healthcare Representative,81732,7,Active,0122000554,91,2026-04-15
+HRA-766,Staff 766,Sales,Sales Representative,27564,2,Active,0122000555,97,2026-04-15
+HRA-769,Staff 769,Research & Development,Laboratory Technician,29400,2,Active,0122000556,83,2026-04-15
+HRA-771,Staff 771,Research & Development,Healthcare Representative,61116,1,Active,0122000557,86,2026-04-15
+HRA-772,Staff 772,Research & Development,Laboratory Technician,63708,10,Active,0122000558,84,2026-04-15
+HRA-773,Staff 773,Research & Development,Research Scientist,36684,1,Active,0122000559,81,2026-04-15
+HRA-775,Staff 775,Research & Development,Manufacturing Director,61452,0,Active,0122000560,87,2026-04-15
+HRA-776,Staff 776,Sales,Manager,202272,34,Active,0122000561,87,2026-04-15
+HRA-780,Staff 780,Research & Development,Research Scientist,32232,10,Terminated,0122000562,80,2026-04-15
+HRA-781,Staff 781,Sales,Sales Executive,74160,6,Active,0122000563,96,2026-04-15
+HRA-783,Staff 783,Sales,Sales Representative,79584,8,Active,0122000564,92,2026-04-15
+HRA-784,Staff 784,Research & Development,Research Scientist,42060,2,Active,0122000565,90,2026-04-15
+HRA-785,Staff 785,Sales,Sales Executive,76764,5,Terminated,0122000566,96,2026-04-15
+HRA-786,Staff 786,Sales,Sales Executive,75288,6,Active,0122000567,96,2026-04-15
+HRA-787,Staff 787,Research & Development,Manager,238308,5,Terminated,0122000568,94,2026-04-15
+HRA-789,Staff 789,Sales,Sales Executive,91044,10,Active,0122000569,90,2026-04-15
+HRA-791,Staff 791,Research & Development,Research Scientist,51096,4,Active,0122000570,90,2026-04-15
+HRA-792,Staff 792,Research & Development,Laboratory Technician,52368,2,Active,0122000571,91,2026-04-15
+HRA-793,Staff 793,Research & Development,Healthcare Representative,52020,8,Active,0122000572,97,2026-04-15
+HRA-796,Staff 796,Sales,Sales Executive,63912,4,Terminated,0122000573,84,2026-04-15
+HRA-797,Staff 797,Research & Development,Research Scientist,39360,4,Active,0122000574,91,2026-04-15
+HRA-799,Staff 799,Research & Development,Manufacturing Director,65820,5,Active,0122000575,84,2026-04-15
+HRA-800,Staff 800,Sales,Sales Executive,52104,4,Active,0122000576,83,2026-04-15
+HRA-802,Staff 802,Research & Development,Research Scientist,33384,5,Active,0122000577,82,2026-04-15
+HRA-803,Staff 803,Research & Development,Manufacturing Director,71760,15,Active,0122000578,98,2026-04-15
+HRA-804,Staff 804,Research & Development,Research Scientist,52572,6,Active,0122000579,99,2026-04-15
+HRA-805,Staff 805,Sales,Sales Representative,30864,3,Active,0122000580,82,2026-04-15
+HRA-806,Staff 806,Research & Development,Laboratory Technician,45996,2,Active,0122000581,97,2026-04-15
+HRA-807,Staff 807,Research & Development,Healthcare Representative,50928,8,Active,0122000582,84,2026-04-15
+HRA-808,Staff 808,Sales,Sales Executive,78000,3,Active,0122000583,88,2026-04-15
+HRA-809,Staff 809,Research & Development,Manager,221160,24,Active,0122000584,97,2026-04-15
+HRA-811,Staff 811,Research & Development,Laboratory Technician,19212,0,Terminated,0122000585,97,2026-04-15
+HRA-812,Staff 812,Research & Development,Laboratory Technician,32328,1,Active,0122000586,99,2026-04-15
+HRA-813,Staff 813,Research & Development,Laboratory Technician,37788,5,Active,0122000587,94,2026-04-15
+HRA-815,Staff 815,Research & Development,Research Director,211668,4,Active,0122000588,98,2026-04-15
+HRA-816,Staff 816,Research & Development,Laboratory Technician,27828,1,Terminated,0122000589,98,2026-04-15
+HRA-817,Staff 817,Research & Development,Research Director,140292,13,Active,0122000590,89,2026-04-15
+HRA-819,Staff 819,Sales,Sales Executive,63888,3,Terminated,0122000591,80,2026-04-15
+HRA-820,Staff 820,Research & Development,Manager,201024,26,Active,0122000592,82,2026-04-15
+HRA-823,Staff 823,Research & Development,Manufacturing Director,62736,9,Active,0122000593,90,2026-04-15
+HRA-824,Staff 824,Research & Development,Research Scientist,32400,10,Active,0122000594,85,2026-04-15
+HRA-825,Staff 825,Research & Development,Research Director,230952,31,Terminated,0122000595,84,2026-04-15
+HRA-826,Staff 826,Research & Development,Research Scientist,30072,2,Active,0122000596,89,2026-04-15
+HRA-827,Staff 827,Research & Development,Manufacturing Director,72744,4,Active,0122000597,84,2026-04-15
+HRA-828,Staff 828,Research & Development,Research Scientist,52584,2,Terminated,0122000598,99,2026-04-15
+HRA-829,Staff 829,Human Resources,Human Resources,25716,5,Active,0122000599,83,2026-04-15
+HRA-830,Staff 830,Research & Development,Manufacturing Director,73944,14,Active,0122000600,83,2026-04-15
+HRA-832,Staff 832,Research & Development,Laboratory Technician,61128,1,Active,0122000601,84,2026-04-15
+HRA-833,Staff 833,Research & Development,Manufacturing Director,82524,0,Active,0122000602,97,2026-04-15
+HRA-834,Staff 834,Research & Development,Research Scientist,27288,1,Active,0122000603,84,2026-04-15
+HRA-836,Staff 836,Research & Development,Manufacturing Director,53208,9,Active,0122000604,81,2026-04-15
+HRA-837,Staff 837,Research & Development,Healthcare Representative,75456,4,Active,0122000605,95,2026-04-15
+HRA-838,Staff 838,Research & Development,Research Scientist,30636,5,Active,0122000606,99,2026-04-15
+HRA-840,Staff 840,Sales,Sales Executive,91848,9,Terminated,0122000607,82,2026-04-15
+HRA-842,Staff 842,Sales,Sales Executive,61920,9,Terminated,0122000608,90,2026-04-15
+HRA-843,Staff 843,Research & Development,Research Director,205908,4,Active,0122000609,86,2026-04-15
+HRA-844,Staff 844,Research & Development,Research Director,153696,9,Active,0122000610,91,2026-04-15
+HRA-845,Staff 845,Research & Development,Manufacturing Director,122652,8,Active,0122000611,85,2026-04-15
+HRA-846,Staff 846,Sales,Sales Executive,57348,8,Active,0122000612,81,2026-04-15
+HRA-847,Staff 847,Human Resources,Human Resources,44844,3,Active,0122000613,80,2026-04-15
+HRA-848,Staff 848,Research & Development,Research Scientist,28392,8,Terminated,0122000614,99,2026-04-15
+HRA-850,Staff 850,Research & Development,Research Scientist,20472,0,Active,0122000615,80,2026-04-15
+HRA-851,Staff 851,Sales,Manager,195684,20,Active,0122000616,85,2026-04-15
+HRA-852,Staff 852,Research & Development,Healthcare Representative,71196,5,Active,0122000617,98,2026-04-15
+HRA-854,Staff 854,Research & Development,Research Scientist,41088,4,Active,0122000618,85,2026-04-15
+HRA-855,Staff 855,Sales,Sales Executive,48444,9,Active,0122000619,96,2026-04-15
+HRA-856,Staff 856,Research & Development,Research Scientist,30708,6,Active,0122000620,94,2026-04-15
+HRA-857,Staff 857,Sales,Sales Executive,74412,18,Active,0122000621,93,2026-04-15
+HRA-859,Staff 859,Sales,Sales Executive,52836,5,Active,0122000622,82,2026-04-15
+HRA-861,Staff 861,Research & Development,Research Scientist,45132,5,Active,0122000623,95,2026-04-15
+HRA-862,Staff 862,Sales,Sales Executive,131208,5,Active,0122000624,86,2026-04-15
+HRA-864,Staff 864,Sales,Sales Executive,129132,5,Active,0122000625,95,2026-04-15
+HRA-865,Staff 865,Research & Development,Research Scientist,62100,5,Active,0122000626,87,2026-04-15
+HRA-867,Staff 867,Research & Development,Manufacturing Director,165912,9,Active,0122000627,82,2026-04-15
+HRA-868,Staff 868,Sales,Sales Executive,76008,1,Active,0122000628,96,2026-04-15
+HRA-869,Staff 869,Human Resources,Human Resources,59232,5,Active,0122000629,90,2026-04-15
+HRA-872,Staff 872,Research & Development,Manufacturing Director,57300,2,Active,0122000630,92,2026-04-15
+HRA-874,Staff 874,Research & Development,Laboratory Technician,33816,3,Active,0122000631,83,2026-04-15
+HRA-875,Staff 875,Research & Development,Research Scientist,30180,2,Active,0122000632,84,2026-04-15
+HRA-878,Staff 878,Human Resources,Human Resources,28104,5,Active,0122000633,83,2026-04-15
+HRA-879,Staff 879,Sales,Sales Executive,50328,5,Active,0122000634,91,2026-04-15
+HRA-880,Staff 880,Research & Development,Manufacturing Director,128220,17,Active,0122000635,82,2026-04-15
+HRA-881,Staff 881,Research & Development,Research Scientist,24264,10,Terminated,0122000636,93,2026-04-15
+HRA-882,Staff 882,Research & Development,Laboratory Technician,27768,3,Active,0122000637,89,2026-04-15
+HRA-885,Staff 885,Sales,Sales Executive,51072,5,Active,0122000638,87,2026-04-15
+HRA-887,Staff 887,Research & Development,Research Scientist,42960,4,Active,0122000639,99,2026-04-15
+HRA-888,Staff 888,Research & Development,Laboratory Technician,37944,5,Active,0122000640,91,2026-04-15
+HRA-889,Staff 889,Sales,Sales Executive,78288,10,Active,0122000641,88,2026-04-15
+HRA-893,Staff 893,Sales,Sales Representative,34788,2,Active,0122000642,98,2026-04-15
+HRA-894,Staff 894,Research & Development,Laboratory Technician,62772,5,Active,0122000643,83,2026-04-15
+HRA-895,Staff 895,Research & Development,Research Scientist,28272,6,Active,0122000644,98,2026-04-15
+HRA-896,Staff 896,Sales,Sales Representative,33600,3,Terminated,0122000645,90,2026-04-15
+HRA-897,Staff 897,Sales,Sales Executive,142032,2,Active,0122000646,80,2026-04-15
+HRA-899,Staff 899,Research & Development,Manufacturing Director,130836,13,Active,0122000647,86,2026-04-15
+HRA-900,Staff 900,Sales,Sales Representative,35676,5,Active,0122000648,85,2026-04-15
+HRA-901,Staff 901,Research & Development,Research Director,171300,12,Active,0122000649,97,2026-04-15
+HRA-902,Staff 902,Research & Development,Healthcare Representative,66744,5,Active,0122000650,95,2026-04-15
+HRA-903,Staff 903,Sales,Sales Executive,54444,7,Active,0122000651,89,2026-04-15
+HRA-904,Staff 904,Sales,Sales Executive,91704,10,Active,0122000652,97,2026-04-15
+HRA-905,Staff 905,Research & Development,Manager,215088,31,Active,0122000653,95,2026-04-15
+HRA-909,Staff 909,Human Resources,Human Resources,62448,5,Active,0122000654,94,2026-04-15
+HRA-910,Staff 910,Human Resources,Human Resources,27324,4,Active,0122000655,91,2026-04-15
+HRA-911,Staff 911,Research & Development,Laboratory Technician,33540,1,Terminated,0122000656,90,2026-04-15
+HRA-912,Staff 912,Research & Development,Laboratory Technician,30384,4,Active,0122000657,96,2026-04-15
+HRA-913,Staff 913,Research & Development,Research Scientist,30708,8,Active,0122000658,95,2026-04-15
+HRA-916,Staff 916,Sales,Sales Executive,58896,4,Active,0122000659,82,2026-04-15
+HRA-918,Staff 918,Research & Development,Laboratory Technician,28560,1,Terminated,0122000660,84,2026-04-15
+HRA-920,Staff 920,Research & Development,Manufacturing Director,57180,1,Active,0122000661,89,2026-04-15
+HRA-922,Staff 922,Sales,Sales Representative,24528,2,Terminated,0122000662,85,2026-04-15
+HRA-923,Staff 923,Research & Development,Research Scientist,32316,1,Terminated,0122000663,89,2026-04-15
+HRA-924,Staff 924,Research & Development,Healthcare Representative,79032,16,Active,0122000664,82,2026-04-15
+HRA-925,Staff 925,Sales,Sales Representative,39528,3,Active,0122000665,93,2026-04-15
+HRA-926,Staff 926,Research & Development,Manufacturing Director,50052,3,Terminated,0122000666,99,2026-04-15
+HRA-927,Staff 927,Research & Development,Laboratory Technician,33336,7,Terminated,0122000667,93,2026-04-15
+HRA-930,Staff 930,Research & Development,Research Scientist,28524,2,Active,0122000668,85,2026-04-15
+HRA-932,Staff 932,Research & Development,Laboratory Technician,28848,2,Terminated,0122000669,91,2026-04-15
+HRA-933,Staff 933,Research & Development,Research Scientist,27816,1,Active,0122000670,85,2026-04-15
+HRA-934,Staff 934,Research & Development,Laboratory Technician,24096,1,Active,0122000671,97,2026-04-15
+HRA-936,Staff 936,Sales,Sales Executive,74928,5,Active,0122000672,89,2026-04-15
+HRA-939,Staff 939,Research & Development,Research Scientist,33588,3,Active,0122000673,84,2026-04-15
+HRA-940,Staff 940,Research & Development,Healthcare Representative,126624,6,Active,0122000674,94,2026-04-15
+HRA-941,Staff 941,Sales,Sales Representative,27948,7,Active,0122000675,89,2026-04-15
+HRA-942,Staff 942,Research & Development,Healthcare Representative,48168,10,Active,0122000676,85,2026-04-15
+HRA-944,Staff 944,Research & Development,Laboratory Technician,88836,26,Active,0122000677,86,2026-04-15
+HRA-945,Staff 945,Research & Development,Research Scientist,27108,0,Active,0122000678,80,2026-04-15
+HRA-947,Staff 947,Sales,Sales Executive,83184,9,Active,0122000679,83,2026-04-15
+HRA-949,Staff 949,Research & Development,Research Scientist,56136,6,Active,0122000680,98,2026-04-15
+HRA-950,Staff 950,Research & Development,Research Director,162984,15,Active,0122000681,87,2026-04-15
+HRA-951,Staff 951,Research & Development,Laboratory Technician,27984,3,Active,0122000682,83,2026-04-15
+HRA-952,Staff 952,Sales,Sales Representative,28956,1,Terminated,0122000683,94,2026-04-15
+HRA-954,Staff 954,Sales,Sales Executive,116460,1,Active,0122000684,91,2026-04-15
+HRA-956,Staff 956,Sales,Sales Executive,51528,7,Active,0122000685,89,2026-04-15
+HRA-957,Staff 957,Research & Development,Laboratory Technician,56652,18,Active,0122000686,94,2026-04-15
+HRA-958,Staff 958,Research & Development,Laboratory Technician,30228,11,Active,0122000687,93,2026-04-15
+HRA-959,Staff 959,Sales,Sales Representative,25452,1,Terminated,0122000688,97,2026-04-15
+HRA-960,Staff 960,Research & Development,Laboratory Technician,35676,1,Terminated,0122000689,85,2026-04-15
+HRA-961,Staff 961,Research & Development,Healthcare Representative,70260,9,Active,0122000690,88,2026-04-15
+HRA-964,Staff 964,Research & Development,Research Scientist,43404,1,Active,0122000691,99,2026-04-15
+HRA-966,Staff 966,Research & Development,Manufacturing Director,80700,8,Active,0122000692,90,2026-04-15
+HRA-967,Staff 967,Sales,Sales Executive,123900,16,Terminated,0122000693,96,2026-04-15
+HRA-969,Staff 969,Research & Development,Healthcare Representative,83388,5,Active,0122000694,85,2026-04-15
+HRA-970,Staff 970,Sales,Sales Executive,127308,14,Terminated,0122000695,82,2026-04-15
+HRA-972,Staff 972,Research & Development,Laboratory Technician,53364,9,Active,0122000696,81,2026-04-15
+HRA-974,Staff 974,Sales,Sales Representative,25884,3,Active,0122000697,87,2026-04-15
+HRA-975,Staff 975,Sales,Sales Executive,55212,5,Active,0122000698,90,2026-04-15
+HRA-976,Staff 976,Research & Development,Manager,205188,9,Active,0122000699,99,2026-04-15
+HRA-977,Staff 977,Research & Development,Research Scientist,29748,1,Terminated,0122000700,96,2026-04-15
+HRA-981,Staff 981,Sales,Manager,178224,17,Active,0122000701,96,2026-04-15
+HRA-982,Staff 982,Sales,Sales Executive,87168,8,Active,0122000702,88,2026-04-15
+HRA-983,Staff 983,Sales,Sales Executive,67992,5,Active,0122000703,83,2026-04-15
+HRA-984,Staff 984,Sales,Sales Executive,93876,10,Active,0122000704,86,2026-04-15
+HRA-985,Staff 985,Sales,Sales Executive,94560,8,Active,0122000705,87,2026-04-15
+HRA-986,Staff 986,Sales,Sales Executive,158328,1,Terminated,0122000706,97,2026-04-15
+HRA-987,Staff 987,Research & Development,Manufacturing Director,60804,19,Active,0122000707,91,2026-04-15
+HRA-990,Staff 990,Sales,Sales Executive,60948,7,Active,0122000708,91,2026-04-15
+HRA-991,Staff 991,Research & Development,Research Scientist,27852,3,Terminated,0122000709,90,2026-04-15
+HRA-992,Staff 992,Sales,Manager,209328,10,Active,0122000710,97,2026-04-15
+HRA-994,Staff 994,Research & Development,Research Scientist,28848,0,Terminated,0122000711,97,2026-04-15
+HRA-995,Staff 995,Research & Development,Research Scientist,41424,3,Active,0122000712,81,2026-04-15
+HRA-996,Staff 996,Research & Development,Laboratory Technician,27240,5,Active,0122000713,90,2026-04-15
+HRA-997,Staff 997,Research & Development,Research Director,208788,5,Active,0122000714,86,2026-04-15
+HRA-998,Staff 998,Research & Development,Healthcare Representative,65856,6,Active,0122000715,92,2026-04-15
+HRA-999,Staff 999,Research & Development,Research Director,233028,18,Active,0122000716,99,2026-04-15
+HRA-1001,Staff 1001,Research & Development,Laboratory Technician,33732,2,Active,0122000717,86,2026-04-15
+HRA-1002,Staff 1002,Research & Development,Laboratory Technician,43596,9,Active,0122000718,84,2026-04-15
+HRA-1003,Staff 1003,Sales,Sales Executive,49956,9,Active,0122000719,96,2026-04-15
+HRA-1004,Staff 1004,Research & Development,Research Scientist,25584,5,Terminated,0122000720,89,2026-04-15
+HRA-1005,Staff 1005,Research & Development,Manufacturing Director,167676,12,Active,0122000721,83,2026-04-15
+HRA-1006,Staff 1006,Research & Development,Research Scientist,32208,2,Active,0122000722,88,2026-04-15
+HRA-1007,Staff 1007,Research & Development,Manufacturing Director,130140,8,Active,0122000723,90,2026-04-15
+HRA-1009,Staff 1009,Research & Development,Manufacturing Director,52524,4,Active,0122000724,96,2026-04-15
+HRA-1010,Staff 1010,Research & Development,Laboratory Technician,44916,4,Terminated,0122000725,85,2026-04-15
+HRA-1011,Staff 1011,Research & Development,Manufacturing Director,49776,4,Active,0122000726,87,2026-04-15
+HRA-1012,Staff 1012,Research & Development,Research Scientist,12612,0,Active,0122000727,84,2026-04-15
+HRA-1013,Staff 1013,Research & Development,Manufacturing Director,128868,10,Active,0122000728,89,2026-04-15
+HRA-1014,Staff 1014,Research & Development,Healthcare Representative,124656,16,Active,0122000729,89,2026-04-15
+HRA-1015,Staff 1015,Research & Development,Research Director,136992,8,Active,0122000730,87,2026-04-15
+HRA-1016,Staff 1016,Research & Development,Research Scientist,31200,1,Terminated,0122000731,98,2026-04-15
+HRA-1017,Staff 1017,Research & Development,Laboratory Technician,29064,3,Terminated,0122000732,97,2026-04-15
+HRA-1018,Staff 1018,Research & Development,Manufacturing Director,65664,8,Active,0122000733,97,2026-04-15
+HRA-1019,Staff 1019,Research & Development,Laboratory Technician,29412,4,Active,0122000734,98,2026-04-15
+HRA-1022,Staff 1022,Research & Development,Healthcare Representative,50880,2,Active,0122000735,81,2026-04-15
+HRA-1024,Staff 1024,Research & Development,Healthcare Representative,131988,15,Active,0122000736,82,2026-04-15
+HRA-1025,Staff 1025,Research & Development,Manufacturing Director,60036,2,Active,0122000737,95,2026-04-15
+HRA-1026,Staff 1026,Research & Development,Manufacturing Director,152904,21,Active,0122000738,91,2026-04-15
+HRA-1027,Staff 1027,Research & Development,Manufacturing Director,50724,3,Active,0122000739,83,2026-04-15
+HRA-1028,Staff 1028,Research & Development,Laboratory Technician,47004,3,Active,0122000740,91,2026-04-15
+HRA-1029,Staff 1029,Sales,Manager,219636,1,Active,0122000741,98,2026-04-15
+HRA-1030,Staff 1030,Research & Development,Laboratory Technician,28560,1,Active,0122000742,82,2026-04-15
+HRA-1032,Staff 1032,Research & Development,Manufacturing Director,164712,5,Active,0122000743,97,2026-04-15
+HRA-1033,Staff 1033,Research & Development,Healthcare Representative,57324,1,Terminated,0122000744,94,2026-04-15
+HRA-1034,Staff 1034,Research & Development,Healthcare Representative,76620,8,Active,0122000745,81,2026-04-15
+HRA-1035,Staff 1035,Research & Development,Research Director,239676,21,Active,0122000746,88,2026-04-15
+HRA-1036,Staff 1036,Sales,Sales Executive,82332,1,Active,0122000747,88,2026-04-15
+HRA-1037,Staff 1037,Sales,Sales Executive,59628,2,Terminated,0122000748,81,2026-04-15
+HRA-1038,Staff 1038,Sales,Manager,238140,32,Terminated,0122000749,87,2026-04-15
+HRA-1039,Staff 1039,Sales,Sales Executive,159840,12,Active,0122000750,85,2026-04-15
+HRA-1040,Staff 1040,Sales,Sales Executive,76164,18,Active,0122000751,90,2026-04-15
+HRA-1042,Staff 1042,Research & Development,Laboratory Technician,32916,17,Terminated,0122000752,88,2026-04-15
+HRA-1043,Staff 1043,Research & Development,Manufacturing Director,130560,21,Active,0122000753,84,2026-04-15
+HRA-1044,Staff 1044,Sales,Sales Representative,28104,2,Active,0122000754,82,2026-04-15
+HRA-1045,Staff 1045,Sales,Manager,211800,9,Active,0122000755,88,2026-04-15
+HRA-1046,Staff 1046,Research & Development,Laboratory Technician,48300,8,Active,0122000756,80,2026-04-15
+HRA-1047,Staff 1047,Sales,Sales Executive,116700,15,Active,0122000757,89,2026-04-15
+HRA-1048,Staff 1048,Sales,Manager,142848,6,Active,0122000758,86,2026-04-15
+HRA-1049,Staff 1049,Human Resources,Human Resources,26124,6,Active,0122000759,80,2026-04-15
+HRA-1050,Staff 1050,Sales,Sales Executive,90300,15,Active,0122000760,95,2026-04-15
+HRA-1052,Staff 1052,Research & Development,Laboratory Technician,58008,1,Terminated,0122000761,99,2026-04-15
+HRA-1053,Staff 1053,Research & Development,Research Scientist,24504,3,Terminated,0122000762,90,2026-04-15
+HRA-1055,Staff 1055,Sales,Sales Representative,26640,1,Active,0122000763,84,2026-04-15
+HRA-1056,Staff 1056,Sales,Sales Representative,12624,1,Active,0122000764,93,2026-04-15
+HRA-1060,Staff 1060,Research & Development,Research Scientist,33852,2,Active,0122000765,91,2026-04-15
+HRA-1061,Staff 1061,Research & Development,Research Director,230844,8,Active,0122000766,87,2026-04-15
+HRA-1062,Staff 1062,Research & Development,Healthcare Representative,49284,4,Active,0122000767,88,2026-04-15
+HRA-1066,Staff 1066,Sales,Sales Executive,100752,7,Active,0122000768,86,2026-04-15
+HRA-1068,Staff 1068,Research & Development,Research Scientist,24084,5,Active,0122000769,87,2026-04-15
+HRA-1069,Staff 1069,Research & Development,Research Director,235524,2,Active,0122000770,92,2026-04-15
+HRA-1070,Staff 1070,Sales,Sales Executive,128232,9,Active,0122000771,92,2026-04-15
+HRA-1071,Staff 1071,Research & Development,Research Scientist,35304,5,Active,0122000772,98,2026-04-15
+HRA-1073,Staff 1073,Research & Development,Manufacturing Director,106296,14,Active,0122000773,86,2026-04-15
+HRA-1074,Staff 1074,Research & Development,Manager,201072,9,Active,0122000774,81,2026-04-15
+HRA-1076,Staff 1076,Sales,Sales Executive,129576,1,Active,0122000775,93,2026-04-15
+HRA-1077,Staff 1077,Sales,Sales Representative,27876,2,Terminated,0122000776,91,2026-04-15
+HRA-1079,Staff 1079,Research & Development,Laboratory Technician,16992,1,Terminated,0122000777,91,2026-04-15
+HRA-1080,Staff 1080,Research & Development,Research Scientist,55380,16,Active,0122000778,94,2026-04-15
+HRA-1081,Staff 1081,Research & Development,Research Scientist,29532,10,Terminated,0122000779,95,2026-04-15
+HRA-1082,Staff 1082,Research & Development,Healthcare Representative,104664,10,Terminated,0122000780,99,2026-04-15
+HRA-1083,Staff 1083,Research & Development,Laboratory Technician,47460,5,Active,0122000781,84,2026-04-15
+HRA-1084,Staff 1084,Research & Development,Manufacturing Director,119484,6,Active,0122000782,92,2026-04-15
+HRA-1085,Staff 1085,Research & Development,Research Scientist,40512,10,Active,0122000783,95,2026-04-15
+HRA-1088,Staff 1088,Research & Development,Healthcare Representative,105876,19,Active,0122000784,91,2026-04-15
+HRA-1092,Staff 1092,Research & Development,Healthcare Representative,123864,11,Active,0122000785,92,2026-04-15
+HRA-1094,Staff 1094,Research & Development,Laboratory Technician,55452,3,Active,0122000786,94,2026-04-15
+HRA-1096,Staff 1096,Research & Development,Manufacturing Director,131712,3,Active,0122000787,91,2026-04-15
+HRA-1097,Staff 1097,Research & Development,Research Scientist,43920,8,Active,0122000788,92,2026-04-15
+HRA-1098,Staff 1098,Human Resources,Human Resources,125784,20,Terminated,0122000789,86,2026-04-15
+HRA-1099,Staff 1099,Research & Development,Healthcare Representative,85428,3,Active,0122000790,86,2026-04-15
+HRA-1100,Staff 1100,Sales,Sales Executive,114984,8,Terminated,0122000791,86,2026-04-15
+HRA-1101,Staff 1101,Research & Development,Research Scientist,54096,13,Terminated,0122000792,96,2026-04-15
+HRA-1102,Staff 1102,Research & Development,Laboratory Technician,26484,4,Active,0122000793,93,2026-04-15
+HRA-1103,Staff 1103,Research & Development,Healthcare Representative,93072,6,Active,0122000794,80,2026-04-15
+HRA-1105,Staff 1105,Sales,Sales Executive,80328,1,Active,0122000795,91,2026-04-15
+HRA-1106,Staff 1106,Research & Development,Laboratory Technician,44292,7,Terminated,0122000796,81,2026-04-15
+HRA-1107,Staff 1107,Research & Development,Laboratory Technician,28524,1,Terminated,0122000797,98,2026-04-15
+HRA-1108,Staff 1108,Research & Development,Research Scientist,27756,2,Terminated,0122000798,93,2026-04-15
+HRA-1109,Staff 1109,Research & Development,Manager,211980,22,Active,0122000799,87,2026-04-15
+HRA-1111,Staff 1111,Research & Development,Laboratory Technician,31152,1,Terminated,0122000800,91,2026-04-15
+HRA-1113,Staff 1113,Sales,Sales Executive,56736,0,Terminated,0122000801,94,2026-04-15
+HRA-1114,Staff 1114,Sales,Sales Executive,51624,3,Active,0122000802,90,2026-04-15
+HRA-1115,Staff 1115,Research & Development,Research Scientist,35748,0,Active,0122000803,90,2026-04-15
+HRA-1116,Staff 1116,Research & Development,Manager,202620,5,Active,0122000804,85,2026-04-15
+HRA-1117,Staff 1117,Sales,Sales Executive,67116,15,Active,0122000805,82,2026-04-15
+HRA-1118,Staff 1118,Research & Development,Healthcare Representative,125340,8,Active,0122000806,99,2026-04-15
+HRA-1119,Staff 1119,Sales,Sales Executive,104880,8,Active,0122000807,94,2026-04-15
+HRA-1120,Staff 1120,Research & Development,Research Scientist,30168,7,Active,0122000808,94,2026-04-15
+HRA-1121,Staff 1121,Research & Development,Manufacturing Director,91860,9,Active,0122000809,94,2026-04-15
+HRA-1124,Staff 1124,Sales,Manager,209580,12,Active,0122000810,97,2026-04-15
+HRA-1125,Staff 1125,Sales,Sales Executive,88212,1,Active,0122000811,91,2026-04-15
+HRA-1126,Staff 1126,Research & Development,Manufacturing Director,129840,8,Active,0122000812,93,2026-04-15
+HRA-1127,Staff 1127,Research & Development,Healthcare Representative,146028,18,Terminated,0122000813,87,2026-04-15
+HRA-1128,Staff 1128,Research & Development,Research Director,235512,20,Active,0122000814,81,2026-04-15
+HRA-1131,Staff 1131,Research & Development,Research Scientist,24840,2,Active,0122000815,91,2026-04-15
+HRA-1132,Staff 1132,Research & Development,Laboratory Technician,81384,5,Active,0122000816,80,2026-04-15
+HRA-1133,Staff 1133,Research & Development,Manufacturing Director,93348,11,Active,0122000817,84,2026-04-15
+HRA-1135,Staff 1135,Sales,Sales Representative,33492,2,Active,0122000818,92,2026-04-15
+HRA-1136,Staff 1136,Research & Development,Research Scientist,38412,5,Active,0122000819,89,2026-04-15
+HRA-1137,Staff 1137,Sales,Sales Executive,59616,5,Active,0122000820,82,2026-04-15
+HRA-1138,Staff 1138,Sales,Sales Executive,157440,9,Active,0122000821,80,2026-04-15
+HRA-1140,Staff 1140,Research & Development,Manufacturing Director,48396,3,Active,0122000822,93,2026-04-15
+HRA-1143,Staff 1143,Research & Development,Research Scientist,39492,7,Active,0122000823,88,2026-04-15
+HRA-1148,Staff 1148,Research & Development,Laboratory Technician,51264,1,Active,0122000824,93,2026-04-15
+HRA-1150,Staff 1150,Research & Development,Manufacturing Director,60672,10,Active,0122000825,83,2026-04-15
+HRA-1152,Staff 1152,Human Resources,Human Resources,34128,7,Active,0122000826,89,2026-04-15
+HRA-1154,Staff 1154,Research & Development,Research Scientist,32436,3,Active,0122000827,95,2026-04-15
+HRA-1156,Staff 1156,Research & Development,Laboratory Technician,22848,0,Terminated,0122000828,92,2026-04-15
+HRA-1157,Staff 1157,Sales,Sales Executive,98688,5,Terminated,0122000829,81,2026-04-15
+HRA-1158,Staff 1158,Research & Development,Laboratory Technician,57192,1,Active,0122000830,90,2026-04-15
+HRA-1160,Staff 1160,Research & Development,Laboratory Technician,31320,2,Terminated,0122000831,97,2026-04-15
+HRA-1161,Staff 1161,Research & Development,Healthcare Representative,68772,6,Active,0122000832,90,2026-04-15
+HRA-1162,Staff 1162,Research & Development,Research Scientist,30468,4,Active,0122000833,90,2026-04-15
+HRA-1163,Staff 1163,Sales,Sales Executive,68568,6,Active,0122000834,80,2026-04-15
+HRA-1164,Staff 1164,Human Resources,Human Resources,51876,5,Active,0122000835,97,2026-04-15
+HRA-1165,Staff 1165,Sales,Sales Executive,88032,11,Terminated,0122000836,92,2026-04-15
+HRA-1166,Staff 1166,Research & Development,Research Director,161988,18,Active,0122000837,86,2026-04-15
+HRA-1167,Staff 1167,Sales,Sales Executive,165096,21,Terminated,0122000838,89,2026-04-15
+HRA-1171,Staff 1171,Sales,Sales Executive,61860,6,Active,0122000839,92,2026-04-15
+HRA-1172,Staff 1172,Research & Development,Laboratory Technician,27096,8,Active,0122000840,84,2026-04-15
+HRA-1173,Staff 1173,Research & Development,Laboratory Technician,43164,4,Active,0122000841,87,2026-04-15
+HRA-1175,Staff 1175,Research & Development,Laboratory Technician,30180,1,Terminated,0122000842,88,2026-04-15
+HRA-1177,Staff 1177,Research & Development,Laboratory Technician,53040,8,Active,0122000843,90,2026-04-15
+HRA-1179,Staff 1179,Sales,Sales Executive,78936,10,Active,0122000844,96,2026-04-15
+HRA-1180,Staff 1180,Research & Development,Research Scientist,53064,1,Active,0122000845,93,2026-04-15
+HRA-1182,Staff 1182,Research & Development,Manufacturing Director,123288,7,Active,0122000846,92,2026-04-15
+HRA-1184,Staff 1184,Research & Development,Healthcare Representative,64116,13,Active,0122000847,90,2026-04-15
+HRA-1185,Staff 1185,Research & Development,Laboratory Technician,28512,2,Active,0122000848,82,2026-04-15
+HRA-1188,Staff 1188,Sales,Sales Executive,64152,4,Terminated,0122000849,82,2026-04-15
+HRA-1190,Staff 1190,Sales,Sales Representative,33924,1,Active,0122000850,86,2026-04-15
+HRA-1191,Staff 1191,Research & Development,Manager,239316,5,Active,0122000851,91,2026-04-15
+HRA-1192,Staff 1192,Research & Development,Laboratory Technician,37572,10,Active,0122000852,94,2026-04-15
+HRA-1193,Staff 1193,Research & Development,Research Scientist,30624,1,Active,0122000853,94,2026-04-15
+HRA-1195,Staff 1195,Research & Development,Research Scientist,53724,3,Active,0122000854,83,2026-04-15
+HRA-1196,Staff 1196,Research & Development,Manufacturing Director,77688,14,Active,0122000855,90,2026-04-15
+HRA-1198,Staff 1198,Research & Development,Laboratory Technician,36396,2,Active,0122000856,84,2026-04-15
+HRA-1200,Staff 1200,Research & Development,Research Scientist,35232,6,Terminated,0122000857,97,2026-04-15
+HRA-1201,Staff 1201,Research & Development,Manager,223272,7,Active,0122000858,92,2026-04-15
+HRA-1202,Staff 1202,Research & Development,Research Scientist,26016,5,Active,0122000859,87,2026-04-15
+HRA-1203,Staff 1203,Research & Development,Research Scientist,34236,0,Terminated,0122000860,90,2026-04-15
+HRA-1204,Staff 1204,Sales,Manager,204576,26,Active,0122000861,89,2026-04-15
+HRA-1206,Staff 1206,Research & Development,Research Scientist,27480,0,Active,0122000862,99,2026-04-15
+HRA-1207,Staff 1207,Human Resources,Human Resources,43200,5,Active,0122000863,83,2026-04-15
+HRA-1210,Staff 1210,Research & Development,Research Scientist,25284,1,Terminated,0122000864,96,2026-04-15
+HRA-1211,Staff 1211,Sales,Sales Executive,49380,4,Active,0122000865,88,2026-04-15
+HRA-1212,Staff 1212,Sales,Sales Executive,51924,0,Active,0122000866,91,2026-04-15
+HRA-1215,Staff 1215,Research & Development,Manager,214272,2,Active,0122000867,80,2026-04-15
+HRA-1216,Staff 1216,Research & Development,Laboratory Technician,38352,6,Active,0122000868,92,2026-04-15
+HRA-1217,Staff 1217,Research & Development,Research Director,228972,4,Active,0122000869,88,2026-04-15
+HRA-1218,Staff 1218,Sales,Sales Executive,107592,7,Active,0122000870,85,2026-04-15
+HRA-1219,Staff 1219,Research & Development,Laboratory Technician,26520,1,Terminated,0122000871,94,2026-04-15
+HRA-1220,Staff 1220,Sales,Sales Executive,54468,10,Active,0122000872,93,2026-04-15
+HRA-1221,Staff 1221,Research & Development,Laboratory Technician,32892,7,Active,0122000873,92,2026-04-15
+HRA-1224,Staff 1224,Research & Development,Laboratory Technician,41892,10,Active,0122000874,86,2026-04-15
+HRA-1225,Staff 1225,Research & Development,Research Scientist,54492,20,Active,0122000875,86,2026-04-15
+HRA-1226,Staff 1226,Sales,Sales Representative,32136,2,Active,0122000876,84,2026-04-15
+HRA-1228,Staff 1228,Research & Development,Manufacturing Director,88548,6,Active,0122000877,85,2026-04-15
+HRA-1231,Staff 1231,Human Resources,Human Resources,75264,4,Active,0122000878,93,2026-04-15
+HRA-1233,Staff 1233,Sales,Sales Executive,62640,11,Active,0122000879,87,2026-04-15
+HRA-1234,Staff 1234,Research & Development,Laboratory Technician,32916,2,Active,0122000880,92,2026-04-15
+HRA-1235,Staff 1235,Research & Development,Research Scientist,59976,8,Active,0122000881,87,2026-04-15
+HRA-1237,Staff 1237,Research & Development,Manufacturing Director,123024,7,Active,0122000882,84,2026-04-15
+HRA-1238,Staff 1238,Research & Development,Research Scientist,33372,14,Active,0122000883,93,2026-04-15
+HRA-1239,Staff 1239,Sales,Sales Executive,82224,5,Active,0122000884,89,2026-04-15
+HRA-1240,Staff 1240,Sales,Sales Executive,59400,4,Active,0122000885,88,2026-04-15
+HRA-1241,Staff 1241,Research & Development,Research Scientist,42948,11,Active,0122000886,97,2026-04-15
+HRA-1242,Staff 1242,Research & Development,Research Director,158292,1,Active,0122000887,91,2026-04-15
+HRA-1243,Staff 1243,Sales,Sales Executive,124524,13,Active,0122000888,96,2026-04-15
+HRA-1244,Staff 1244,Research & Development,Research Scientist,26820,9,Active,0122000889,94,2026-04-15
+HRA-1245,Staff 1245,Research & Development,Manufacturing Director,126024,5,Active,0122000890,89,2026-04-15
+HRA-1246,Staff 1246,Research & Development,Research Scientist,24132,10,Active,0122000891,87,2026-04-15
+HRA-1248,Staff 1248,Research & Development,Research Scientist,22308,1,Terminated,0122000892,81,2026-04-15
+HRA-1249,Staff 1249,Research & Development,Research Scientist,45120,3,Active,0122000893,87,2026-04-15
+HRA-1250,Staff 1250,Research & Development,Research Director,213348,10,Active,0122000894,96,2026-04-15
+HRA-1251,Staff 1251,Research & Development,Healthcare Representative,81996,6,Active,0122000895,86,2026-04-15
+HRA-1252,Staff 1252,Research & Development,Healthcare Representative,81744,10,Active,0122000896,90,2026-04-15
+HRA-1254,Staff 1254,Sales,Sales Executive,62052,6,Active,0122000897,95,2026-04-15
+HRA-1255,Staff 1255,Research & Development,Research Director,236880,8,Active,0122000898,82,2026-04-15
+HRA-1256,Staff 1256,Research & Development,Manager,224532,1,Active,0122000899,83,2026-04-15
+HRA-1257,Staff 1257,Research & Development,Research Scientist,44304,11,Active,0122000900,80,2026-04-15
+HRA-1258,Staff 1258,Research & Development,Laboratory Technician,30708,1,Active,0122000901,88,2026-04-15
+HRA-1259,Staff 1259,Research & Development,Research Scientist,30204,5,Active,0122000902,93,2026-04-15
+HRA-1260,Staff 1260,Research & Development,Healthcare Representative,79476,6,Active,0122000903,97,2026-04-15
+HRA-1263,Staff 1263,Research & Development,Research Director,219180,1,Active,0122000904,86,2026-04-15
+HRA-1264,Staff 1264,Research & Development,Research Director,193488,7,Active,0122000905,96,2026-04-15
+HRA-1265,Staff 1265,Research & Development,Research Scientist,31020,1,Active,0122000906,99,2026-04-15
+HRA-1267,Staff 1267,Sales,Manager,218556,22,Active,0122000907,87,2026-04-15
+HRA-1268,Staff 1268,Sales,Sales Executive,100560,9,Active,0122000908,98,2026-04-15
+HRA-1269,Staff 1269,Research & Development,Research Scientist,35928,1,Active,0122000909,85,2026-04-15
+HRA-1270,Staff 1270,Research & Development,Research Scientist,14676,1,Active,0122000910,90,2026-04-15
+HRA-1273,Staff 1273,Sales,Sales Representative,13416,1,Terminated,0122000911,95,2026-04-15
+HRA-1275,Staff 1275,Research & Development,Research Scientist,34500,8,Active,0122000912,92,2026-04-15
+HRA-1277,Staff 1277,Sales,Manager,225888,24,Terminated,0122000913,84,2026-04-15
+HRA-1278,Staff 1278,Research & Development,Healthcare Representative,162924,33,Active,0122000914,80,2026-04-15
+HRA-1279,Staff 1279,Research & Development,Laboratory Technician,31500,2,Terminated,0122000915,87,2026-04-15
+HRA-1280,Staff 1280,Sales,Manager,225468,11,Active,0122000916,94,2026-04-15
+HRA-1281,Staff 1281,Sales,Sales Executive,54456,3,Active,0122000917,96,2026-04-15
+HRA-1282,Staff 1282,Sales,Manager,238164,29,Active,0122000918,90,2026-04-15
+HRA-1283,Staff 1283,Research & Development,Manufacturing Director,126144,9,Active,0122000919,80,2026-04-15
+HRA-1285,Staff 1285,Research & Development,Laboratory Technician,53328,11,Active,0122000920,83,2026-04-15
+HRA-1286,Staff 1286,Research & Development,Laboratory Technician,25848,4,Active,0122000921,98,2026-04-15
+HRA-1288,Staff 1288,Research & Development,Manager,230280,25,Active,0122000922,95,2026-04-15
+HRA-1289,Staff 1289,Human Resources,Human Resources,53880,10,Active,0122000923,84,2026-04-15
+HRA-1291,Staff 1291,Research & Development,Research Scientist,42072,3,Active,0122000924,95,2026-04-15
+HRA-1292,Staff 1292,Research & Development,Research Scientist,28464,1,Active,0122000925,86,2026-04-15
+HRA-1293,Staff 1293,Sales,Sales Executive,122772,21,Active,0122000926,94,2026-04-15
+HRA-1294,Staff 1294,Research & Development,Manufacturing Director,64920,16,Active,0122000927,96,2026-04-15
+HRA-1295,Staff 1295,Research & Development,Healthcare Representative,95736,10,Terminated,0122000928,96,2026-04-15
+HRA-1296,Staff 1296,Research & Development,Laboratory Technician,46404,2,Active,0122000929,83,2026-04-15
+HRA-1297,Staff 1297,Research & Development,Laboratory Technician,34056,7,Active,0122000930,81,2026-04-15
+HRA-1298,Staff 1298,Research & Development,Manufacturing Director,56340,8,Active,0122000931,94,2026-04-15
+HRA-1299,Staff 1299,Research & Development,Laboratory Technician,40068,7,Terminated,0122000932,83,2026-04-15
+HRA-1301,Staff 1301,Research & Development,Research Scientist,24960,3,Active,0122000933,95,2026-04-15
+HRA-1303,Staff 1303,Research & Development,Research Scientist,25152,2,Active,0122000934,96,2026-04-15
+HRA-1304,Staff 1304,Sales,Sales Executive,74508,10,Active,0122000935,91,2026-04-15
+HRA-1306,Staff 1306,Research & Development,Manager,216732,0,Active,0122000936,97,2026-04-15
+HRA-1307,Staff 1307,Research & Development,Manager,205476,19,Active,0122000937,89,2026-04-15
+HRA-1308,Staff 1308,Research & Development,Research Scientist,28464,2,Active,0122000938,88,2026-04-15
+HRA-1309,Staff 1309,Research & Development,Laboratory Technician,58596,10,Terminated,0122000939,96,2026-04-15
+HRA-1310,Staff 1310,Research & Development,Research Scientist,46848,5,Terminated,0122000940,87,2026-04-15
+HRA-1311,Staff 1311,Research & Development,Laboratory Technician,55524,9,Active,0122000941,94,2026-04-15
+HRA-1312,Staff 1312,Research & Development,Healthcare Representative,85128,7,Active,0122000942,81,2026-04-15
+HRA-1314,Staff 1314,Human Resources,Human Resources,41076,7,Active,0122000943,92,2026-04-15
+HRA-1315,Staff 1315,Research & Development,Laboratory Technician,80088,9,Active,0122000944,92,2026-04-15
+HRA-1317,Staff 1317,Research & Development,Research Director,202560,3,Active,0122000945,84,2026-04-15
+HRA-1318,Staff 1318,Sales,Sales Executive,109128,5,Terminated,0122000946,89,2026-04-15
+HRA-1319,Staff 1319,Sales,Sales Executive,101352,8,Terminated,0122000947,82,2026-04-15
+HRA-1321,Staff 1321,Research & Development,Manager,142992,9,Active,0122000948,88,2026-04-15
+HRA-1322,Staff 1322,Research & Development,Manufacturing Director,54408,8,Active,0122000949,90,2026-04-15
+HRA-1324,Staff 1324,Sales,Sales Executive,118224,10,Active,0122000950,93,2026-04-15
+HRA-1329,Staff 1329,Sales,Sales Executive,73812,19,Active,0122000951,81,2026-04-15
+HRA-1331,Staff 1331,Sales,Sales Representative,27624,3,Terminated,0122000952,92,2026-04-15
+HRA-1333,Staff 1333,Research & Development,Laboratory Technician,28344,3,Terminated,0122000953,96,2026-04-15
+HRA-1334,Staff 1334,Research & Development,Manager,214332,20,Active,0122000954,87,2026-04-15
+HRA-1336,Staff 1336,Research & Development,Manager,230244,19,Active,0122000955,82,2026-04-15
+HRA-1338,Staff 1338,Human Resources,Manager,236604,7,Active,0122000956,80,2026-04-15
+HRA-1340,Staff 1340,Research & Development,Research Scientist,42528,4,Active,0122000957,92,2026-04-15
+HRA-1344,Staff 1344,Research & Development,Healthcare Representative,102000,9,Active,0122000958,91,2026-04-15
+HRA-1346,Staff 1346,Research & Development,Research Scientist,55932,9,Active,0122000959,93,2026-04-15
+HRA-1349,Staff 1349,Sales,Sales Executive,49236,9,Active,0122000960,80,2026-04-15
+HRA-1350,Staff 1350,Research & Development,Research Scientist,50988,9,Active,0122000961,83,2026-04-15
+HRA-1352,Staff 1352,Human Resources,Manager,168312,33,Active,0122000962,90,2026-04-15
+HRA-1355,Staff 1355,Sales,Sales Executive,82716,7,Active,0122000963,91,2026-04-15
+HRA-1356,Staff 1356,Sales,Sales Executive,73500,10,Active,0122000964,90,2026-04-15
+HRA-1358,Staff 1358,Research & Development,Laboratory Technician,44028,3,Active,0122000965,88,2026-04-15
+HRA-1360,Staff 1360,Research & Development,Manufacturing Director,120096,10,Terminated,0122000966,94,2026-04-15
+HRA-1361,Staff 1361,Research & Development,Laboratory Technician,28644,4,Active,0122000967,96,2026-04-15
+HRA-1362,Staff 1362,Sales,Sales Executive,55668,15,Active,0122000968,96,2026-04-15
+HRA-1363,Staff 1363,Research & Development,Manufacturing Director,94776,10,Active,0122000969,91,2026-04-15
+HRA-1364,Staff 1364,Sales,Sales Representative,30408,1,Active,0122000970,85,2026-04-15
+HRA-1367,Staff 1367,Research & Development,Manufacturing Director,157704,5,Active,0122000971,84,2026-04-15
+HRA-1368,Staff 1368,Research & Development,Laboratory Technician,19332,0,Active,0122000972,87,2026-04-15
+HRA-1369,Staff 1369,Research & Development,Laboratory Technician,64356,9,Active,0122000973,89,2026-04-15
+HRA-1371,Staff 1371,Sales,Sales Executive,60852,6,Active,0122000974,80,2026-04-15
+HRA-1372,Staff 1372,Sales,Sales Executive,164340,19,Terminated,0122000975,93,2026-04-15
+HRA-1373,Staff 1373,Research & Development,Manufacturing Director,160824,19,Active,0122000976,91,2026-04-15
+HRA-1374,Staff 1374,Research & Development,Research Scientist,24348,5,Active,0122000977,99,2026-04-15
+HRA-1375,Staff 1375,Research & Development,Healthcare Representative,76524,12,Active,0122000978,92,2026-04-15
+HRA-1377,Staff 1377,Research & Development,Laboratory Technician,65148,8,Active,0122000979,86,2026-04-15
+HRA-1379,Staff 1379,Sales,Sales Representative,33420,1,Terminated,0122000980,81,2026-04-15
+HRA-1380,Staff 1380,Sales,Sales Executive,55368,4,Terminated,0122000981,83,2026-04-15
+HRA-1382,Staff 1382,Research & Development,Research Scientist,31320,4,Active,0122000982,81,2026-04-15
+HRA-1383,Staff 1383,Research & Development,Healthcare Representative,80244,14,Active,0122000983,90,2026-04-15
+HRA-1387,Staff 1387,Sales,Sales Executive,56688,5,Active,0122000984,99,2026-04-15
+HRA-1389,Staff 1389,Research & Development,Manufacturing Director,74148,10,Terminated,0122000985,99,2026-04-15
+HRA-1390,Staff 1390,Sales,Sales Executive,73440,5,Active,0122000986,83,2026-04-15
+HRA-1391,Staff 1391,Sales,Sales Executive,127152,4,Active,0122000987,86,2026-04-15
+HRA-1392,Staff 1392,Research & Development,Research Scientist,65604,6,Active,0122000988,95,2026-04-15
+HRA-1394,Staff 1394,Research & Development,Research Scientist,35952,6,Active,0122000989,92,2026-04-15
+HRA-1395,Staff 1395,Sales,Sales Executive,119976,5,Active,0122000990,83,2026-04-15
+HRA-1396,Staff 1396,Sales,Sales Executive,48936,3,Active,0122000991,81,2026-04-15
+HRA-1397,Staff 1397,Research & Development,Healthcare Representative,131040,6,Active,0122000992,81,2026-04-15
+HRA-1399,Staff 1399,Sales,Sales Executive,74784,3,Active,0122000993,98,2026-04-15
+HRA-1401,Staff 1401,Research & Development,Manufacturing Director,158964,5,Active,0122000994,96,2026-04-15
+HRA-1402,Staff 1402,Research & Development,Research Scientist,48972,20,Active,0122000995,92,2026-04-15
+HRA-1403,Staff 1403,Sales,Sales Executive,69228,6,Active,0122000996,97,2026-04-15
+HRA-1405,Staff 1405,Research & Development,Research Scientist,28728,8,Terminated,0122000997,87,2026-04-15
+HRA-1407,Staff 1407,Research & Development,Research Scientist,46848,4,Active,0122000998,81,2026-04-15
+HRA-1408,Staff 1408,Human Resources,Manager,201588,20,Active,0122000999,80,2026-04-15
+HRA-1409,Staff 1409,Research & Development,Laboratory Technician,35400,5,Active,0122001000,82,2026-04-15
+HRA-1411,Staff 1411,Research & Development,Laboratory Technician,43548,3,Active,0122001001,99,2026-04-15
+HRA-1412,Staff 1412,Research & Development,Manufacturing Director,112344,2,Active,0122001002,97,2026-04-15
+HRA-1415,Staff 1415,Research & Development,Laboratory Technician,38748,3,Active,0122001003,99,2026-04-15
+HRA-1417,Staff 1417,Research & Development,Laboratory Technician,42936,7,Active,0122001004,94,2026-04-15
+HRA-1419,Staff 1419,Human Resources,Human Resources,95856,10,Active,0122001005,83,2026-04-15
+HRA-1420,Staff 1420,Research & Development,Laboratory Technician,51408,4,Terminated,0122001006,94,2026-04-15
+HRA-1421,Staff 1421,Research & Development,Healthcare Representative,90636,8,Terminated,0122001007,84,2026-04-15
+HRA-1422,Staff 1422,Research & Development,Research Director,207936,20,Active,0122001008,81,2026-04-15
+HRA-1423,Staff 1423,Research & Development,Research Director,236412,9,Active,0122001009,81,2026-04-15
+HRA-1424,Staff 1424,Research & Development,Research Director,176784,7,Active,0122001010,80,2026-04-15
+HRA-1425,Staff 1425,Sales,Sales Executive,111336,5,Active,0122001011,82,2026-04-15
+HRA-1427,Staff 1427,Sales,Sales Representative,16308,1,Terminated,0122001012,83,2026-04-15
+HRA-1428,Staff 1428,Sales,Sales Executive,57348,3,Active,0122001013,96,2026-04-15
+HRA-1430,Staff 1430,Research & Development,Research Director,197064,3,Active,0122001014,91,2026-04-15
+HRA-1431,Staff 1431,Research & Development,Research Scientist,35952,4,Active,0122001015,93,2026-04-15
+HRA-1433,Staff 1433,Research & Development,Research Scientist,15132,1,Terminated,0122001016,99,2026-04-15
+HRA-1434,Staff 1434,Research & Development,Laboratory Technician,25188,5,Active,0122001017,98,2026-04-15
+HRA-1435,Staff 1435,Research & Development,Laboratory Technician,69720,10,Active,0122001018,80,2026-04-15
+HRA-1436,Staff 1436,Sales,Sales Executive,67764,3,Active,0122001019,80,2026-04-15
+HRA-1438,Staff 1438,Research & Development,Research Scientist,41040,6,Active,0122001020,92,2026-04-15
+HRA-1439,Staff 1439,Sales,Sales Representative,52800,3,Terminated,0122001021,81,2026-04-15
+HRA-1440,Staff 1440,Research & Development,Laboratory Technician,42000,6,Active,0122001022,90,2026-04-15
+HRA-1441,Staff 1441,Research & Development,Research Scientist,24792,3,Active,0122001023,86,2026-04-15
+HRA-1443,Staff 1443,Research & Development,Research Director,206028,20,Active,0122001024,96,2026-04-15
+HRA-1445,Staff 1445,Sales,Sales Executive,49944,5,Active,0122001025,93,2026-04-15
+HRA-1446,Staff 1446,Sales,Sales Executive,110448,4,Active,0122001026,85,2026-04-15
+HRA-1447,Staff 1447,Research & Development,Laboratory Technician,39528,5,Active,0122001027,98,2026-04-15
+HRA-1448,Staff 1448,Research & Development,Research Scientist,25524,4,Active,0122001028,92,2026-04-15
+HRA-1449,Staff 1449,Research & Development,Laboratory Technician,47700,8,Active,0122001029,86,2026-04-15
+HRA-1453,Staff 1453,Sales,Sales Executive,129516,13,Active,0122001030,93,2026-04-15
+HRA-1457,Staff 1457,Sales,Sales Executive,121152,7,Terminated,0122001031,98,2026-04-15
+HRA-1458,Staff 1458,Research & Development,Laboratory Technician,43752,1,Terminated,0122001032,88,2026-04-15
+HRA-1459,Staff 1459,Research & Development,Manufacturing Director,89352,10,Terminated,0122001033,83,2026-04-15
+HRA-1460,Staff 1460,Research & Development,Healthcare Representative,130212,7,Active,0122001034,86,2026-04-15
+HRA-1461,Staff 1461,Human Resources,Human Resources,25308,3,Active,0122001035,81,2026-04-15
+HRA-1464,Staff 1464,Research & Development,Laboratory Technician,44664,2,Terminated,0122001036,82,2026-04-15
+HRA-1465,Staff 1465,Research & Development,Manufacturing Director,112560,3,Active,0122001037,99,2026-04-15
+HRA-1466,Staff 1466,Sales,Sales Executive,65832,2,Active,0122001038,87,2026-04-15
+HRA-1467,Staff 1467,Human Resources,Human Resources,32904,2,Terminated,0122001039,90,2026-04-15
+HRA-1468,Staff 1468,Research & Development,Research Director,165084,9,Active,0122001040,82,2026-04-15
+HRA-1469,Staff 1469,Sales,Sales Executive,101556,5,Active,0122001041,94,2026-04-15
+HRA-1471,Staff 1471,Research & Development,Laboratory Technician,37944,5,Active,0122001042,94,2026-04-15
+HRA-1472,Staff 1472,Research & Development,Research Director,199176,9,Active,0122001043,87,2026-04-15
+HRA-1473,Staff 1473,Research & Development,Healthcare Representative,79812,3,Active,0122001044,86,2026-04-15
+HRA-1474,Staff 1474,Research & Development,Research Scientist,28140,3,Active,0122001045,81,2026-04-15
+HRA-1475,Staff 1475,Research & Development,Research Scientist,41040,5,Active,0122001046,93,2026-04-15
+HRA-1477,Staff 1477,Sales,Sales Executive,52476,4,Active,0122001047,84,2026-04-15
+HRA-1478,Staff 1478,Sales,Sales Executive,57108,13,Active,0122001048,95,2026-04-15
+HRA-1479,Staff 1479,Sales,Sales Executive,63612,2,Active,0122001049,81,2026-04-15
+HRA-1480,Staff 1480,Research & Development,Laboratory Technician,44076,12,Active,0122001050,91,2026-04-15
+HRA-1481,Staff 1481,Sales,Sales Executive,57216,1,Active,0122001051,86,2026-04-15
+HRA-1482,Staff 1482,Research & Development,Research Scientist,15288,1,Active,0122001052,93,2026-04-15
+HRA-1483,Staff 1483,Research & Development,Research Scientist,58800,12,Active,0122001053,88,2026-04-15
+HRA-1484,Staff 1484,Research & Development,Healthcare Representative,125592,8,Active,0122001054,87,2026-04-15
+HRA-1485,Staff 1485,Research & Development,Research Director,204084,14,Active,0122001055,81,2026-04-15
+HRA-1486,Staff 1486,Sales,Sales Representative,34908,3,Terminated,0122001056,91,2026-04-15
+HRA-1487,Staff 1487,Sales,Sales Executive,69180,5,Terminated,0122001057,87,2026-04-15
+HRA-1489,Staff 1489,Sales,Sales Executive,55188,15,Terminated,0122001058,85,2026-04-15
+HRA-1492,Staff 1492,Sales,Sales Representative,28848,1,Active,0122001059,99,2026-04-15
+HRA-1494,Staff 1494,Research & Development,Laboratory Technician,38064,0,Terminated,0122001060,89,2026-04-15
+HRA-1495,Staff 1495,Sales,Sales Representative,24396,1,Active,0122001061,83,2026-04-15
+HRA-1496,Staff 1496,Research & Development,Manufacturing Director,122508,2,Active,0122001062,87,2026-04-15
+HRA-1497,Staff 1497,Sales,Sales Executive,103440,10,Active,0122001063,83,2026-04-15
+HRA-1499,Staff 1499,Human Resources,Human Resources,24768,5,Active,0122001064,81,2026-04-15
+HRA-1501,Staff 1501,Research & Development,Healthcare Representative,48420,3,Active,0122001065,81,2026-04-15
+HRA-1502,Staff 1502,Research & Development,Laboratory Technician,46056,5,Active,0122001066,82,2026-04-15
+HRA-1503,Staff 1503,Sales,Sales Executive,55092,5,Active,0122001067,86,2026-04-15
+HRA-1504,Staff 1504,Research & Development,Laboratory Technician,30732,0,Terminated,0122001068,80,2026-04-15
+HRA-1506,Staff 1506,Research & Development,Research Scientist,18756,1,Active,0122001069,91,2026-04-15
+HRA-1507,Staff 1507,Sales,Sales Executive,58776,4,Active,0122001070,83,2026-04-15
+HRA-1509,Staff 1509,Research & Development,Laboratory Technician,57468,3,Active,0122001071,95,2026-04-15
+HRA-1513,Staff 1513,Research & Development,Laboratory Technician,38160,3,Active,0122001072,96,2026-04-15
+HRA-1514,Staff 1514,Research & Development,Manufacturing Director,78588,8,Active,0122001073,86,2026-04-15
+HRA-1515,Staff 1515,Research & Development,Healthcare Representative,76656,0,Active,0122001074,87,2026-04-15
+HRA-1516,Staff 1516,Research & Development,Manager,134928,5,Active,0122001075,92,2026-04-15
+HRA-1520,Staff 1520,Research & Development,Manager,192384,14,Active,0122001076,81,2026-04-15
+HRA-1522,Staff 1522,Research & Development,Research Scientist,28344,9,Terminated,0122001077,96,2026-04-15
+HRA-1523,Staff 1523,Research & Development,Research Director,195936,20,Active,0122001078,88,2026-04-15
+HRA-1525,Staff 1525,Research & Development,Manufacturing Director,100512,2,Active,0122001079,98,2026-04-15
+HRA-1527,Staff 1527,Sales,Manager,199272,13,Active,0122001080,95,2026-04-15
+HRA-1529,Staff 1529,Research & Development,Healthcare Representative,103272,11,Active,0122001081,94,2026-04-15
+HRA-1533,Staff 1533,Research & Development,Laboratory Technician,27264,4,Active,0122001082,87,2026-04-15
+HRA-1534,Staff 1534,Research & Development,Laboratory Technician,24216,5,Terminated,0122001083,82,2026-04-15
+HRA-1535,Staff 1535,Sales,Sales Executive,84996,10,Active,0122001084,86,2026-04-15
+HRA-1537,Staff 1537,Research & Development,Research Scientist,49008,7,Terminated,0122001085,95,2026-04-15
+HRA-1539,Staff 1539,Research & Development,Research Director,172932,32,Active,0122001086,85,2026-04-15
+HRA-1541,Staff 1541,Sales,Sales Representative,27696,11,Active,0122001087,81,2026-04-15
+HRA-1542,Staff 1542,Research & Development,Laboratory Technician,58092,1,Active,0122001088,90,2026-04-15
+HRA-1543,Staff 1543,Research & Development,Research Scientist,51420,10,Active,0122001089,93,2026-04-15
+HRA-1544,Staff 1544,Research & Development,Healthcare Representative,116580,7,Active,0122001090,81,2026-04-15
+HRA-1545,Staff 1545,Research & Development,Manufacturing Director,51840,5,Active,0122001091,89,2026-04-15
+HRA-1546,Staff 1546,Research & Development,Research Scientist,25584,5,Active,0122001092,84,2026-04-15
+HRA-1547,Staff 1547,Research & Development,Healthcare Representative,121488,20,Active,0122001093,86,2026-04-15
+HRA-1548,Staff 1548,Sales,Sales Executive,65676,8,Active,0122001094,95,2026-04-15
+HRA-1549,Staff 1549,Research & Development,Laboratory Technician,62484,15,Active,0122001095,85,2026-04-15
+HRA-1550,Staff 1550,Human Resources,Manager,197244,21,Active,0122001096,87,2026-04-15
+HRA-1551,Staff 1551,Research & Development,Laboratory Technician,27552,1,Active,0122001097,82,2026-04-15
+HRA-1552,Staff 1552,Research & Development,Healthcare Representative,48828,2,Active,0122001098,91,2026-04-15
+HRA-1553,Staff 1553,Research & Development,Healthcare Representative,89292,10,Active,0122001099,93,2026-04-15
+HRA-1554,Staff 1554,Sales,Sales Representative,29160,5,Active,0122001100,84,2026-04-15
+HRA-1555,Staff 1555,Research & Development,Research Scientist,70536,7,Active,0122001101,96,2026-04-15
+HRA-1556,Staff 1556,Sales,Sales Representative,31728,3,Active,0122001102,86,2026-04-15
+HRA-1557,Staff 1557,Sales,Sales Executive,77268,8,Active,0122001103,88,2026-04-15
+HRA-1558,Staff 1558,Research & Development,Research Scientist,29412,1,Active,0122001104,97,2026-04-15
+HRA-1560,Staff 1560,Sales,Sales Executive,76704,2,Active,0122001105,94,2026-04-15
+HRA-1562,Staff 1562,Sales,Sales Executive,116568,10,Terminated,0122001106,81,2026-04-15
+HRA-1563,Staff 1563,Human Resources,Human Resources,72924,6,Active,0122001107,99,2026-04-15
+HRA-1564,Staff 1564,Research & Development,Laboratory Technician,29400,3,Active,0122001108,98,2026-04-15
+HRA-1568,Staff 1568,Sales,Sales Executive,111000,4,Active,0122001109,94,2026-04-15
+HRA-1569,Staff 1569,Research & Development,Laboratory Technician,24888,1,Terminated,0122001110,87,2026-04-15
+HRA-1572,Staff 1572,Research & Development,Manufacturing Director,122028,33,Terminated,0122001111,88,2026-04-15
+HRA-1573,Staff 1573,Research & Development,Manufacturing Director,58260,5,Terminated,0122001112,97,2026-04-15
+HRA-1574,Staff 1574,Research & Development,Research Scientist,49044,6,Active,0122001113,98,2026-04-15
+HRA-1576,Staff 1576,Research & Development,Research Scientist,28404,8,Active,0122001114,81,2026-04-15
+HRA-1577,Staff 1577,Research & Development,Research Scientist,35664,1,Active,0122001115,90,2026-04-15
+HRA-1578,Staff 1578,Sales,Manager,235032,36,Active,0122001116,92,2026-04-15
+HRA-1580,Staff 1580,Research & Development,Research Scientist,65808,2,Active,0122001117,84,2026-04-15
+HRA-1581,Staff 1581,Research & Development,Research Scientist,24732,1,Active,0122001118,94,2026-04-15
+HRA-1582,Staff 1582,Sales,Sales Executive,119088,9,Active,0122001119,85,2026-04-15
+HRA-1583,Staff 1583,Sales,Sales Executive,50376,3,Active,0122001120,84,2026-04-15
+HRA-1585,Staff 1585,Sales,Sales Executive,81780,1,Active,0122001121,89,2026-04-15
+HRA-1586,Staff 1586,Research & Development,Laboratory Technician,56676,10,Active,0122001122,98,2026-04-15
+HRA-1587,Staff 1587,Research & Development,Healthcare Representative,73704,5,Active,0122001123,98,2026-04-15
+HRA-1588,Staff 1588,Sales,Sales Executive,98844,7,Active,0122001124,84,2026-04-15
+HRA-1590,Staff 1590,Research & Development,Healthcare Representative,106236,6,Active,0122001125,91,2026-04-15
+HRA-1591,Staff 1591,Sales,Manager,231972,1,Active,0122001126,98,2026-04-15
+HRA-1592,Staff 1592,Research & Development,Research Scientist,24876,2,Active,0122001127,92,2026-04-15
+HRA-1594,Staff 1594,Research & Development,Laboratory Technician,66744,3,Active,0122001128,94,2026-04-15
+HRA-1595,Staff 1595,Research & Development,Manager,235356,1,Active,0122001129,83,2026-04-15
+HRA-1596,Staff 1596,Research & Development,Laboratory Technician,40884,10,Active,0122001130,80,2026-04-15
+HRA-1597,Staff 1597,Research & Development,Healthcare Representative,60756,8,Active,0122001131,84,2026-04-15
+HRA-1598,Staff 1598,Sales,Sales Executive,55668,5,Active,0122001132,90,2026-04-15
+HRA-1599,Staff 1599,Research & Development,Laboratory Technician,58512,6,Active,0122001133,88,2026-04-15
+HRA-1601,Staff 1601,Research & Development,Laboratory Technician,32280,1,Active,0122001134,96,2026-04-15
+HRA-1602,Staff 1602,Sales,Manager,210804,26,Active,0122001135,92,2026-04-15
+HRA-1604,Staff 1604,Research & Development,Laboratory Technician,28896,1,Terminated,0122001136,80,2026-04-15
+HRA-1605,Staff 1605,Research & Development,Research Scientist,33768,4,Active,0122001137,96,2026-04-15
+HRA-1606,Staff 1606,Research & Development,Healthcare Representative,134940,30,Active,0122001138,80,2026-04-15
+HRA-1607,Staff 1607,Research & Development,Research Scientist,39744,3,Active,0122001139,82,2026-04-15
+HRA-1608,Staff 1608,Research & Development,Research Director,228588,22,Active,0122001140,96,2026-04-15
+HRA-1609,Staff 1609,Research & Development,Research Scientist,25692,6,Active,0122001141,91,2026-04-15
+HRA-1611,Staff 1611,Research & Development,Laboratory Technician,69228,10,Active,0122001142,89,2026-04-15
+HRA-1612,Staff 1612,Sales,Sales Executive,52620,10,Active,0122001143,84,2026-04-15
+HRA-1613,Staff 1613,Sales,Sales Executive,63984,5,Active,0122001144,95,2026-04-15
+HRA-1614,Staff 1614,Research & Development,Manufacturing Director,55956,3,Active,0122001145,93,2026-04-15
+HRA-1615,Staff 1615,Research & Development,Manufacturing Director,56688,9,Active,0122001146,95,2026-04-15
+HRA-1617,Staff 1617,Research & Development,Laboratory Technician,38532,9,Active,0122001147,88,2026-04-15
+HRA-1618,Staff 1618,Research & Development,Manufacturing Director,64524,7,Active,0122001148,84,2026-04-15
+HRA-1619,Staff 1619,Research & Development,Laboratory Technician,48792,7,Active,0122001149,88,2026-04-15
+HRA-1621,Staff 1621,Research & Development,Research Scientist,62496,16,Active,0122001150,82,2026-04-15
+HRA-1622,Staff 1622,Research & Development,Manufacturing Director,58524,5,Active,0122001151,96,2026-04-15
+HRA-1623,Staff 1623,Research & Development,Research Scientist,37404,2,Active,0122001152,96,2026-04-15
+HRA-1624,Staff 1624,Sales,Sales Representative,18828,0,Terminated,0122001153,81,2026-04-15
+HRA-1625,Staff 1625,Human Resources,Manager,235896,5,Active,0122001154,94,2026-04-15
+HRA-1627,Staff 1627,Research & Development,Laboratory Technician,36828,10,Active,0122001155,97,2026-04-15
+HRA-1628,Staff 1628,Research & Development,Manufacturing Director,125220,18,Active,0122001156,90,2026-04-15
+HRA-1630,Staff 1630,Research & Development,Healthcare Representative,49776,14,Active,0122001157,97,2026-04-15
+HRA-1631,Staff 1631,Research & Development,Manufacturing Director,69216,4,Active,0122001158,96,2026-04-15
+HRA-1633,Staff 1633,Research & Development,Manufacturing Director,60504,9,Active,0122001159,85,2026-04-15
+HRA-1635,Staff 1635,Research & Development,Manufacturing Director,69240,10,Active,0122001160,90,2026-04-15
+HRA-1638,Staff 1638,Research & Development,Manufacturing Director,93072,5,Active,0122001161,95,2026-04-15
+HRA-1639,Staff 1639,Sales,Sales Executive,123672,13,Terminated,0122001162,94,2026-04-15
+HRA-1640,Staff 1640,Research & Development,Research Scientist,47232,8,Active,0122001163,96,2026-04-15
+HRA-1641,Staff 1641,Research & Development,Manufacturing Director,95340,4,Active,0122001164,89,2026-04-15
+HRA-1642,Staff 1642,Human Resources,Human Resources,68916,10,Active,0122001165,82,2026-04-15
+HRA-1644,Staff 1644,Research & Development,Manager,182424,2,Active,0122001166,95,2026-04-15
+HRA-1645,Staff 1645,Sales,Sales Executive,65280,2,Terminated,0122001167,87,2026-04-15
+HRA-1646,Staff 1646,Research & Development,Research Scientist,45120,6,Active,0122001168,80,2026-04-15
+HRA-1647,Staff 1647,Research & Development,Research Scientist,42204,3,Active,0122001169,80,2026-04-15
+HRA-1648,Staff 1648,Research & Development,Research Scientist,30960,4,Active,0122001170,82,2026-04-15
+HRA-1649,Staff 1649,Research & Development,Laboratory Technician,25992,4,Terminated,0122001171,92,2026-04-15
+HRA-1650,Staff 1650,Sales,Sales Executive,70428,5,Active,0122001172,90,2026-04-15
+HRA-1651,Staff 1651,Research & Development,Healthcare Representative,96096,3,Active,0122001173,85,2026-04-15
+HRA-1653,Staff 1653,Research & Development,Manufacturing Director,62472,7,Active,0122001174,81,2026-04-15
+HRA-1654,Staff 1654,Research & Development,Manufacturing Director,63540,5,Active,0122001175,90,2026-04-15
+HRA-1655,Staff 1655,Research & Development,Research Director,196956,4,Active,0122001176,99,2026-04-15
+HRA-1656,Staff 1656,Research & Development,Research Director,159228,14,Active,0122001177,80,2026-04-15
+HRA-1657,Staff 1657,Sales,Sales Representative,33396,2,Active,0122001178,90,2026-04-15
+HRA-1658,Staff 1658,Research & Development,Research Scientist,65196,11,Active,0122001179,91,2026-04-15
+HRA-1659,Staff 1659,Research & Development,Laboratory Technician,24156,4,Active,0122001180,83,2026-04-15
+HRA-1661,Staff 1661,Research & Development,Healthcare Representative,167592,15,Active,0122001181,96,2026-04-15
+HRA-1662,Staff 1662,Research & Development,Manufacturing Director,52488,3,Active,0122001182,87,2026-04-15
+HRA-1664,Staff 1664,Research & Development,Healthcare Representative,82104,5,Active,0122001183,93,2026-04-15
+HRA-1665,Staff 1665,Research & Development,Manager,209112,10,Active,0122001184,81,2026-04-15
+HRA-1666,Staff 1666,Research & Development,Research Director,211236,14,Active,0122001185,97,2026-04-15
+HRA-1667,Staff 1667,Sales,Sales Executive,54972,11,Terminated,0122001186,83,2026-04-15
+HRA-1668,Staff 1668,Research & Development,Research Scientist,56820,13,Active,0122001187,91,2026-04-15
+HRA-1669,Staff 1669,Sales,Sales Executive,50244,10,Active,0122001188,81,2026-04-15
+HRA-1670,Staff 1670,Sales,Sales Executive,66060,6,Active,0122001189,92,2026-04-15
+HRA-1671,Staff 1671,Research & Development,Research Scientist,65640,9,Active,0122001190,91,2026-04-15
+HRA-1673,Staff 1673,Sales,Sales Executive,65712,10,Active,0122001191,87,2026-04-15
+HRA-1674,Staff 1674,Research & Development,Laboratory Technician,31044,2,Active,0122001192,97,2026-04-15
+HRA-1675,Staff 1675,Research & Development,Laboratory Technician,29280,4,Active,0122001193,92,2026-04-15
+HRA-1676,Staff 1676,Sales,Manager,191664,3,Active,0122001194,88,2026-04-15
+HRA-1677,Staff 1677,Research & Development,Manager,184548,8,Active,0122001195,81,2026-04-15
+HRA-1678,Staff 1678,Sales,Sales Executive,84984,2,Active,0122001196,95,2026-04-15
+HRA-1680,Staff 1680,Sales,Sales Representative,32736,2,Active,0122001197,90,2026-04-15
+HRA-1681,Staff 1681,Sales,Sales Executive,64416,6,Active,0122001198,92,2026-04-15
+HRA-1682,Staff 1682,Research & Development,Healthcare Representative,64164,3,Active,0122001199,87,2026-04-15
+HRA-1683,Staff 1683,Human Resources,Human Resources,38340,2,Active,0122001200,85,2026-04-15
+HRA-1684,Staff 1684,Research & Development,Laboratory Technician,47868,5,Terminated,0122001201,80,2026-04-15
+HRA-1687,Staff 1687,Research & Development,Laboratory Technician,39672,0,Active,0122001202,89,2026-04-15
+HRA-1689,Staff 1689,Research & Development,Healthcare Representative,84060,4,Active,0122001203,83,2026-04-15
+HRA-1691,Staff 1691,Sales,Sales Representative,31860,9,Terminated,0122001204,99,2026-04-15
+HRA-1692,Staff 1692,Research & Development,Laboratory Technician,16716,1,Terminated,0122001205,99,2026-04-15
+HRA-1693,Staff 1693,Research & Development,Laboratory Technician,30840,7,Active,0122001206,86,2026-04-15
+HRA-1694,Staff 1694,Research & Development,Research Scientist,42444,4,Active,0122001207,92,2026-04-15
+HRA-1696,Staff 1696,Research & Development,Laboratory Technician,47832,15,Active,0122001208,91,2026-04-15
+HRA-1697,Staff 1697,Research & Development,Healthcare Representative,130596,1,Active,0122001209,89,2026-04-15
+HRA-1698,Staff 1698,Research & Development,Laboratory Technician,24336,14,Active,0122001210,98,2026-04-15
+HRA-1700,Staff 1700,Sales,Sales Executive,114300,6,Active,0122001211,95,2026-04-15
+HRA-1701,Staff 1701,Research & Development,Research Scientist,35148,10,Active,0122001212,90,2026-04-15
+HRA-1702,Staff 1702,Sales,Sales Representative,27300,3,Terminated,0122001213,84,2026-04-15
+HRA-1703,Staff 1703,Research & Development,Healthcare Representative,94548,8,Active,0122001214,85,2026-04-15
+HRA-1704,Staff 1704,Research & Development,Research Scientist,59160,5,Active,0122001215,82,2026-04-15
+HRA-1706,Staff 1706,Sales,Sales Executive,94164,10,Active,0122001216,97,2026-04-15
+HRA-1707,Staff 1707,Research & Development,Research Scientist,52812,5,Active,0122001217,86,2026-04-15
+HRA-1708,Staff 1708,Sales,Sales Executive,110892,10,Active,0122001218,84,2026-04-15
+HRA-1709,Staff 1709,Research & Development,Laboratory Technician,35688,5,Active,0122001219,82,2026-04-15
+HRA-1710,Staff 1710,Sales,Sales Representative,54024,13,Active,0122001220,91,2026-04-15
+HRA-1712,Staff 1712,Research & Development,Healthcare Representative,128976,23,Active,0122001221,97,2026-04-15
+HRA-1714,Staff 1714,Human Resources,Human Resources,18660,1,Terminated,0122001222,84,2026-04-15
+HRA-1716,Staff 1716,Sales,Sales Executive,155232,23,Terminated,0122001223,85,2026-04-15
+HRA-1718,Staff 1718,Research & Development,Laboratory Technician,27660,3,Active,0122001224,99,2026-04-15
+HRA-1719,Staff 1719,Research & Development,Research Director,200448,21,Active,0122001225,87,2026-04-15
+HRA-1720,Staff 1720,Research & Development,Research Scientist,41196,5,Active,0122001226,82,2026-04-15
+HRA-1721,Staff 1721,Research & Development,Laboratory Technician,41724,5,Active,0122001227,93,2026-04-15
+HRA-1722,Staff 1722,Human Resources,Human Resources,77160,3,Active,0122001228,85,2026-04-15
+HRA-1724,Staff 1724,Research & Development,Manufacturing Director,78192,1,Active,0122001229,90,2026-04-15
+HRA-1725,Staff 1725,Research & Development,Laboratory Technician,46884,6,Active,0122001230,80,2026-04-15
+HRA-1727,Staff 1727,Research & Development,Healthcare Representative,66744,10,Active,0122001231,89,2026-04-15
+HRA-1728,Staff 1728,Research & Development,Manufacturing Director,82596,7,Active,0122001232,84,2026-04-15
+HRA-1729,Staff 1729,Research & Development,Research Scientist,34344,10,Active,0122001233,81,2026-04-15
+HRA-1731,Staff 1731,Sales,Sales Executive,59736,1,Active,0122001234,84,2026-04-15
+HRA-1732,Staff 1732,Sales,Sales Executive,124416,10,Active,0122001235,91,2026-04-15
+HRA-1733,Staff 1733,Sales,Sales Executive,73608,2,Terminated,0122001236,99,2026-04-15
+HRA-1734,Staff 1734,Sales,Sales Executive,80820,0,Terminated,0122001237,95,2026-04-15
+HRA-1735,Staff 1735,Research & Development,Laboratory Technician,39540,3,Active,0122001238,95,2026-04-15
+HRA-1736,Staff 1736,Research & Development,Manufacturing Director,62856,5,Active,0122001239,95,2026-04-15
+HRA-1737,Staff 1737,Research & Development,Laboratory Technician,77664,9,Active,0122001240,83,2026-04-15
+HRA-1739,Staff 1739,Sales,Sales Executive,115320,4,Active,0122001241,85,2026-04-15
+HRA-1740,Staff 1740,Sales,Manager,237996,21,Active,0122001242,91,2026-04-15
+HRA-1744,Staff 1744,Human Resources,Human Resources,117072,5,Active,0122001243,87,2026-04-15
+HRA-1745,Staff 1745,Research & Development,Research Scientist,59616,9,Active,0122001244,94,2026-04-15
+HRA-1746,Staff 1746,Human Resources,Human Resources,25740,2,Active,0122001245,92,2026-04-15
+HRA-1747,Staff 1747,Human Resources,Human Resources,26160,4,Terminated,0122001246,81,2026-04-15
+HRA-1749,Staff 1749,Sales,Sales Executive,100152,5,Active,0122001247,98,2026-04-15
+HRA-1751,Staff 1751,Research & Development,Research Scientist,41340,6,Active,0122001248,87,2026-04-15
+HRA-1752,Staff 1752,Sales,Sales Representative,33120,2,Terminated,0122001249,96,2026-04-15
+HRA-1753,Staff 1753,Research & Development,Healthcare Representative,75528,3,Active,0122001250,80,2026-04-15
+HRA-1754,Staff 1754,Sales,Sales Executive,85680,7,Active,0122001251,96,2026-04-15
+HRA-1755,Staff 1755,Research & Development,Research Scientist,35184,5,Active,0122001252,83,2026-04-15
+HRA-1756,Staff 1756,Sales,Sales Executive,61764,11,Active,0122001253,91,2026-04-15
+HRA-1757,Staff 1757,Sales,Sales Executive,54084,5,Active,0122001254,88,2026-04-15
+HRA-1758,Staff 1758,Sales,Sales Executive,102768,0,Terminated,0122001255,90,2026-04-15
+HRA-1760,Staff 1760,Research & Development,Laboratory Technician,29616,6,Active,0122001256,87,2026-04-15
+HRA-1761,Staff 1761,Sales,Sales Executive,97932,1,Terminated,0122001257,85,2026-04-15
+HRA-1762,Staff 1762,Research & Development,Research Scientist,25308,1,Active,0122001258,82,2026-04-15
+HRA-1763,Staff 1763,Research & Development,Healthcare Representative,63528,7,Active,0122001259,97,2026-04-15
+HRA-1764,Staff 1764,Research & Development,Research Scientist,32616,7,Active,0122001260,87,2026-04-15
+HRA-1766,Staff 1766,Research & Development,Healthcare Representative,69732,1,Active,0122001261,99,2026-04-15
+HRA-1767,Staff 1767,Research & Development,Research Scientist,29244,1,Terminated,0122001262,91,2026-04-15
+HRA-1768,Staff 1768,Research & Development,Laboratory Technician,33192,5,Active,0122001263,91,2026-04-15
+HRA-1770,Staff 1770,Research & Development,Research Director,228456,1,Active,0122001264,97,2026-04-15
+HRA-1771,Staff 1771,Research & Development,Research Scientist,36660,9,Active,0122001265,87,2026-04-15
+HRA-1772,Staff 1772,Research & Development,Laboratory Technician,27468,5,Active,0122001266,86,2026-04-15
+HRA-1774,Staff 1774,Sales,Sales Executive,48012,15,Active,0122001267,96,2026-04-15
+HRA-1775,Staff 1775,Research & Development,Manufacturing Director,155580,3,Active,0122001268,86,2026-04-15
+HRA-1778,Staff 1778,Human Resources,Human Resources,42468,9,Active,0122001269,85,2026-04-15
+HRA-1779,Staff 1779,Sales,Sales Executive,72348,2,Active,0122001270,87,2026-04-15
+HRA-1780,Staff 1780,Sales,Sales Representative,32148,1,Terminated,0122001271,84,2026-04-15
+HRA-1782,Staff 1782,Research & Development,Laboratory Technician,44424,5,Active,0122001272,98,2026-04-15
+HRA-1783,Staff 1783,Research & Development,Laboratory Technician,28776,1,Terminated,0122001273,92,2026-04-15
+HRA-1784,Staff 1784,Sales,Sales Executive,65616,12,Active,0122001274,83,2026-04-15
+HRA-1786,Staff 1786,Research & Development,Manager,157392,2,Active,0122001275,90,2026-04-15
+HRA-1787,Staff 1787,Sales,Sales Executive,50268,5,Active,0122001276,80,2026-04-15
+HRA-1789,Staff 1789,Research & Development,Research Director,231936,2,Active,0122001277,98,2026-04-15
+HRA-1790,Staff 1790,Research & Development,Healthcare Representative,99852,12,Active,0122001278,90,2026-04-15
+HRA-1792,Staff 1792,Research & Development,Research Scientist,28104,5,Terminated,0122001279,80,2026-04-15
+HRA-1794,Staff 1794,Human Resources,Human Resources,48852,10,Active,0122001280,88,2026-04-15
+HRA-1797,Staff 1797,Sales,Sales Executive,69756,10,Terminated,0122001281,83,2026-04-15
+HRA-1798,Staff 1798,Research & Development,Research Scientist,37716,10,Active,0122001282,96,2026-04-15
+HRA-1799,Staff 1799,Research & Development,Research Scientist,24528,5,Active,0122001283,99,2026-04-15
+HRA-1800,Staff 1800,Research & Development,Research Director,161568,4,Active,0122001284,90,2026-04-15
+HRA-1801,Staff 1801,Sales,Sales Executive,95892,2,Active,0122001285,85,2026-04-15
+HRA-1802,Staff 1802,Research & Development,Laboratory Technician,40524,4,Active,0122001286,84,2026-04-15
+HRA-1803,Staff 1803,Research & Development,Healthcare Representative,66456,0,Active,0122001287,93,2026-04-15
+HRA-1804,Staff 1804,Research & Development,Manufacturing Director,69144,7,Active,0122001288,95,2026-04-15
+HRA-1805,Staff 1805,Human Resources,Human Resources,31104,11,Active,0122001289,83,2026-04-15
+HRA-1807,Staff 1807,Research & Development,Laboratory Technician,64152,7,Terminated,0122001290,98,2026-04-15
+HRA-1809,Staff 1809,Research & Development,Manufacturing Director,50556,10,Terminated,0122001291,84,2026-04-15
+HRA-1812,Staff 1812,Sales,Sales Executive,49524,2,Active,0122001292,89,2026-04-15
+HRA-1813,Staff 1813,Research & Development,Research Scientist,29256,3,Active,0122001293,96,2026-04-15
+HRA-1814,Staff 1814,Research & Development,Healthcare Representative,82440,3,Active,0122001294,94,2026-04-15
+HRA-1815,Staff 1815,Sales,Sales Executive,125364,22,Active,0122001295,82,2026-04-15
+HRA-1816,Staff 1816,Research & Development,Manufacturing Director,116004,7,Active,0122001296,85,2026-04-15
+HRA-1818,Staff 1818,Human Resources,Human Resources,25776,5,Terminated,0122001297,88,2026-04-15
+HRA-1821,Staff 1821,Research & Development,Healthcare Representative,107112,9,Terminated,0122001298,98,2026-04-15
+HRA-1822,Staff 1822,Research & Development,Healthcare Representative,78156,5,Active,0122001299,89,2026-04-15
+HRA-1823,Staff 1823,Sales,Sales Executive,81588,10,Active,0122001300,98,2026-04-15
+HRA-1824,Staff 1824,Sales,Manager,195492,16,Active,0122001301,90,2026-04-15
+HRA-1826,Staff 1826,Research & Development,Laboratory Technician,32460,5,Active,0122001302,81,2026-04-15
+HRA-1827,Staff 1827,Research & Development,Manufacturing Director,123996,22,Active,0122001303,88,2026-04-15
+HRA-1829,Staff 1829,Research & Development,Healthcare Representative,53376,7,Active,0122001304,93,2026-04-15
+HRA-1830,Staff 1830,Research & Development,Research Scientist,82248,7,Active,0122001305,87,2026-04-15
+HRA-1833,Staff 1833,Sales,Sales Executive,115644,3,Active,0122001306,99,2026-04-15
+HRA-1834,Staff 1834,Research & Development,Research Scientist,43092,3,Active,0122001307,93,2026-04-15
+HRA-1835,Staff 1835,Sales,Sales Representative,64860,4,Active,0122001308,99,2026-04-15
+HRA-1836,Staff 1836,Sales,Sales Executive,56208,5,Active,0122001309,86,2026-04-15
+HRA-1837,Staff 1837,Research & Development,Research Director,189444,2,Active,0122001310,90,2026-04-15
+HRA-1839,Staff 1839,Research & Development,Research Scientist,18168,0,Active,0122001311,87,2026-04-15
+HRA-1842,Staff 1842,Human Resources,Human Resources,35472,1,Terminated,0122001312,99,2026-04-15
+HRA-1844,Staff 1844,Human Resources,Human Resources,28020,2,Terminated,0122001313,94,2026-04-15
+HRA-1845,Staff 1845,Sales,Sales Executive,61848,8,Active,0122001314,95,2026-04-15
+HRA-1847,Staff 1847,Research & Development,Research Scientist,83544,1,Active,0122001315,99,2026-04-15
+HRA-1849,Staff 1849,Sales,Sales Executive,68100,7,Active,0122001316,94,2026-04-15
+HRA-1850,Staff 1850,Research & Development,Laboratory Technician,28548,5,Active,0122001317,92,2026-04-15
+HRA-1852,Staff 1852,Research & Development,Laboratory Technician,45744,11,Active,0122001318,88,2026-04-15
+HRA-1853,Staff 1853,Sales,Sales Executive,55776,0,Active,0122001319,81,2026-04-15
+HRA-1854,Staff 1854,Research & Development,Research Scientist,35232,6,Active,0122001320,95,2026-04-15
+HRA-1856,Staff 1856,Research & Development,Laboratory Technician,25260,2,Active,0122001321,85,2026-04-15
+HRA-1857,Staff 1857,Research & Development,Manufacturing Director,102936,9,Active,0122001322,87,2026-04-15
+HRA-1858,Staff 1858,Human Resources,Human Resources,32472,3,Active,0122001323,96,2026-04-15
+HRA-1859,Staff 1859,Research & Development,Healthcare Representative,76608,7,Active,0122001324,85,2026-04-15
+HRA-1860,Staff 1860,Research & Development,Laboratory Technician,47616,0,Active,0122001325,97,2026-04-15
+HRA-1862,Staff 1862,Sales,Sales Executive,118884,2,Terminated,0122001326,88,2026-04-15
+HRA-1863,Staff 1863,Sales,Sales Executive,158700,19,Active,0122001327,82,2026-04-15
+HRA-1864,Staff 1864,Sales,Sales Representative,42480,9,Active,0122001328,99,2026-04-15
+HRA-1865,Staff 1865,Human Resources,Human Resources,33648,1,Active,0122001329,88,2026-04-15
+HRA-1866,Staff 1866,Research & Development,Manager,232704,16,Active,0122001330,97,2026-04-15
+HRA-1867,Staff 1867,Research & Development,Research Director,235980,22,Active,0122001331,93,2026-04-15
+HRA-1868,Staff 1868,Research & Development,Research Scientist,29268,1,Terminated,0122001332,92,2026-04-15
+HRA-1869,Staff 1869,Sales,Sales Executive,87768,8,Terminated,0122001333,86,2026-04-15
+HRA-1870,Staff 1870,Research & Development,Research Scientist,57288,7,Active,0122001334,88,2026-04-15
+HRA-1871,Staff 1871,Research & Development,Research Scientist,46824,2,Active,0122001335,80,2026-04-15
+HRA-1873,Staff 1873,Research & Development,Research Scientist,31944,5,Active,0122001336,97,2026-04-15
+HRA-1875,Staff 1875,Sales,Sales Representative,34272,1,Active,0122001337,90,2026-04-15
+HRA-1876,Staff 1876,Sales,Sales Representative,12972,1,Terminated,0122001338,80,2026-04-15
+HRA-1878,Staff 1878,Research & Development,Research Scientist,29664,1,Terminated,0122001339,96,2026-04-15
+HRA-1880,Staff 1880,Sales,Sales Executive,68076,10,Active,0122001340,80,2026-04-15
+HRA-1881,Staff 1881,Research & Development,Laboratory Technician,50364,10,Active,0122001341,97,2026-04-15
+HRA-1882,Staff 1882,Sales,Sales Executive,116556,5,Active,0122001342,90,2026-04-15
+HRA-1883,Staff 1883,Research & Development,Laboratory Technician,24744,3,Active,0122001343,85,2026-04-15
+HRA-1885,Staff 1885,Research & Development,Research Scientist,51408,5,Active,0122001344,86,2026-04-15
+HRA-1886,Staff 1886,Research & Development,Manufacturing Director,57456,3,Active,0122001345,85,2026-04-15
+HRA-1888,Staff 1888,Research & Development,Manufacturing Director,70872,9,Active,0122001346,91,2026-04-15
+HRA-1890,Staff 1890,Human Resources,Human Resources,46632,10,Active,0122001347,93,2026-04-15
+HRA-1892,Staff 1892,Research & Development,Manager,201876,19,Active,0122001348,80,2026-04-15
+HRA-1893,Staff 1893,Research & Development,Research Scientist,35196,1,Active,0122001349,93,2026-04-15
+HRA-1898,Staff 1898,Sales,Sales Executive,78000,8,Active,0122001350,97,2026-04-15
+HRA-1900,Staff 1900,Research & Development,Manager,206088,22,Active,0122001351,86,2026-04-15
+HRA-1903,Staff 1903,Research & Development,Healthcare Representative,60396,2,Active,0122001352,81,2026-04-15
+HRA-1905,Staff 1905,Research & Development,Research Scientist,27684,5,Terminated,0122001353,89,2026-04-15
+HRA-1907,Staff 1907,Research & Development,Laboratory Technician,31044,4,Terminated,0122001354,90,2026-04-15
+HRA-1908,Staff 1908,Sales,Sales Executive,66084,4,Active,0122001355,87,2026-04-15
+HRA-1909,Staff 1909,Sales,Sales Executive,52716,5,Active,0122001356,90,2026-04-15
+HRA-1911,Staff 1911,Research & Development,Research Director,160176,13,Active,0122001357,90,2026-04-15
+HRA-1912,Staff 1912,Sales,Sales Executive,78996,5,Active,0122001358,83,2026-04-15
+HRA-1915,Staff 1915,Sales,Sales Executive,97236,4,Active,0122001359,97,2026-04-15
+HRA-1916,Staff 1916,Research & Development,Laboratory Technician,47736,2,Active,0122001360,97,2026-04-15
+HRA-1918,Staff 1918,Research & Development,Laboratory Technician,30528,7,Active,0122001361,82,2026-04-15
+HRA-1922,Staff 1922,Research & Development,Healthcare Representative,64788,4,Active,0122001362,88,2026-04-15
+HRA-1924,Staff 1924,Sales,Sales Executive,65844,10,Active,0122001363,94,2026-04-15
+HRA-1927,Staff 1927,Sales,Sales Executive,82008,7,Active,0122001364,86,2026-04-15
+HRA-1928,Staff 1928,Sales,Sales Representative,13092,1,Terminated,0122001365,98,2026-04-15
+HRA-1929,Staff 1929,Sales,Sales Executive,68832,3,Active,0122001366,85,2026-04-15
+HRA-1931,Staff 1931,Research & Development,Research Scientist,26712,5,Active,0122001367,99,2026-04-15
+HRA-1932,Staff 1932,Research & Development,Research Scientist,68964,15,Active,0122001368,90,2026-04-15
+HRA-1933,Staff 1933,Sales,Sales Executive,118248,2,Terminated,0122001369,97,2026-04-15
+HRA-1934,Staff 1934,Research & Development,Research Scientist,65604,8,Active,0122001370,84,2026-04-15
+HRA-1935,Staff 1935,Sales,Sales Executive,64560,0,Active,0122001371,93,2026-04-15
+HRA-1936,Staff 1936,Research & Development,Manufacturing Director,61812,10,Active,0122001372,87,2026-04-15
+HRA-1937,Staff 1937,Research & Development,Research Scientist,25596,20,Active,0122001373,87,2026-04-15
+HRA-1938,Staff 1938,Sales,Manager,214500,1,Active,0122001374,97,2026-04-15
+HRA-1939,Staff 1939,Research & Development,Research Scientist,29184,4,Terminated,0122001375,85,2026-04-15
+HRA-1940,Staff 1940,Research & Development,Research Scientist,57252,5,Active,0122001376,88,2026-04-15
+HRA-1941,Staff 1941,Research & Development,Research Director,229932,5,Active,0122001377,94,2026-04-15
+HRA-1943,Staff 1943,Sales,Sales Executive,61044,0,Active,0122001378,87,2026-04-15
+HRA-1944,Staff 1944,Human Resources,Human Resources,34356,1,Terminated,0122001379,82,2026-04-15
+HRA-1945,Staff 1945,Sales,Sales Executive,66732,5,Active,0122001380,99,2026-04-15
+HRA-1947,Staff 1947,Research & Development,Research Scientist,25728,5,Active,0122001381,96,2026-04-15
+HRA-1948,Staff 1948,Research & Development,Research Scientist,36780,4,Active,0122001382,86,2026-04-15
+HRA-1949,Staff 1949,Research & Development,Laboratory Technician,33720,5,Active,0122001383,94,2026-04-15
+HRA-1950,Staff 1950,Sales,Sales Executive,118656,14,Active,0122001384,95,2026-04-15
+HRA-1951,Staff 1951,Sales,Sales Executive,103536,8,Active,0122001385,89,2026-04-15
+HRA-1952,Staff 1952,Research & Development,Laboratory Technician,34404,7,Active,0122001386,99,2026-04-15
+HRA-1954,Staff 1954,Research & Development,Healthcare Representative,64476,5,Active,0122001387,82,2026-04-15
+HRA-1955,Staff 1955,Research & Development,Healthcare Representative,80004,5,Active,0122001388,89,2026-04-15
+HRA-1956,Staff 1956,Research & Development,Research Scientist,60036,10,Active,0122001389,96,2026-04-15
+HRA-1960,Staff 1960,Research & Development,Laboratory Technician,28404,4,Terminated,0122001390,90,2026-04-15
+HRA-1961,Staff 1961,Sales,Sales Representative,34296,1,Active,0122001391,85,2026-04-15
+HRA-1962,Staff 1962,Sales,Sales Executive,62448,10,Active,0122001392,91,2026-04-15
+HRA-1965,Staff 1965,Sales,Sales Executive,49260,7,Active,0122001393,90,2026-04-15
+HRA-1966,Staff 1966,Research & Development,Manufacturing Director,116148,1,Active,0122001394,85,2026-04-15
+HRA-1967,Staff 1967,Sales,Sales Executive,67404,10,Terminated,0122001395,91,2026-04-15
+HRA-1968,Staff 1968,Sales,Sales Executive,125376,2,Terminated,0122001396,93,2026-04-15
+HRA-1969,Staff 1969,Research & Development,Research Scientist,34764,4,Active,0122001397,94,2026-04-15
+HRA-1970,Staff 1970,Research & Development,Healthcare Representative,71616,9,Active,0122001398,93,2026-04-15
+HRA-1971,Staff 1971,Research & Development,Healthcare Representative,90120,10,Active,0122001399,88,2026-04-15
+HRA-1972,Staff 1972,Human Resources,Human Resources,35892,6,Active,0122001400,89,2026-04-15
+HRA-1973,Staff 1973,Human Resources,Manager,235632,10,Active,0122001401,88,2026-04-15
+HRA-1974,Staff 1974,Research & Development,Laboratory Technician,13548,1,Active,0122001402,86,2026-04-15
+HRA-1975,Staff 1975,Sales,Sales Executive,160092,20,Active,0122001403,87,2026-04-15
+HRA-1976,Staff 1976,Research & Development,Research Scientist,51984,20,Active,0122001404,90,2026-04-15
+HRA-1979,Staff 1979,Research & Development,Research Director,132372,11,Active,0122001405,83,2026-04-15
+HRA-1980,Staff 1980,Research & Development,Manufacturing Director,53280,5,Active,0122001406,99,2026-04-15
+HRA-1981,Staff 1981,Research & Development,Healthcare Representative,55404,4,Active,0122001407,96,2026-04-15
+HRA-1982,Staff 1982,Research & Development,Laboratory Technician,31764,5,Active,0122001408,85,2026-04-15
+HRA-1985,Staff 1985,Research & Development,Laboratory Technician,75876,10,Active,0122001409,85,2026-04-15
+HRA-1986,Staff 1986,Sales,Sales Executive,68124,11,Active,0122001410,86,2026-04-15
+HRA-1987,Staff 1987,Human Resources,Human Resources,26244,2,Active,0122001411,84,2026-04-15
+HRA-1989,Staff 1989,Research & Development,Laboratory Technician,44976,12,Active,0122001412,97,2026-04-15
+HRA-1992,Staff 1992,Research & Development,Laboratory Technician,47724,2,Active,0122001413,81,2026-04-15
+HRA-1993,Staff 1993,Research & Development,Healthcare Representative,103596,17,Active,0122001414,86,2026-04-15
+HRA-1994,Staff 1994,Research & Development,Laboratory Technician,24096,1,Active,0122001415,98,2026-04-15
+HRA-1995,Staff 1995,Sales,Sales Executive,53280,15,Active,0122001416,84,2026-04-15
+HRA-1996,Staff 1996,Sales,Sales Representative,36804,2,Active,0122001417,89,2026-04-15
+HRA-1997,Staff 1997,Research & Development,Manufacturing Director,63852,8,Active,0122001418,92,2026-04-15
+HRA-1998,Staff 1998,Research & Development,Research Scientist,64920,4,Active,0122001419,91,2026-04-15
+HRA-1999,Staff 1999,Research & Development,Research Scientist,33384,5,Active,0122001420,83,2026-04-15
+HRA-2000,Staff 2000,Research & Development,Research Director,143484,13,Active,0122001421,84,2026-04-15
+HRA-2003,Staff 2003,Research & Development,Laboratory Technician,31920,2,Active,0122001422,98,2026-04-15
+HRA-2007,Staff 2007,Research & Development,Research Scientist,40500,3,Active,0122001423,88,2026-04-15
+HRA-2008,Staff 2008,Research & Development,Research Scientist,61176,10,Active,0122001424,80,2026-04-15
+HRA-2009,Staff 2009,Research & Development,Healthcare Representative,58536,9,Active,0122001425,94,2026-04-15
+HRA-2010,Staff 2010,Research & Development,Laboratory Technician,34044,6,Active,0122001426,92,2026-04-15
+HRA-2012,Staff 2012,Research & Development,Laboratory Technician,28872,1,Active,0122001427,94,2026-04-15
+HRA-2013,Staff 2013,Sales,Sales Representative,27228,2,Active,0122001428,80,2026-04-15
+HRA-2014,Staff 2014,Research & Development,Research Scientist,49296,7,Active,0122001429,87,2026-04-15
+HRA-2015,Staff 2015,Research & Development,Research Director,158472,18,Active,0122001430,94,2026-04-15
+HRA-2016,Staff 2016,Sales,Sales Executive,125064,14,Active,0122001431,89,2026-04-15
+HRA-2017,Staff 2017,Research & Development,Research Director,164928,16,Active,0122001432,86,2026-04-15
+HRA-2018,Staff 2018,Sales,Sales Executive,58884,5,Active,0122001433,97,2026-04-15
+HRA-2019,Staff 2019,Sales,Sales Representative,41784,9,Active,0122001434,97,2026-04-15
+HRA-2020,Staff 2020,Research & Development,Research Scientist,29232,4,Active,0122001435,85,2026-04-15
+HRA-2021,Staff 2021,Sales,Sales Representative,28560,2,Active,0122001436,92,2026-04-15
+HRA-2022,Staff 2022,Research & Development,Manager,233172,6,Active,0122001437,83,2026-04-15
+HRA-2023,Staff 2023,Sales,Sales Representative,21480,1,Terminated,0122001438,83,2026-04-15
+HRA-2024,Staff 2024,Sales,Sales Executive,91728,9,Active,0122001439,83,2026-04-15
+HRA-2025,Staff 2025,Research & Development,Manufacturing Director,61572,4,Active,0122001440,82,2026-04-15
+HRA-2026,Staff 2026,Research & Development,Healthcare Representative,75672,13,Active,0122001441,87,2026-04-15
+HRA-2027,Staff 2027,Research & Development,Research Scientist,57444,2,Terminated,0122001442,95,2026-04-15
+HRA-2031,Staff 2031,Research & Development,Manager,226560,22,Active,0122001443,98,2026-04-15
+HRA-2032,Staff 2032,Research & Development,Laboratory Technician,28068,10,Terminated,0122001444,83,2026-04-15
+HRA-2034,Staff 2034,Research & Development,Manufacturing Director,162840,20,Active,0122001445,92,2026-04-15
+HRA-2035,Staff 2035,Sales,Sales Executive,80544,8,Active,0122001446,88,2026-04-15
+HRA-2036,Staff 2036,Sales,Sales Executive,64872,15,Active,0122001447,85,2026-04-15
+HRA-2037,Staff 2037,Sales,Sales Executive,107256,5,Active,0122001448,86,2026-04-15
+HRA-2038,Staff 2038,Research & Development,Research Scientist,29268,4,Active,0122001449,82,2026-04-15
+HRA-2040,Staff 2040,Human Resources,Human Resources,106044,9,Active,0122001450,99,2026-04-15
+HRA-2041,Staff 2041,Sales,Sales Executive,64116,10,Active,0122001451,81,2026-04-15
+HRA-2044,Staff 2044,Sales,Sales Executive,80736,6,Terminated,0122001452,83,2026-04-15
+HRA-2045,Staff 2045,Sales,Sales Executive,79824,6,Active,0122001453,86,2026-04-15
+HRA-2046,Staff 2046,Sales,Sales Executive,58200,5,Active,0122001454,85,2026-04-15
+HRA-2048,Staff 2048,Research & Development,Research Scientist,33708,2,Active,0122001455,88,2026-04-15
+HRA-2049,Staff 2049,Research & Development,Healthcare Representative,68268,10,Active,0122001456,86,2026-04-15
+HRA-2051,Staff 2051,Research & Development,Research Scientist,24012,5,Active,0122001457,88,2026-04-15
+HRA-2052,Staff 2052,Research & Development,Research Scientist,35724,4,Active,0122001458,93,2026-04-15
+HRA-2053,Staff 2053,Research & Development,Laboratory Technician,48300,4,Active,0122001459,90,2026-04-15
+HRA-2054,Staff 2054,Research & Development,Research Scientist,45420,5,Active,0122001460,81,2026-04-15
+HRA-2055,Staff 2055,Sales,Sales Executive,130248,3,Terminated,0122001461,98,2026-04-15
+HRA-2056,Staff 2056,Sales,Sales Executive,144372,20,Active,0122001462,85,2026-04-15
+HRA-2057,Staff 2057,Research & Development,Manufacturing Director,119232,9,Active,0122001463,84,2026-04-15
+HRA-2060,Staff 2060,Sales,Sales Representative,35592,4,Active,0122001464,82,2026-04-15
+HRA-2061,Staff 2061,Research & Development,Laboratory Technician,30852,5,Active,0122001465,83,2026-04-15
+HRA-2062,Staff 2062,Research & Development,Healthcare Representative,119892,7,Active,0122001466,98,2026-04-15
+HRA-2064,Staff 2064,Research & Development,Manufacturing Director,73704,6,Active,0122001467,89,2026-04-15
+HRA-2065,Staff 2065,Sales,Sales Executive,64680,9,Active,0122001468,97,2026-04-15
+HRA-2068,Staff 2068,Research & Development,Laboratory Technician,52848,4,Active,0122001469,81,2026-04-15

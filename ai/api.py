@@ -127,7 +127,7 @@ async def health():
 
 
 @app.post("/predict")
-async def predict(worker: WorkerRecord):
+def predict(worker: WorkerRecord):
     features = np.array([[
         worker.nin_count,
         worker.account_count,
@@ -246,6 +246,91 @@ async def predict(worker: WorkerRecord):
         "confidence": round(final_score, 1),
         "reasons": reasons,
     }
+
+
+@app.post("/predict/batch")
+def predict_batch(workers: List[WorkerRecord]):
+    if not workers:
+        return []
+
+    # Vectorize feature extraction
+    features = np.array([
+        [
+            w.nin_count,
+            w.account_count,
+            w.salary_zscore,
+            w.missing_score,
+            w.attendance_score,
+            w.days_since_verification
+        ] for w in workers
+    ])
+
+    # Bulk ML prediction (Lightning fast compared to 1-by-1)
+    iso_preds = model.predict(features)
+    iso_raw_scores = model.decision_function(features)
+    
+    results = []
+    for i, worker in enumerate(workers):
+        iso_prediction = iso_preds[i]
+        raw = iso_raw_scores[i]
+        iso_prob = max(0.0, min(100.0, 50.0 - raw * 120.0))
+
+        rules_score = 0.0
+        reasons = []
+
+        if worker.nin_count > 1:
+            contrib = min(18, 10 + (worker.nin_count - 2) * 4)
+            reasons.append({"flag": f"NIN shared by {worker.nin_count} payroll profiles", "severity": "high", "contribution": contrib})
+            rules_score += contrib
+
+        if worker.account_count > 1:
+            contrib = min(25, 15 + (worker.account_count - 2) * 4)
+            reasons.append({"flag": f"Bank account linked to {worker.account_count} separate employees", "severity": "high", "contribution": contrib})
+            rules_score += contrib
+
+        if abs(worker.salary_zscore) > 2.0:
+            contrib = min(18, int(abs(worker.salary_zscore) * 4))
+            reasons.append({"flag": f"Salary anomaly detected — Z-score {round(worker.salary_zscore, 2)} vs workforce mean", "severity": "medium" if abs(worker.salary_zscore) < 3.0 else "high", "contribution": contrib})
+            rules_score += contrib
+
+        if worker.missing_score > 0:
+            contrib = worker.missing_score * 6
+            reasons.append({"flag": f"{worker.missing_score} mandatory HR field{'s' if worker.missing_score > 1 else ''} absent from profile", "severity": "medium", "contribution": contrib})
+            rules_score += contrib
+
+        if worker.attendance_score < 20:
+            contrib = 20 if worker.attendance_score < 10 else 14
+            reasons.append({"flag": f"Attendance critically low at {round(worker.attendance_score, 1)}%", "severity": "high", "contribution": contrib})
+            rules_score += contrib
+        elif worker.attendance_score < 40:
+            contrib = 8
+            reasons.append({"flag": f"Below-average attendance ({round(worker.attendance_score, 1)}%) recorded", "severity": "medium", "contribution": contrib})
+            rules_score += contrib
+
+        if worker.days_since_verification > 180:
+            contrib = 15
+            reasons.append({"flag": f"Biometric verification not updated in {int(worker.days_since_verification)} days", "severity": "high", "contribution": contrib})
+            rules_score += contrib
+        elif worker.days_since_verification > 90:
+            contrib = 8
+            reasons.append({"flag": f"Last verified {int(worker.days_since_verification)} days ago — verification overdue", "severity": "medium", "contribution": contrib})
+            rules_score += contrib
+
+        if rules_score < 25 and iso_prediction == -1 and iso_prob > 55:
+            ml_contrib = round(min(28, iso_prob - 40), 1)
+            reasons.append({"flag": "Multivariate anomaly cluster detected by ML (no single dominant rule)", "severity": "medium", "contribution": ml_contrib})
+            rules_score += ml_contrib
+
+        final_score = min(99.9, rules_score)
+        label = "GHOST" if final_score >= 60 else "VERIFIED"
+
+        results.append({
+            "label": label,
+            "confidence": round(final_score, 1),
+            "reasons": reasons,
+        })
+
+    return results
 
 
 if __name__ == "__main__":

@@ -10,8 +10,8 @@ export const uploadWorkers = async (workers) => {
   return res.json();
 };
 
-export const getWorkers = async () => {
-  const res = await fetch(`${API_URL}/workers`);
+export const getWorkers = async ({ limit = 200, offset = 0 } = {}) => {
+  const res = await fetch(`${API_URL}/workers?limit=${limit}&offset=${offset}`);
   if (!res.ok) throw new Error('Failed to fetch workers');
   return res.json();
 };
