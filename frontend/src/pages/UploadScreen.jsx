@@ -21,23 +21,29 @@ function generateHRDataset(count) {
   return { csv, count, anomalies };
 }
 
-function generatePayrollDataset(count, anomalyRate) {
-  let csv = 'worker_id,full_name,department,salary,account_number,attendance_score,last_verification\n';
-  const depts = ['Sanitation', 'Transport', 'Education', 'Health', 'Works', 'Finance'];
-  let anomalies = 0;
-  for (let i = 1; i <= count; i++) {
-    const isGhost = Math.random() < anomalyRate;
-    const name = isGhost ? `Ghost Record ${i}` : `Payroll Worker ${i}`;
-    const dept = isGhost ? '' : depts[i % depts.length];
-    const pay = isGhost ? 999999 : 140000 + (i % 5) * 15000;
-    const acct = isGhost ? '0123456789' : `008123${String(1000 + i).padStart(4, '0')}`;
-    const score = isGhost ? Math.floor(Math.random() * 15) : 85 + Math.floor(Math.random() * 15);
-    const date = isGhost ? '2025-10-01' : '2026-05-01';
-    if (isGhost) anomalies++;
-    csv += `VIR-${100000 + i},${name},${dept},${pay},${acct},${score},${date}\n`;
+const generatePayrollDataset = (count, fraudRate = 0.12) => {
+  let csv = 'worker_id,full_name,department,salary,account_number,bank_code,bank_name,attendance_score,last_verification\n';
+  const depts = ['Finance', 'Works', 'Education', 'Health', 'Transport', 'Sanitation', 'Justice'];
+  const banks = [
+    { code: '058', name: 'GTBank' },
+    { code: '011', name: 'First Bank' },
+    { code: '044', name: 'Access Bank' },
+    { code: '057', name: 'Zenith Bank' }
+  ];
+  for (let i = 0; i < count; i++) {
+    const isGhost = Math.random() < fraudRate;
+    const id = `EMP${1000 + i}`;
+    const name = `Worker ${1000 + i}`;
+    const dept = depts[Math.floor(Math.random() * depts.length)];
+    const salary = isGhost ? 950000 + (Math.random() * 500000) : 120000 + (Math.random() * 300000);
+    const acc = isGhost ? 'SHARED_GHOST_ACCT' : `00${Math.floor(10000000 + Math.random() * 90000000)}`;
+    const bank = banks[Math.floor(Math.random() * banks.length)];
+    const att = isGhost ? Math.random() * 15 : 75 + Math.random() * 25;
+    const ver = isGhost ? 200 + Math.random() * 100 : Math.random() * 30;
+    csv += `${id},${name},${dept},${Math.round(salary)},${acc},${bank.code},${bank.name},${att.toFixed(1)},${Math.round(ver)}\n`;
   }
-  return { csv, count, anomalies };
-}
+  return { csv };
+};
 
 const publicHR = generateHRDataset(212);
 const ghostPayroll = generatePayrollDataset(250, 0.12);

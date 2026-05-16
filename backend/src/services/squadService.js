@@ -65,36 +65,51 @@ async function createWorkerAccount(worker) {
 async function releaseSalaryPayment(worker, amount, forceMock = false) {
   const transaction_reference = `VIRGIL-SALARY-${worker.id}-${Date.now()}`;
 
-  // Use real Squad API if mode is live_sandbox, key exists, and not forcing mock
   if (!forceMock && SQUAD_MODE === 'live_sandbox' && SQUAD_KEY) {
+    let url = `${SQUAD_BASE}/payout/transfer`;
     try {
-      const res = await fetch(`${SQUAD_BASE}/payout/transfer`, {
+      const payload = {
+        transaction_reference,
+        amount:                Math.round(amount * 100),
+        bank_code:             worker.bankCode || '058', // Default to GTB
+        account_number:        worker.bankAccount,
+        account_name:          worker.name || `${worker.firstName} ${worker.lastName}`,
+        narration:             `VIRGIL Salary — ${new Date().toLocaleDateString('en-NG', { month: 'long', year: 'numeric' })}`,
+        currency_id:           'NGN',
+      };
+
+      console.log(`[SQUAD] Calling LIVE Payout: ${url}`);
+      
+      let res = await fetch(url, {
         method: 'POST',
         headers,
-        body: JSON.stringify({
-          transaction_reference,
-          amount:                Math.round(amount * 100), // Squad requires kobo
-          bank_code:             worker.bankCode,
-          account_number:        worker.bankAccount,
-          account_name:          `${worker.firstName} ${worker.lastName}`,
-          narration:             `VIRGIL Salary — ${new Date().toLocaleDateString('en-NG', { month: 'long', year: 'numeric' })}`,
-          currency_id:           'NGN',
-        }),
+        body: JSON.stringify(payload),
       });
 
+      // If /payout/transfer 404s, try /payout as a known sandbox alternative
+      if (res.status === 404) {
+        console.warn(`[SQUAD] /payout/transfer 404'd. Trying fallback /payout...`);
+        url = `${SQUAD_BASE}/payout`;
+        res = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload),
+        });
+      }
+
       if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err);
+        const errText = await res.text();
+        console.error(`[SQUAD] API Error [${res.status}]: ${errText}`);
+        throw new Error(errText);
       }
 
       return await res.json();
     } catch (error) {
-      console.error(`[SQUAD] Live sandbox payment failed: ${error.message}`);
-      // Throw the error clearly so the caller knows it failed in live mode
+      console.error(`[SQUAD] Live sandbox payment failed at ${url}: ${error.message}`);
       throw new Error(`LIVE_SANDBOX disbursement failed: ${error.message}`);
     }
   } else {
-    // MOCK_FALLBACK mode
+    // ... rest of the mock logic
     console.warn(`[SQUAD] Running in MOCK_FALLBACK mode. Simulating payment for ${worker.id}.`);
     return {
       status: 200,
