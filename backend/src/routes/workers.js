@@ -138,6 +138,8 @@ router.post('/upload', async (req, res) => {
 
       const processedChunk = chunk.map((w, localIndex) => {
         const absoluteIndex = i + localIndex;
+        const acct = w.bankAccount || w.bank_account || w.account_number || '';
+        const salary = Number(w.salary || 0);
         const score = scoreChunk[localIndex] || { 
           status: 'NEEDS REVIEW', 
           confidence: 0, 
@@ -145,6 +147,7 @@ router.post('/upload', async (req, res) => {
         };
         
         const status = score.status || (score.label === 'GHOST' ? 'FLAGGED' : 'VERIFIED');
+        const riskScore = Number(score.risk_score ?? score.confidence ?? 0);
 
         return {
           batch: activeBatch,
