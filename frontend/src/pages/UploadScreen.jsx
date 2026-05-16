@@ -39,8 +39,12 @@ const generatePayrollDataset = (count, fraudRate = 0.12) => {
     const acc = isGhost ? 'SHARED_GHOST_ACCT' : `00${Math.floor(10000000 + Math.random() * 90000000)}`;
     const bank = banks[Math.floor(Math.random() * banks.length)];
     const att = isGhost ? Math.random() * 15 : 75 + Math.random() * 25;
-    const ver = isGhost ? 200 + Math.random() * 100 : Math.random() * 30;
-    csv += `${id},${name},${dept},${Math.round(salary)},${acc},${bank.code},${bank.name},${att.toFixed(1)},${Math.round(ver)}\n`;
+    
+    // Generate a realistic date string instead of a raw number
+    const daysAgo = isGhost ? 400 + Math.random() * 800 : Math.random() * 60;
+    const date = new Date(Date.now() - daysAgo * 86400000).toISOString().split('T')[0];
+    
+    csv += `${id},${name},${dept},${Math.round(salary)},${acc},${bank.code},${bank.name},${att.toFixed(1)},${date}\n`;
   }
   return { csv };
 };
@@ -112,7 +116,7 @@ const DEMO_DATASETS = [
     complexity: 'High',
     density: '~4% Anomaly Density',
     desc: 'Simulates a large government parastatal. Tests chunked AI batch processing (10x sub-batches) and DB performance.',
-    csv: enterpriseStress.csv
+    csv: generatePayrollDataset(5000, 0.04).csv
   }
 ];
 

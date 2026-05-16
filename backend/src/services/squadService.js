@@ -66,50 +66,55 @@ async function releaseSalaryPayment(worker, amount, forceMock = false) {
   const transaction_reference = `VIRGIL-SALARY-${worker.id}-${Date.now()}`;
 
   if (!forceMock && SQUAD_MODE === 'live_sandbox' && SQUAD_KEY) {
-    let url = `${SQUAD_BASE}/payout/transfer`;
-    try {
-      const payload = {
-        transaction_reference,
-        amount:                Math.round(amount * 100),
-        bank_code:             worker.bankCode || '058', // Default to GTB
-        account_number:        worker.bankAccount,
-        account_name:          worker.name || `${worker.firstName} ${worker.lastName}`,
-        narration:             `VIRGIL Salary — ${new Date().toLocaleDateString('en-NG', { month: 'long', year: 'numeric' })}`,
-        currency_id:           'NGN',
-      };
+    const endpoints = [
+      `${SQUAD_BASE}/payout/transfer`,
+      `${SQUAD_BASE}/transfer/single`,
+      `${SQUAD_BASE}/payout`
+    ];
+    
+    const payload = {
+      transaction_reference,
+      amount:                Math.round(amount * 100),
+      bank_code:             worker.bankCode || '058',
+      account_number:        worker.bankAccount,
+      account_name:          worker.name || `${worker.firstName} ${worker.lastName}`,
+      narration:             `VIRGIL Salary — ${new Date().toLocaleDateString('en-NG', { month: 'long', year: 'numeric' })}`,
+      currency_id:           'NGN',
+    };
 
-      console.log(`[SQUAD] Calling LIVE Payout: ${url}`);
-      
-      let res = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload),
-      });
-
-      // If /payout/transfer 404s, try /payout as a known sandbox alternative
-      if (res.status === 404) {
-        console.warn(`[SQUAD] /payout/transfer 404'd. Trying fallback /payout...`);
-        url = `${SQUAD_BASE}/payout`;
-        res = await fetch(url, {
+    for (const url of endpoints) {
+      try {
+        console.log(`[SQUAD] Attempting LIVE Payout [Attempt ${endpoints.indexOf(url)+1}]: ${url}`);
+        const res = await fetch(url, {
           method: 'POST',
           headers,
           body: JSON.stringify(payload),
         });
-      }
 
-      if (!res.ok) {
-        const errText = await res.text();
-        console.error(`[SQUAD] API Error [${res.status}]: ${errText}`);
-        throw new Error(errText);
-      }
+        if (res.status === 404) {
+          console.warn(`[SQUAD] 404 at ${url}. Trying next fallback...`);
+          continue; 
+        }
 
-      return await res.json();
-    } catch (error) {
-      console.error(`[SQUAD] Live sandbox payment failed at ${url}: ${error.message}`);
-      throw new Error(`LIVE_SANDBOX disbursement failed: ${error.message}`);
+        if (!res.ok) {
+          const errText = await res.text();
+          console.error(`[SQUAD] API Error [${res.status}] at ${url}: ${errText}`);
+          throw new Error(errText);
+        }
+
+        const data = await res.json();
+        console.log(`[SQUAD] ✅ Success at ${url}:`, data.message || 'Payment initiated');
+        return data;
+      } catch (error) {
+        // If this is the last attempt and it failed, throw the error
+        if (url === endpoints[endpoints.length - 1]) {
+          console.error(`[SQUAD] All Live sandbox endpoints failed: ${error.message}`);
+          throw new Error(`LIVE_SANDBOX disbursement failed: ${error.message}`);
+        }
+      }
     }
   } else {
-    // ... rest of the mock logic
+    // MOCK_FALLBACK mode
     console.warn(`[SQUAD] Running in MOCK_FALLBACK mode. Simulating payment for ${worker.id}.`);
     return {
       status: 200,
@@ -152,7 +157,16 @@ async function verifyTransaction(reference, forceMock = false) {
       status: 200,
       success: true,
       message: "Simulated Verification Success (MOCK_FALLBACK mode)",
-      data: { transaction_reference: reference }
+      data: { 
+        id: 'enterprise_stress_test',
+        name: 'Enterprise Stress Test (Nigeria-Scale)',
+        type: 'Bulk Simulation',
+        workers: 5000,
+        complexity: 'High',
+        density: '~4% Anomaly Density',
+        desc: 'Simulates a large government parastatal. Tests chunked AI batch processing (10x sub-batches) and DB performance.',
+        csv: null // Simplified for snippet
+      }
     };
   }
 }
