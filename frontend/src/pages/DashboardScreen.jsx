@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAuditLog, getStats, getWorkers } from '../lib/api';
 import { Sidebar } from '../components/Sidebar';
-import { computeMetrics, formatMoney, normalizeWorker, signalCountsFromWorkers } from '../lib/workerState';
+import { formatMoney, normalizeWorker } from '../lib/workerState';
 
 const DashboardScreen = ({ onNav, onUpload, theme, onToggleTheme }) => {
   const [workers, setWorkers] = useState([]);

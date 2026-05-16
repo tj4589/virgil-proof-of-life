@@ -1,13 +1,15 @@
+const { connectDB, sequelize } = require('./src/config/db');
 
-const mongoose = require('mongoose');
-const uri = "mongodb://localhost:27017/ghostdetect";
+async function testConnection() {
+  try {
+    await connectDB();
+    console.log('Successfully connected to SQLite database');
+  } catch (error) {
+    console.error('Database connection error:', error.message);
+    process.exitCode = 1;
+  } finally {
+    await sequelize.close();
+  }
+}
 
-mongoose.connect(uri)
-  .then(() => {
-    console.log("Successfully connected to MongoDB");
-    process.exit(0);
-  })
-  .catch(err => {
-    console.error("Connection error", err);
-    process.exit(1);
-  });
+testConnection();

@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import { useCallback, useState, useRef } from 'react';
 
 export default function useCamera() {
   const videoRef = useRef(null);
-  const [stream, setStream] = useState(null);
+  const streamRef = useRef(null);
   const [error, setError] = useState(null);
   const [isActive, setIsActive] = useState(false);
 
-  const start = async () => {
+  const start = useCallback(async () => {
     try {
       const s = await navigator.mediaDevices.getUserMedia({
         video: { 
@@ -18,24 +18,24 @@ export default function useCamera() {
       if (videoRef.current) {
         videoRef.current.srcObject = s;
       }
-      setStream(s);
+      streamRef.current = s;
       setIsActive(true);
       setError(null);
-    } catch (err) {
+    } catch {
       setError('Camera access denied. Please allow camera access and refresh.');
       setIsActive(false);
     }
-  };
+  }, []);
 
-  const stop = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      setStream(null);
+  const stop = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
     }
     setIsActive(false);
-  };
+  }, []);
 
-  const capture = () => {
+  const capture = useCallback(() => {
     if (!videoRef.current) return null;
     const canvas = document.createElement('canvas');
     canvas.width = videoRef.current.videoWidth;
@@ -43,7 +43,7 @@ export default function useCamera() {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(videoRef.current, 0, 0);
     return canvas.toDataURL('image/jpeg', 0.8);
-  };
+  }, []);
 
   return { videoRef, start, stop, capture, error, isActive };
 }

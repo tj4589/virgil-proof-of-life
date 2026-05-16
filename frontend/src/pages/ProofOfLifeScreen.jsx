@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { verifyPol } from '../lib/api';
 
@@ -9,45 +9,20 @@ const prompts = [
   "Raise right hand"
 ];
 
-const ProofOfLifeScreen = ({ theme, onToggleTheme }) => {
+const ProofOfLifeScreen = ({ theme }) => {
   const [step, setStep] = useState('login'); // login, otp, camera, analyzing, result
   const [staffId, setStaffId] = useState('');
   const [otp, setOtp] = useState('');
-  const [prompt, setPrompt] = useState('');
   const [result, setResult] = useState(null);
 
   const videoRef = useRef(null);
 
-  useEffect(() => {
-    if (step === 'camera') {
-      const promptIndex = Math.abs(staffId.split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0)) % prompts.length;
-      setPrompt(prompts[promptIndex]);
-      
-      // Simulate webcam initialization
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
-        })
-        .catch(err => console.log('Camera access denied/failed, using fallback.'));
+  const prompt = useMemo(() => {
+    const promptIndex = Math.abs(staffId.split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0)) % prompts.length;
+    return prompts[promptIndex] || prompts[0];
+  }, [staffId]);
 
-      // Simulate capturing logic
-      setTimeout(() => setStep('analyzing'), 5000);
-    }
-
-    if (step === 'analyzing') {
-      submitPol();
-    }
-
-    return () => {
-      if (videoRef.current && videoRef.current.srcObject && step === 'camera') {
-        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, [step]);
-
-  const submitPol = async () => {
+  const submitPol = useCallback(async () => {
     try {
       const res = await verifyPol({
         staffId: staffId.toUpperCase(),
@@ -55,25 +30,57 @@ const ProofOfLifeScreen = ({ theme, onToggleTheme }) => {
       });
       setResult(res.status);
       setStep('result');
-      
-      // Stop webcam
+    } catch (error) {
+      console.error(error);
+      setResult('FAILED');
+      setStep('result');
+    } finally {
       if (videoRef.current && videoRef.current.srcObject) {
         videoRef.current.srcObject.getTracks().forEach(track => track.stop());
       }
-    } catch (err) {
-      console.error(err);
-      setResult('FAILED');
-      setStep('result');
     }
-  };
+  }, [staffId, otp]);
+
+  useEffect(() => {
+    if (step !== 'camera') return undefined;
+
+    let cancelled = false;
+    let localStream = null;
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        if (cancelled) {
+          stream.getTracks().forEach(track => track.stop());
+          return;
+        }
+        localStream = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      })
+      .catch(() => console.log('Camera access denied/failed, using fallback.'));
+
+    const timer = setTimeout(() => {
+      if (cancelled) return;
+      setStep('analyzing');
+      setTimeout(() => {
+        if (!cancelled) void submitPol();
+      }, 120);
+    }, 5000);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [step, submitPol]);
 
   const logoSrc = theme === 'light' ? '/logo-light.png' : '/logo.png';
 
   return (
     <div className="screen pol-screen" style={{ background: 'var(--bg)', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ position: 'absolute', top: 20, right: 20 }}>
-      </div>
-
       <div className="pol-container" style={{ width: '100%', maxWidth: '420px', padding: '40px', background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <img src={logoSrc} alt="VIRGIL" style={{ height: '32px', marginBottom: '16px' }} />

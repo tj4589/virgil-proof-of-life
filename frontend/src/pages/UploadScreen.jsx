@@ -3,24 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { uploadWorkers } from '../lib/api';
 import { Sidebar } from '../components/Sidebar';
 
-function generateHRDataset(count) {
-  let csv = 'emp_id,employee_name,dept,monthly_pay,acct_num,days_present,last_check\n';
-  const depts = ['Sanitation', 'Transport', 'Education', 'Health', 'Works', 'Finance'];
-  let anomalies = 0;
-  for (let i = 1; i <= count; i++) {
-    const isGhost = Math.random() < 0.08;
-    const name = isGhost ? `Ghost Record ${i}` : `Public Worker ${i}`;
-    const dept = depts[i % depts.length];
-    const pay = 120000 + (i % 5) * 15000;
-    const acct = isGhost ? '0099992222' : `009999${String(1000 + i).padStart(4, '0')}`;
-    const days = isGhost ? Math.floor(Math.random() * 5) : 20 + Math.floor(Math.random() * 3);
-    const date = isGhost ? '2025-01-12' : '2026-05-10';
-    if (isGhost) anomalies++;
-    csv += `HR-${900 + i},${name},${dept},${pay},${acct},${days},${date}\n`;
-  }
-  return { csv, count, anomalies };
-}
-
 const generatePayrollDataset = (count, fraudRate = 0.12) => {
   let csv = 'worker_id,full_name,department,salary,account_number,bank_code,bank_name,attendance_score,last_verification\n';
   const depts = ['Finance', 'Works', 'Education', 'Health', 'Transport', 'Sanitation', 'Justice'];
@@ -49,11 +31,7 @@ const generatePayrollDataset = (count, fraudRate = 0.12) => {
   return { csv };
 };
 
-const publicHR = generateHRDataset(212);
 const ghostPayroll = generatePayrollDataset(250, 0.12);
-const cleanPayroll = generatePayrollDataset(120, 0);
-const largeScale = generatePayrollDataset(1500, 0.08);
-const enterpriseStress = generatePayrollDataset(5000, 0.04);
 
 const DEMO_DATASETS = [
   {
@@ -199,10 +177,55 @@ function predictMappings(headers) {
 }
 
 function rawParseCSV(text) {
-  const lines = text.trim().split('\n').filter(Boolean);
-  const headers = lines[0].split(',').map(h => h.trim());
-  const rows = lines.slice(1).map(line => line.split(',').map(v => v.trim()));
-  return { headers, rows };
+  const rows = [];
+  let row = [];
+  let value = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && next === '"') {
+        value += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (char === ',' && !inQuotes) {
+      row.push(value.trim());
+      value = '';
+      continue;
+    }
+
+    if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && next === '\n') i++;
+      row.push(value.trim());
+      value = '';
+      if (row.length && row.some(cell => cell !== '')) rows.push(row);
+      row = [];
+      continue;
+    }
+
+    value += char;
+  }
+
+  if (value !== '' || row.length) {
+    row.push(value.trim());
+    if (row.some(cell => cell !== '')) rows.push(row);
+  }
+
+  if (rows.length < 2) {
+    throw new Error('CSV must include headers and at least one data row');
+  }
+
+  const headers = rows[0];
+  const dataRows = rows.slice(1);
+  return { headers, rows: dataRows };
 }
 
 function applyMappingAndFormat(headers, rows, mapping) {
@@ -264,9 +287,6 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
   const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef();
 
-  const [rawHeaders, setRawHeaders] = useState([]);
-  const [rawRows, setRawRows] = useState([]);
-  const [mapping, setMapping] = useState({});
   const [previewLimit, setPreviewLimit] = useState(12);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [lowConfidenceFields, setLowConfidenceFields] = useState([]);
@@ -276,8 +296,6 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
       setPreviewLimit(12);
       setFileName(name);
       const { headers, rows } = rawParseCSV(text);
-      setRawHeaders(headers);
-      setRawRows(rows);
 
       // Always auto-map — VIRGIL infers field structure silently
       const exactMatch = EXPECTED_FIELDS.every(f => headers.includes(f.id));
@@ -297,7 +315,6 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
         setLowConfidenceFields(low);
       }
 
-      setMapping(finalMapping);
       let parsed = applyMappingAndFormat(headers, rows, finalMapping);
       if (options.fraudInject || name.toLowerCase().includes('fraud') || name.toLowerCase().includes('ghost')) {
         parsed = injectFraudSignals(parsed, options.fraudRate || 0.12);
@@ -345,12 +362,6 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
     } else {
       processRawData(ds.id + '.csv', ds.csv, ds);
     }
-  };
-
-  const confirmMapping = () => {
-    const parsed = applyMappingAndFormat(rawHeaders, rawRows, mapping);
-    setWorkers(parsed);
-    setPhase('preview');
   };
 
   const handleUpload = async () => {
@@ -494,7 +505,7 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
                       </div>
                       <div className="upload-security-note">
                         <i className="ti ti-lock" style={{ color: 'var(--accent)', fontSize: 12 }} />
-                        <span>Files are processed locally and never transmitted to external servers</span>
+                        <span>Files are sent only to your configured VIRGIL backend for analysis</span>
                       </div>
                     </div>
                   </>

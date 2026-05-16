@@ -1,4 +1,4 @@
-export const Sidebar = ({ active, onNav, theme, onToggleTheme }) => {
+export const Sidebar = ({ active, onNav, theme }) => {
   const logoSrc = theme === 'light' ? '/logo-light.png' : '/logo.png';
   const items = [
     { id:'overview', ic:'ti-layout-dashboard', label:'Overview' },

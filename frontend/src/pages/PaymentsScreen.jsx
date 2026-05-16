@@ -31,7 +31,12 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
     }
   };
 
-  useEffect(() => { reload(); }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void reload();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   const totalSalary   = stats?.queuedAmount   ?? 0;
   const flaggedSalary = stats?.blockedAmount  ?? 0;

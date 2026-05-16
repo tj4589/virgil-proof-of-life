@@ -15,8 +15,9 @@ print("Downloading Employee Attrition Data...")
 path3 = kagglehub.dataset_download("HRAnalyticRepository/employee-attrition-data")
 print(f"Path3: {path3}")
 
-# We will let the user know we have downloaded them or we can copy the CSVs to frontend/public/datasets
-dest_dir = r"c:\Users\DELL\.gemini\antigravity\scratch\ghostdetect\frontend\public\datasets"
+# Copy CSVs into the local repo dataset directory.
+repo_root = os.path.dirname(os.path.abspath(__file__))
+dest_dir = os.path.join(repo_root, "frontend", "public", "datasets")
 os.makedirs(dest_dir, exist_ok=True)
 
 def copy_csvs(src, prefix):

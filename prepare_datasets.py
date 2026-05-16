@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 import os
 
-base_dir = r"c:\Users\DELL\.gemini\antigravity\scratch\ghostdetect\frontend\public\datasets"
+repo_root = os.path.dirname(os.path.abspath(__file__))
+base_dir = os.path.join(repo_root, "frontend", "public", "datasets")
 
 # 1. LA Payroll (Huge, let's take a sample of 2000)
 la_file = os.path.join(base_dir, "la_payroll_payroll.csv")
