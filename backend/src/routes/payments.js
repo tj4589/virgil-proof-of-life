@@ -29,6 +29,26 @@ router.post('/release-batch', async (req, res) => {
         try {
           // CALL REAL SQUAD SERVICE
           const squadResult = await squadService.releaseSalaryPayment(worker, worker.salary, forceMock);
+          
+          if (squadResult.success === false) {
+            console.error(`[PAYMENTS] Squad rejected worker ${worker.id}: ${squadResult.message}`);
+            
+            await PaymentTransaction.create({
+              workerId: worker.id,
+              reference: `FAIL-${Date.now()}-${worker.id}`,
+              amount: worker.salary,
+              status: 'FAILED'
+            });
+
+            await AuditEntry.create({
+              workerId: worker.id,
+              action: 'PAYMENT_FAILED',
+              details: `Squad API Error: ${squadResult.message || 'Not Found (404)'}`
+            });
+
+            return { id: worker.id, status: 'FAILED', error: squadResult.message };
+          }
+
           const reference = squadResult.data?.transaction_reference || squadResult.transaction_reference || `VIRGIL-REF-${Date.now()}-${worker.id}`;
 
           await worker.update({ status: 'PAID' });
@@ -49,7 +69,7 @@ router.post('/release-batch', async (req, res) => {
 
           return { id: worker.id, status: 'PAID' };
         } catch (err) {
-          console.error(`[PAYMENTS] Failed for worker ${worker.id}:`, err.message);
+          console.error(`[PAYMENTS] Critical error for worker ${worker.id}:`, err.message);
           return { id: worker.id, status: 'FAILED', error: err.message };
         }
       });
