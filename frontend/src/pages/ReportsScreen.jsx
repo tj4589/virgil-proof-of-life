@@ -9,9 +9,9 @@ const ReportsScreen = ({ onNav, theme, onToggleTheme }) => {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    Promise.all([getWorkers(), getStats().catch(() => null)])
-      .then(([data, summary]) => {
-        setWorkers(data.map(normalizeWorker));
+    Promise.all([getWorkers({ limit: 500 }), getStats().catch(() => null)])
+      .then(([res, summary]) => {
+        setWorkers(res.workers?.length ? res.workers.map(normalizeWorker) : []);
         setStats(summary);
       })
       .catch(() => {

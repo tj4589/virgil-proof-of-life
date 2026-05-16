@@ -218,7 +218,7 @@ router.post('/upload', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const where = await buildWorkerWhere(req.query);
-    const limit = Math.min(parseInt(req.query.limit || '200', 10), 5000);
+    const limit = Math.min(parseInt(req.query.limit || '5000', 10), 10000);
     const offset = parseInt(req.query.offset || '0', 10);
     
     const { count, rows: workers } = await Worker.findAndCountAll({ 

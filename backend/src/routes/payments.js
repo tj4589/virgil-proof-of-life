@@ -101,27 +101,48 @@ router.post('/release-batch', async (req, res) => {
 // Stats route
 router.get('/stats', async (req, res) => {
   try {
+    const { Sequelize } = require('sequelize');
     const activeBatch = await getActiveBatch();
     const where = activeBatch ? { batch: activeBatch } : {};
-    const workers = await Worker.findAll({ where });
-    const activeWorkerIds = new Set(workers.map(w => w.id));
-    const transactions = await PaymentTransaction.findAll();
-    const flagged = workers.filter(w => w.status === 'FLAGGED');
-    const verified = workers.filter(w => w.status === 'VERIFIED');
-    const paid = workers.filter(w => w.status === 'PAID' || w.status === 'CONFIRMED');
     
-    res.json({
-      batch: activeBatch,
-      totalWorkers: workers.length,
-      flaggedCount: flagged.length,
-      verifiedCount: verified.length,
-      paidCount: paid.length,
-      blockedAmount: flagged.reduce((sum, w) => sum + Number(w.salary || 0), 0),
-      queuedAmount: verified.reduce((sum, w) => sum + Number(w.salary || 0), 0),
-      releasedAmount: transactions
-        .filter(tx => activeWorkerIds.has(tx.workerId) && (tx.status === 'SUCCESS' || tx.status === 'CONFIRMED'))
-        .reduce((sum, tx) => sum + Number(tx.amount || 0), 0)
+    const stats = await Worker.findAll({
+      where,
+      attributes: [
+        'status',
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count'],
+        [Sequelize.fn('SUM', Sequelize.col('salary')), 'totalSalary']
+      ],
+      group: ['status']
     });
+
+    const result = {
+      batch: activeBatch,
+      totalWorkers: 0,
+      flaggedCount: 0,
+      verifiedCount: 0,
+      paidCount: 0,
+      blockedAmount: 0,
+      queuedAmount: 0,
+      releasedAmount: 0
+    };
+
+    stats.forEach(s => {
+      const count = parseInt(s.get('count'), 10);
+      const salary = parseFloat(s.get('totalSalary') || 0);
+      result.totalWorkers += count;
+      if (s.status === 'FLAGGED') {
+        result.flaggedCount = count;
+        result.blockedAmount = salary;
+      } else if (s.status === 'VERIFIED') {
+        result.verifiedCount = count;
+        result.queuedAmount = salary;
+      } else if (s.status === 'PAID' || s.status === 'CONFIRMED') {
+        result.paidCount = count;
+        result.releasedAmount = salary;
+      }
+    });
+
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
