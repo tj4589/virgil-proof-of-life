@@ -126,6 +126,7 @@ const EXPECTED_FIELDS = [
   { id: 'employment_status', label: 'Employment Status' },
   { id: 'tenure', label: 'Tenure (Years)' },
   { id: 'account_number', label: 'Account Number' },
+  { id: 'bank_code', label: 'Bank Code' },
   { id: 'last_verification', label: 'Last Verification Date' }
 ];
 
@@ -139,6 +140,7 @@ const FIELD_ALIASES = {
   attendance_score: ['days_present', 'attendance', 'present_days', 'score', 'days_worked'],
   employment_status: ['status', 'employment_type', 'attrition', 'active_status'],
   tenure: ['years_at_company', 'length_of_service', 'service_years', 'years_worked'],
+  bank_code: ['bank_id', 'sort_code', 'bank_code_num', 'routing_number', 'bank_code'],
   last_verification: ['last_check', 'verification_date', 'last_verified', 'date_verified', 'last_scan']
 };
 

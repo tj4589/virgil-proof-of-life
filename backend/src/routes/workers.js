@@ -137,7 +137,7 @@ router.post('/upload', async (req, res) => {
 
       const processedChunk = chunk.map((w, localIndex) => {
         const absoluteIndex = i + localIndex;
-        const acct = w.bankAccount || w.bank_account || '';
+        const acct = w.bankAccount || w.bank_account || w.account_number || '';
         const salary = Number(w.salary || 0);
         const score = scoreChunk[localIndex] || { label: 'ERROR', status: 'NEEDS REVIEW', confidence: 0, reasons: [{ flag: 'AI score missing for worker', severity: 'high', contribution: 0 }] };
         const status = score.status || (score.label === 'GHOST' ? 'FLAGGED' : score.label === 'ERROR' ? 'NEEDS REVIEW' : 'VERIFIED');
@@ -153,7 +153,7 @@ router.post('/upload', async (req, res) => {
           nin: w.nin,
           bvn: w.bvn,
           bankAccount: acct,
-          bankCode: '000000',
+          bankCode: w.bankCode || w.bank_code || w.bank_id || '058',
           salary,
           department: w.department || null,
           status,
@@ -162,7 +162,7 @@ router.post('/upload', async (req, res) => {
           riskLevel: score.risk_level || (riskScore >= 70 ? 'HIGH' : riskScore >= 50 ? 'MEDIUM' : 'LOW'),
           anomalyScore: Number(score.anomaly_score ?? score.isolation_score ?? riskScore),
           aiReasons: (score.reasons || []).map(normalizeReason),
-          lastVerified: w.lastVerified ? new Date(w.lastVerified) : null,
+          lastVerified: w.lastVerified || w.last_verification || null,
         };
       });
 
