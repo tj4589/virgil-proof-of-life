@@ -22,6 +22,8 @@ const FILTERS = ['all', 'blocked', 'paid', 'ai', 'info'];
 const AuditTrailScreen = ({ onNav, theme, onToggleTheme }) => {
   const [filter, setFilter] = useState('all');
   const [entries, setEntries] = useState([]);
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 15;
 
   useEffect(() => {
     getAuditLog()
@@ -29,7 +31,11 @@ const AuditTrailScreen = ({ onNav, theme, onToggleTheme }) => {
       .catch(() => setEntries([]));
   }, []);
 
-  const visible = filter === 'all' ? entries : entries.filter(e => e.status === filter);
+  const filtered = filter === 'all' ? entries : entries.filter(e => e.status === filter);
+  const visible = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+  // Reset page on filter change
+  useEffect(() => { setPage(0); }, [filter]);
 
   return (
     <div className="screen on" style={{ flexDirection: 'row' }}>
@@ -78,7 +84,7 @@ const AuditTrailScreen = ({ onNav, theme, onToggleTheme }) => {
                     className={`audit-row ${entry.status}`}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.03, duration: 0.2 }}
+                    transition={{ duration: 0.15 }}
                   >
                     <div className={`audit-dot audit-dot-${entry.status}`}>
                       <i className={`ti ${STATUS_ICONS[entry.status] || 'ti-file'}`} />
@@ -97,6 +103,17 @@ const AuditTrailScreen = ({ onNav, theme, onToggleTheme }) => {
                   </motion.div>
                 ))}
               </div>
+
+              {filtered.length > PAGE_SIZE && (
+                <div className="pagination-bar" style={{ marginTop: 12 }}>
+                  <div className="pagination-info">Showing events {(page * PAGE_SIZE) + 1}–{Math.min(filtered.length, (page + 1) * PAGE_SIZE)}</div>
+                  <div className="pagination-btns">
+                    <button className="btn-pagi" disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</button>
+                    <span className="page-indicator">Page {page + 1}</span>
+                    <button className="btn-pagi" disabled={(page + 1) * PAGE_SIZE >= filtered.length} onClick={() => setPage(p => p + 1)}>Next</button>
+                  </div>
+                </div>
+              )}
             </>
           )}
 

@@ -253,16 +253,33 @@ router.get('/stats/summary', async (req, res) => {
     const { Sequelize, Op } = require('sequelize');
     const where = await buildWorkerWhere(req.query);
     
-    // Use DB-side aggregation for speed with 5000+ records
-    const counts = await Worker.findAll({
-      where,
-      attributes: [
-        'status',
-        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count'],
-        [Sequelize.fn('SUM', Sequelize.col('salary')), 'totalSalary']
-      ],
-      group: ['status']
-    });
+    const [counts, deptStats, workersWithReasons] = await Promise.all([
+      // 1. Status & Salary Counts
+      Worker.findAll({
+        where,
+        attributes: [
+          'status',
+          [Sequelize.fn('COUNT', Sequelize.col('id')), 'count'],
+          [Sequelize.fn('SUM', Sequelize.col('salary')), 'totalSalary']
+        ],
+        group: ['status']
+      }),
+      // 2. Department Breakdown
+      Worker.findAll({
+        where,
+        attributes: [
+          'department',
+          [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']
+        ],
+        group: ['department']
+      }),
+      // 3. Signal Sampling
+      Worker.findAll({
+        where: { ...where, status: 'FLAGGED' },
+        attributes: ['aiReasons'],
+        limit: 200 
+      })
+    ]);
 
     const stats = {
       total: 0,
@@ -273,7 +290,10 @@ router.get('/stats/summary', async (req, res) => {
       blockedAmount: 0,
       queuedAmount: 0,
       releasedAmount: 0,
-      departmentStats: [],
+      departmentStats: deptStats.map(d => ({ 
+        label: d.department || 'Unassigned', 
+        count: parseInt(d.get('count'), 10) 
+      })),
       signals: []
     };
 
@@ -293,28 +313,6 @@ router.get('/stats/summary', async (req, res) => {
         stats.releasedAmount += salary;
         stats.cleared += count;
       }
-    });
-
-    // Get department breakdown
-    const deptStats = await Worker.findAll({
-      where,
-      attributes: [
-        'department',
-        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']
-      ],
-      group: ['department']
-    });
-    stats.departmentStats = deptStats.map(d => ({ 
-      label: d.department || 'Unassigned', 
-      count: parseInt(d.get('count'), 10) 
-    }));
-
-    // Get signals (reasons) — this still requires some memory work but we can optimize
-    // For large scale, we only sample or aggregate the most common ones
-    const workersWithReasons = await Worker.findAll({
-      where: { ...where, status: 'FLAGGED' },
-      attributes: ['aiReasons'],
-      limit: 200 // Sample for speed
     });
 
     const signalMap = {};
