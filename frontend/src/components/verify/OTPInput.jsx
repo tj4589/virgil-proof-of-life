@@ -25,7 +25,7 @@ export default function OTPInput({ length = 6, onComplete }) {
     if (otp.every(v => v !== "")) {
       onComplete(otp.join(""));
     }
-  }, [otp]);
+  }, [otp, onComplete]);
 
   return (
     <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>

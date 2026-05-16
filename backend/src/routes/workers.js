@@ -334,37 +334,6 @@ router.get('/stats/summary', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-      const dept = worker.department || 'Unassigned';
-      if (!departmentMap[dept]) departmentMap[dept] = { dept, workers: 0, flagged: 0, riskTotal: 0 };
-      departmentMap[dept].workers += 1;
-      departmentMap[dept].flagged += worker.status === 'FLAGGED' ? 1 : 0;
-      departmentMap[dept].riskTotal += Number(worker.aiConfidence || 0);
-    });
-
-    res.json({
-      batch: workers[0]?.batch || await getActiveBatch(),
-      totalWorkers: workers.length,
-      flaggedCount: flagged.length,
-      verifiedCount: verified.length,
-      paidCount: paid.length,
-      clearedCount: cleared.length,
-      blockedAmount: flagged.reduce((s, w) => s + Number(w.salary || 0), 0),
-      queuedAmount: verified.reduce((s, w) => s + Number(w.salary || 0), 0),
-      releasedAmount: paid.reduce((s, w) => s + Number(w.salary || 0), 0),
-      integrity: workers.length ? Math.round((cleared.length / workers.length) * 100) : 0,
-      anomalyDensity: workers.length ? Number(((flagged.length / workers.length) * 100).toFixed(1)) : 0,
-      signalCounts: Object.entries(signalCounts).map(([label, count]) => ({ label, count })),
-      departmentRisk: Object.values(departmentMap).map(item => ({
-        dept: item.dept,
-        workers: item.workers,
-        flagged: item.flagged,
-        risk: item.workers ? Math.round(item.riskTotal / item.workers) : 0,
-      })),
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 // Audit log
 router.get('/audit/log', async (req, res) => {

@@ -25,7 +25,7 @@ const story = [
   },
 ];
 
-const OnboardingScreen = ({ onComplete, theme, onToggleTheme }) => {
+const OnboardingScreen = ({ onComplete, theme }) => {
   const [step, setStep] = useState(0);
   const [source, setSource] = useState('excel');
   const [formData, setFormData] = useState({ orgName: '', country: 'Nigeria', role: '' });

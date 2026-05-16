@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ThemeToggle } from '../components/ThemeToggle';
 
-const AuthScreen = ({ onLogin, theme, onToggleTheme }) => {
+const AuthScreen = ({ onLogin, theme }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showModal, setShowModal] = useState(false);

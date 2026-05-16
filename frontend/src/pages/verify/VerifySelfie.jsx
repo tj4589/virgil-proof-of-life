@@ -10,7 +10,7 @@ export default function VerifySelfie({ onNext, onBack }) {
   useEffect(() => {
     start();
     return () => stop();
-  }, []);
+  }, [start, stop]);
 
   const handleCapture = () => {
     setIsCapturing(true);

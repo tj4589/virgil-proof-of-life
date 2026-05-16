@@ -124,17 +124,14 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
   const [selected, setSelected] = useState(null);
 
   const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     getWorkers({ limit: 5000 })
       .then(res => {
         setWorkers(res.workers?.length ? res.workers.map(normalizeWorker) : []);
         setStats(res.stats);
       })
-      .catch(() => setWorkers([]))
-      .finally(() => setLoading(false));
+      .catch(() => setWorkers([]));
   }, []);
 
   const departments = ['all', ...new Set(workers.map(w => w.department).filter(Boolean))];
@@ -238,7 +235,7 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
                 </tr>
               </thead>
               <tbody>
-                {visible.map((worker, i) => (
+                {visible.map((worker) => (
                   <tr key={worker.id} style={{ cursor: 'pointer' }} onClick={() => setSelected(worker)}>
                     <td>
                       <div className="worker-cell">

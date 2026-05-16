@@ -15,17 +15,13 @@ const PROMPTS = [
 
 export default function VerifyLiveness({ onNext }) {
   const { videoRef, start, stop } = useCamera();
-  const [selectedPrompts, setSelectedPrompts] = useState([]);
+  const [selectedPrompts] = useState(() => [...PROMPTS].sort(() => 0.5 - Math.random()).slice(0, 4));
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Pick 4 random prompts
-    const shuffled = [...PROMPTS].sort(() => 0.5 - Math.random()).slice(0, 4);
-    setSelectedPrompts(shuffled);
     start();
     return () => stop();
-  }, []);
+  }, [start, stop]);
 
   useEffect(() => {
     if (selectedPrompts.length > 0 && currentIdx < 4) {
@@ -33,15 +29,13 @@ export default function VerifyLiveness({ onNext }) {
       const timer = setTimeout(() => {
         if (currentIdx < 3) {
           setCurrentIdx(prev => prev + 1);
-          setProgress(prev => prev + 25);
         } else {
-          setProgress(100);
           setTimeout(() => onNext({ liveness: 'PASSED' }), 800);
         }
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [currentIdx, selectedPrompts]);
+  }, [currentIdx, onNext, selectedPrompts]);
 
   const currentPrompt = selectedPrompts[currentIdx];
 

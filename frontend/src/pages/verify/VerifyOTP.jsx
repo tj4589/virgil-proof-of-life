@@ -5,15 +5,12 @@ import OTPInput from '../../components/verify/OTPInput';
 
 export default function VerifyOTP({ onNext, onBack, phone = '080****5521' }) {
   const [timer, setTimer] = useState(300); // 5 minutes
-  const [canResend, setCanResend] = useState(false);
+  const canResend = timer === 0;
 
   useEffect(() => {
-    if (timer > 0) {
-      const interval = setInterval(() => setTimer(t => t - 1), 1000);
-      return () => clearInterval(interval);
-    } else {
-      setCanResend(true);
-    }
+    if (timer <= 0) return undefined;
+    const interval = setInterval(() => setTimer(t => t - 1), 1000);
+    return () => clearInterval(interval);
   }, [timer]);
 
   const formatTime = (seconds) => {
@@ -74,7 +71,6 @@ export default function VerifyOTP({ onNext, onBack, phone = '080****5521' }) {
             }}
             onClick={() => {
               setTimer(300);
-              setCanResend(false);
             }}
           >
             Resend Code

@@ -11,7 +11,8 @@ const ReportsScreen = ({ onNav, theme, onToggleTheme }) => {
   useEffect(() => {
     Promise.all([getWorkers(), getStats().catch(() => null)])
       .then(([data, summary]) => {
-        setWorkers(data.map(normalizeWorker));
+        const rows = Array.isArray(data?.workers) ? data.workers : Array.isArray(data) ? data : [];
+        setWorkers(rows.map(normalizeWorker));
         setStats(summary);
       })
       .catch(() => {
@@ -22,15 +23,36 @@ const ReportsScreen = ({ onNav, theme, onToggleTheme }) => {
 
   const localMetrics = computeMetrics(workers);
   const metrics = {
-    flagged: stats?.flaggedCount ?? localMetrics.flagged,
-    verified: stats?.verifiedCount ?? localMetrics.verified,
+    flagged: stats?.flagged ?? localMetrics.flagged,
+    verified: stats?.verified ?? localMetrics.verified,
     blockedAmount: stats?.blockedAmount ?? localMetrics.blockedAmount,
     integrity: stats?.integrity ?? localMetrics.integrity,
     anomalyDensity: stats?.anomalyDensity ?? localMetrics.anomalyDensity,
   };
-  const departments = stats?.departmentRisk?.length ? stats.departmentRisk : [];
-  const signals = stats?.signalCounts?.length
-    ? stats.signalCounts.map(s => ({ label: s.label, count: s.count, severity: s.count > 1 ? 'high' : 'medium' }))
+  const departments = (() => {
+    if (Array.isArray(stats?.departmentRisk) && stats.departmentRisk.length) return stats.departmentRisk;
+
+    const departmentMap = {};
+    workers.forEach(worker => {
+      const dept = worker.department || 'Unassigned';
+      if (!departmentMap[dept]) {
+        departmentMap[dept] = { dept, workers: 0, flagged: 0, riskTotal: 0 };
+      }
+      departmentMap[dept].workers += 1;
+      departmentMap[dept].flagged += worker.status === 'FLAGGED' ? 1 : 0;
+      departmentMap[dept].riskTotal += Number(worker.score || 0);
+    });
+
+    return Object.values(departmentMap).map(item => ({
+      dept: item.dept,
+      workers: item.workers,
+      flagged: item.flagged,
+      risk: item.workers ? Math.round(item.riskTotal / item.workers) : 0,
+    }));
+  })();
+
+  const signals = Array.isArray(stats?.signals) && stats.signals.length
+    ? stats.signals.map(s => ({ label: s.label, count: s.count, severity: s.count > 1 ? 'high' : 'medium' }))
     : signalCountsFromWorkers(workers);
 
   return (

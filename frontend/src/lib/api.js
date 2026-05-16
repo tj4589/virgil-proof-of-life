@@ -1,5 +1,13 @@
 const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
+const toQueryString = (params = {}) => {
+  const entries = Object.entries(params).filter(([, value]) => value !== undefined && value !== null);
+  if (entries.length === 0) return '';
+  const search = new URLSearchParams();
+  entries.forEach(([key, value]) => search.set(key, String(value)));
+  return `?${search.toString()}`;
+};
+
 export const uploadWorkers = async (workers) => {
   // Chunk large uploads — avoid 413 and backend timeouts
   const CHUNK = 500;
@@ -22,8 +30,8 @@ export const uploadWorkers = async (workers) => {
   return lastResult;
 };
 
-export const getWorkers = async () => {
-  const res = await fetch(`${API_URL}/workers`);
+export const getWorkers = async (params = {}) => {
+  const res = await fetch(`${API_URL}/workers${toQueryString(params)}`);
   if (!res.ok) throw new Error('Failed to fetch workers');
   return res.json();
 };

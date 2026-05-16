@@ -25,7 +25,7 @@ const particles = Array.from({ length: 40 }).map((_, i) => ({
   delay: seededValue(i + 161) * 5,
 }));
 
-const SplashScreen = ({ onComplete, theme, onToggleTheme }) => {
+const SplashScreen = ({ onComplete, theme }) => {
   const [phase, setPhase] = useState(0);
   const [isOutro, setIsOutro] = useState(false);
   const [loadingText, setLoadingText] = useState('Initializing secure uplink...');
