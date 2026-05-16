@@ -66,15 +66,11 @@ async function releaseSalaryPayment(worker, amount, forceMock = false) {
   const transaction_reference = `VIRGIL-SALARY-${worker.id}-${Date.now()}`;
 
   if (!forceMock && SQUAD_MODE === 'live_sandbox' && SQUAD_KEY) {
-    const endpoints = [
-      `${SQUAD_BASE}/payout/transfer`,
-      `${SQUAD_BASE}/transfer/single`,
-      `${SQUAD_BASE}/payout`
-    ];
+    const url = `${SQUAD_BASE}/payout/initiate`;
     
     const payload = {
       transaction_reference,
-      amount:                Math.round(amount * 100),
+      amount:                Math.round(amount * 100), // KOBO
       bank_code:             worker.bankCode || '058',
       account_number:        worker.bankAccount,
       account_name:          worker.name || `${worker.firstName} ${worker.lastName}`,
@@ -82,36 +78,28 @@ async function releaseSalaryPayment(worker, amount, forceMock = false) {
       currency_id:           'NGN',
     };
 
-    for (const url of endpoints) {
-      try {
-        console.log(`[SQUAD] Attempting LIVE Payout [Attempt ${endpoints.indexOf(url)+1}]: ${url}`);
-        const res = await fetch(url, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(payload),
-        });
+    try {
+      console.log(`[SQUAD] Calling LIVE Payout: ${url}`);
+      console.log(`[SQUAD] Payload: ${JSON.stringify({ ...payload, transaction_reference: 'HIDDEN' }, null, 2)}`);
+      
+      const res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      });
 
-        if (res.status === 404) {
-          console.warn(`[SQUAD] 404 at ${url}. Trying next fallback...`);
-          continue; 
-        }
-
-        if (!res.ok) {
-          const errText = await res.text();
-          console.error(`[SQUAD] API Error [${res.status}] at ${url}: ${errText}`);
-          throw new Error(errText);
-        }
-
-        const data = await res.json();
-        console.log(`[SQUAD] ✅ Success at ${url}:`, data.message || 'Payment initiated');
-        return data;
-      } catch (error) {
-        // If this is the last attempt and it failed, throw the error
-        if (url === endpoints[endpoints.length - 1]) {
-          console.error(`[SQUAD] All Live sandbox endpoints failed: ${error.message}`);
-          throw new Error(`LIVE_SANDBOX disbursement failed: ${error.message}`);
-        }
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error(`[SQUAD] API Error [${res.status}] at ${url}: ${errText}`);
+        throw new Error(errText);
       }
+
+      const data = await res.json();
+      console.log(`[SQUAD] ✅ Success:`, data.message || 'Payment initiated');
+      return data;
+    } catch (error) {
+      console.error(`[SQUAD] Live sandbox payment failed at ${url}: ${error.message}`);
+      throw new Error(`LIVE_SANDBOX disbursement failed: ${error.message}`);
     }
   } else {
     // MOCK_FALLBACK mode
