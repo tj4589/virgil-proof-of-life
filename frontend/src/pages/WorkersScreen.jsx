@@ -13,6 +13,9 @@ const normalizeWorker = (w, i) => ({
   salary: Number(w.salary || 0),
   status: w.status || 'VERIFIED',
   score: Number(w.aiConfidence ?? w.score ?? 0),
+  trustScore: Number(w.trustScore ?? Math.max(0, 100 - Number(w.aiConfidence ?? w.score ?? 0))),
+  riskLevel: w.riskLevel || (Number(w.aiConfidence ?? w.score ?? 0) >= 70 ? 'HIGH' : Number(w.aiConfidence ?? w.score ?? 0) >= 50 ? 'MEDIUM' : 'LOW'),
+  anomalyScore: Number(w.anomalyScore ?? w.aiConfidence ?? w.score ?? 0),
   reasons: Array.isArray(w.aiReasons) ? w.aiReasons.map(normalizeReason).filter(Boolean) : [],
   squadRef: w.squadRef || null,
   bankAccount: w.bankAccount || w.bank_account || '—',
@@ -57,19 +60,21 @@ const WorkerModal = ({ worker, onClose }) => (
       <div className="worker-modal-body">
         <div className="worker-modal-score-row">
           <div className="worker-modal-score-panel">
-            <div className="modal-score-label">AI Trust Score</div>
-            <div className={`modal-score-val ${worker.score >= 60 ? 'danger' : 'safe'}`}>{worker.score}%</div>
+            <div className="modal-score-label">AI Risk Score</div>
+            <div className={`modal-score-val ${worker.score >= 50 ? 'danger' : 'safe'}`}>{worker.score}%</div>
             <div className="modal-score-bar">
-              <div style={{ width: `${worker.score}%`, background: worker.score >= 60 ? 'var(--accent)' : 'var(--success)' }} />
+              <div style={{ width: `${worker.score}%`, background: worker.score >= 50 ? 'var(--accent)' : 'var(--success)' }} />
             </div>
             <div className="modal-score-verdict">
-              {worker.score >= 80 ? 'HIGH RISK - Payment blocked' : worker.score >= 60 ? 'ELEVATED - Needs review' : 'LOW RISK - Payment cleared'}
+              {worker.score >= 70 ? 'HIGH RISK - Payment blocked' : worker.score >= 50 ? 'ELEVATED - Needs review' : 'LOW RISK - Payment cleared'}
             </div>
           </div>
           <div className="worker-modal-meta">
             {[
               { label: 'NIN', val: worker.nin },
               { label: 'Salary', val: formatMoney(worker.salary) },
+              { label: 'Trust Score', val: `${worker.trustScore}%` },
+              { label: 'Risk Level', val: worker.riskLevel },
               { label: 'Bank Account', val: worker.bankAccount },
               { label: 'Squad Ref', val: worker.squadRef || (worker.status === 'PAID' || worker.status === 'CONFIRMED' ? 'Recorded in payment ledger' : 'Not released') },
             ].map(({ label, val }) => (
@@ -234,11 +239,11 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
                     <td style={{ fontFamily: 'monospace', fontSize: 11 }}>{worker.nin}</td>
                     <td>
                       <div className="risk-bar-wrap">
-                        <span style={{ color: worker.score >= 60 ? 'var(--accent)' : 'var(--success)', fontWeight: 700 }}>
+                        <span style={{ color: worker.score >= 50 ? 'var(--accent)' : 'var(--success)', fontWeight: 700 }}>
                           {worker.score}%
                         </span>
                         <div className="risk-bar">
-                          <div className="risk-bar-fill" style={{ width: `${worker.score}%`, background: worker.score >= 60 ? 'var(--accent)' : 'var(--success)' }} />
+                          <div className="risk-bar-fill" style={{ width: `${worker.score}%`, background: worker.score >= 50 ? 'var(--accent)' : 'var(--success)' }} />
                         </div>
                       </div>
                     </td>

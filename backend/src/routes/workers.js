@@ -58,6 +58,7 @@ router.post('/upload', async (req, res) => {
     const stdSalary = Math.sqrt(variance) || 1;
 
     const results = [];
+    console.log(`[UPLOAD DEBUG] received dataset batch=${activeBatch} records=${workers.length} salary_avg=${avgSalary.toFixed(2)} salary_std=${stdSalary.toFixed(2)}`);
 
     // Pre-calculate batch-wide frequencies for concurrent processing
     const batchNinFreq = {};
@@ -107,6 +108,26 @@ router.post('/upload', async (req, res) => {
 
     // 2. Score all workers in one massively fast vectorized batch request
     const aiScores = await aiService.scoreWorkersBatch(workerFeatures);
+    const scoredFlagged = aiScores.filter(score => (score.status === 'FLAGGED') || (score.label === 'GHOST'));
+    const anomalyScores = aiScores.map(score => Number(score.anomaly_score ?? score.isolation_score ?? score.risk_score ?? score.confidence ?? 0));
+    
+    console.log('[UPLOAD DEBUG] feature_names: ["nin_count", "account_count", "salary_zscore", "missing_score", "attendance_score", "days_since_verification"]');
+    if (workerFeatures.length > 0) {
+      console.log(`[UPLOAD DEBUG] first_worker_features: ${JSON.stringify(workerFeatures[0])}`);
+    }
+    console.log(
+      `[UPLOAD DEBUG] AI returned records=${aiScores.length} flagged=${scoredFlagged.length} ` +
+      `anomaly_score_range=${anomalyScores.length ? Math.min(...anomalyScores).toFixed(1) : 'n/a'}..${anomalyScores.length ? Math.max(...anomalyScores).toFixed(1) : 'n/a'}`
+    );
+    if (scoredFlagged[0]) {
+      console.log('[UPLOAD DEBUG] sample flagged AI result:', JSON.stringify(scoredFlagged[0]));
+    } else {
+      const topScore = aiScores.reduce((best, item) => (
+        Number(item.risk_score ?? item.confidence ?? 0) > Number(best?.risk_score ?? best?.confidence ?? -1) ? item : best
+      ), null);
+      console.warn('[UPLOAD DEBUG] no flagged workers from AI. Top score:', JSON.stringify(topScore));
+      console.warn('[UPLOAD DEBUG] sample features:', JSON.stringify(workerFeatures.slice(0, 3)));
+    }
 
     // 3. Chunk DB inserts to prevent SQLite locking
     const BATCH_SIZE = 100;
@@ -118,7 +139,9 @@ router.post('/upload', async (req, res) => {
         const absoluteIndex = i + localIndex;
         const acct = w.bankAccount || w.bank_account || '';
         const salary = Number(w.salary || 0);
-        const score = scoreChunk[localIndex] || { label: 'VERIFIED', confidence: 99.0, reasons: [] };
+        const score = scoreChunk[localIndex] || { label: 'ERROR', status: 'NEEDS REVIEW', confidence: 0, reasons: [{ flag: 'AI score missing for worker', severity: 'high', contribution: 0 }] };
+        const status = score.status || (score.label === 'GHOST' ? 'FLAGGED' : score.label === 'ERROR' ? 'NEEDS REVIEW' : 'VERIFIED');
+        const riskScore = Number(score.risk_score ?? score.confidence ?? 0);
 
         return {
           batch: activeBatch,
@@ -133,8 +156,11 @@ router.post('/upload', async (req, res) => {
           bankCode: '000000',
           salary,
           department: w.department || null,
-          status: score.label === 'GHOST' ? 'FLAGGED' : score.label === 'ERROR' ? 'NEEDS REVIEW' : 'VERIFIED',
-          aiConfidence: score.confidence,
+          status,
+          aiConfidence: riskScore,
+          trustScore: Number(score.trust_score ?? Math.max(0, 100 - riskScore)),
+          riskLevel: score.risk_level || (riskScore >= 70 ? 'HIGH' : riskScore >= 50 ? 'MEDIUM' : 'LOW'),
+          anomalyScore: Number(score.anomaly_score ?? score.isolation_score ?? riskScore),
           aiReasons: (score.reasons || []).map(normalizeReason),
           lastVerified: w.lastVerified ? new Date(w.lastVerified) : null,
         };
@@ -162,6 +188,20 @@ router.post('/upload', async (req, res) => {
       results.push(...createdWorkers);
     }
 
+    const persistedFlagged = results.filter(worker => worker.status === 'FLAGGED');
+    console.log(`[UPLOAD DEBUG] persisted records=${results.length} flagged=${persistedFlagged.length}`);
+    if (persistedFlagged[0]) {
+      console.log('[UPLOAD DEBUG] sample persisted flagged worker:', JSON.stringify({
+        staffId: persistedFlagged[0].staffId,
+        status: persistedFlagged[0].status,
+        aiConfidence: persistedFlagged[0].aiConfidence,
+        trustScore: persistedFlagged[0].trustScore,
+        riskLevel: persistedFlagged[0].riskLevel,
+        anomalyScore: persistedFlagged[0].anomalyScore,
+        reasons: persistedFlagged[0].aiReasons
+      }));
+    }
+
     await AuditEntry.create({
       action: 'PAYROLL_BATCH_UPLOADED',
       details: `${results.length} workers imported into ${activeBatch}. Flagged: ${results.filter(r => r.status === 'FLAGGED').length}.`,
@@ -178,7 +218,7 @@ router.post('/upload', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const where = await buildWorkerWhere(req.query);
-    const limit = Math.min(parseInt(req.query.limit || '200', 10), 500);
+    const limit = Math.min(parseInt(req.query.limit || '5000', 10), 5000);
     const offset = parseInt(req.query.offset || '0', 10);
     const workers = await Worker.findAll({ where, order: [['createdAt', 'DESC']], limit, offset });
     res.json(workers);

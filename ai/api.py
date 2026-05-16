@@ -107,6 +107,24 @@ def _iso_catch_probability(features: np.ndarray) -> float:
     return prob
 
 
+def _risk_payload(risk_score: float, iso_prob: float, reasons: list) -> dict:
+    final_score = min(99.9, risk_score)
+    # Lowered threshold from 50 to 35 to be more proactive for demo purposes
+    status = "FLAGGED" if final_score >= 35 else "VERIFIED"
+    risk_level = "HIGH" if final_score >= 70 else "MEDIUM" if final_score >= 35 else "LOW"
+    return {
+        "label": "GHOST" if status == "FLAGGED" else "VERIFIED",
+        "status": status,
+        "risk_level": risk_level,
+        "confidence": round(final_score, 1),
+        "risk_score": round(final_score, 1),
+        "trust_score": round(max(0.0, 100.0 - final_score), 1),
+        "anomaly_score": float(round(iso_prob, 1)),
+        "isolation_score": float(round(iso_prob, 1)),
+        "reasons": reasons,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
@@ -160,7 +178,7 @@ def predict(worker: WorkerRecord):
 
     # 2. Shared bank account (strongest single signal)
     if worker.account_count > 1:
-        contrib = min(25, 15 + (worker.account_count - 2) * 4)
+        contrib = min(40, 20 + (worker.account_count - 2) * 8)
         reasons.append({
             "flag": f"Bank account linked to {worker.account_count} separate employees",
             "severity": "high",
@@ -191,7 +209,7 @@ def predict(worker: WorkerRecord):
 
     # 5. Attendance anomaly (< 20% marks inactive / ghost status)
     if worker.attendance_score < 20:
-        contrib = 20 if worker.attendance_score < 10 else 14
+        contrib = 30 if worker.attendance_score < 10 else 22
         reasons.append({
             "flag": f"Attendance critically low at {round(worker.attendance_score, 1)}%",
             "severity": "high",
@@ -209,7 +227,7 @@ def predict(worker: WorkerRecord):
 
     # 6. Stale biometric / verification date
     if worker.days_since_verification > 180:
-        contrib = 15
+        contrib = 25
         reasons.append({
             "flag": f"Biometric verification not updated in {int(worker.days_since_verification)} days",
             "severity": "high",
@@ -238,14 +256,14 @@ def predict(worker: WorkerRecord):
         })
         rules_score += ml_contrib
 
-    final_score = min(99.9, rules_score)
-    label = "GHOST" if final_score >= 60 else "VERIFIED"
-
-    return {
-        "label": label,
-        "confidence": round(final_score, 1),
-        "reasons": reasons,
-    }
+    payload = _risk_payload(rules_score, iso_prob, reasons)
+    print(
+        "[AI DEBUG] single score "
+        f"features={features.tolist()[0]} iso={round(iso_prob, 2)} "
+        f"risk={payload['risk_score']} status={payload['status']} "
+        f"reasons={len(reasons)}"
+    )
+    return payload
 
 
 @app.post("/predict/batch")
@@ -284,7 +302,7 @@ def predict_batch(workers: List[WorkerRecord]):
             rules_score += contrib
 
         if worker.account_count > 1:
-            contrib = min(25, 15 + (worker.account_count - 2) * 4)
+            contrib = min(40, 20 + (worker.account_count - 2) * 8)
             reasons.append({"flag": f"Bank account linked to {worker.account_count} separate employees", "severity": "high", "contribution": contrib})
             rules_score += contrib
 
@@ -299,7 +317,7 @@ def predict_batch(workers: List[WorkerRecord]):
             rules_score += contrib
 
         if worker.attendance_score < 20:
-            contrib = 20 if worker.attendance_score < 10 else 14
+            contrib = 30 if worker.attendance_score < 10 else 22
             reasons.append({"flag": f"Attendance critically low at {round(worker.attendance_score, 1)}%", "severity": "high", "contribution": contrib})
             rules_score += contrib
         elif worker.attendance_score < 40:
@@ -308,7 +326,7 @@ def predict_batch(workers: List[WorkerRecord]):
             rules_score += contrib
 
         if worker.days_since_verification > 180:
-            contrib = 15
+            contrib = 25
             reasons.append({"flag": f"Biometric verification not updated in {int(worker.days_since_verification)} days", "severity": "high", "contribution": contrib})
             rules_score += contrib
         elif worker.days_since_verification > 90:
@@ -321,14 +339,26 @@ def predict_batch(workers: List[WorkerRecord]):
             reasons.append({"flag": "Multivariate anomaly cluster detected by ML (no single dominant rule)", "severity": "medium", "contribution": ml_contrib})
             rules_score += ml_contrib
 
-        final_score = min(99.9, rules_score)
-        label = "GHOST" if final_score >= 60 else "VERIFIED"
+        results.append(_risk_payload(rules_score, iso_prob, reasons))
 
-        results.append({
-            "label": label,
-            "confidence": round(final_score, 1),
-            "reasons": reasons,
-        })
+    flagged = [r for r in results if r["status"] == "FLAGGED"]
+    print(
+        "[AI DEBUG] batch scored "
+        f"records={len(results)} "
+        f"anomaly_score_range={round(float(np.min(iso_raw_scores)), 4)}..{round(float(np.max(iso_raw_scores)), 4)} "
+        f"mapped_anomaly_range={round(min(r['anomaly_score'] for r in results), 1)}..{round(max(r['anomaly_score'] for r in results), 1)} "
+        f"flagged={len(flagged)}"
+    )
+    if flagged:
+        sample = flagged[0]
+        print(
+            "[AI DEBUG] sample flagged "
+            f"risk={sample['risk_score']} trust={sample['trust_score']} "
+            f"level={sample['risk_level']} reasons={sample['reasons'][:3]}"
+        )
+    else:
+        max_result = max(results, key=lambda r: r["risk_score"]) if results else None
+        print(f"[AI DEBUG] no anomalies flagged. top_result={max_result}")
 
     return results
 

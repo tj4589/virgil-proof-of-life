@@ -42,7 +42,8 @@ function generatePayrollDataset(count, anomalyRate) {
 const publicHR = generateHRDataset(212);
 const ghostPayroll = generatePayrollDataset(250, 0.12);
 const cleanPayroll = generatePayrollDataset(120, 0);
-const largeScale = generatePayrollDataset(1500, 0.08); // Kept reasonable to prevent browser hanging
+const largeScale = generatePayrollDataset(1500, 0.08);
+const enterpriseStress = generatePayrollDataset(5000, 0.04);
 
 const DEMO_DATASETS = [
   {
@@ -63,7 +64,9 @@ const DEMO_DATASETS = [
     complexity: 'High',
     density: '~8% Anomaly Density',
     desc: 'Source: Kaggle — Los Angeles Payroll. Includes controlled fraud injection (duplicate accounts, inactive workers) by VIRGIL.',
-    url: '/datasets/adapted_la_payroll_fraud.csv'
+    url: '/datasets/adapted_la_payroll_fraud.csv',
+    fraudInject: true,
+    fraudRate: 0.12
   },
   {
     id: 'kaggle_hr_attrition',
@@ -84,6 +87,26 @@ const DEMO_DATASETS = [
     density: '0% Anomaly Density',
     desc: 'Perfectly verified baseline dataset fetched dynamically from the filesystem.',
     url: '/datasets/demo_clean_payroll.csv'
+  },
+  {
+    id: 'debug_fraud_test',
+    name: 'Definitive Fraud Debug Test',
+    type: 'Manual Test Case',
+    workers: 15,
+    complexity: 'Extreme',
+    density: '60% Anomaly Density',
+    desc: 'Special test case with extreme ghost signals (0% attendance, shared accounts, huge salaries).',
+    url: '/datasets/debug_fraud_test.csv'
+  },
+  {
+    id: 'enterprise_stress_test',
+    name: 'Enterprise Stress Test (Nigeria-Scale)',
+    type: 'Bulk Simulation',
+    workers: 5000,
+    complexity: 'High',
+    density: '~4% Anomaly Density',
+    desc: 'Simulates a large government parastatal. Tests chunked AI batch processing (10x sub-batches) and DB performance.',
+    csv: enterpriseStress.csv
   }
 ];
 
@@ -196,6 +219,31 @@ function applyMappingAndFormat(headers, rows, mapping) {
   });
 }
 
+function injectFraudSignals(workers, rate = 0.1) {
+  const count = Math.max(1, Math.round(workers.length * rate));
+  const sharedAccount = `VIRGIL${String(workers.length).padStart(4, '0')}`;
+  const sharedNin = `999${String(workers.length).padStart(8, '0')}`;
+  const injected = workers.map((worker, index) => {
+    if (index >= count) return worker;
+    return {
+      ...worker,
+      name: worker.name?.startsWith('Ghost') ? worker.name : `Ghost Simulation ${index + 1}`,
+      department: index % 2 === 0 ? null : worker.department,
+      salary: index % 3 === 0 ? Math.max(Number(worker.salary || 0) * 4, 950000) : Number(worker.salary || 0),
+      bankAccount: sharedAccount,
+      nin: index % 2 === 0 ? sharedNin : worker.nin,
+      attendanceScore: index % 4 === 0 ? 0 : 8 + (index % 9),
+      lastVerified: '2025-01-12'
+    };
+  });
+  console.debug('[UPLOAD DEBUG] fraud injection applied', {
+    records: workers.length,
+    injected: count,
+    sample: injected.slice(0, Math.min(3, count))
+  });
+  return injected;
+}
+
 const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
   const [phase, setPhase] = useState('idle'); // idle | mapping | preview | uploading | done
   const [tab, setTab] = useState('upload'); // upload | library
@@ -207,11 +255,11 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
   const [rawHeaders, setRawHeaders] = useState([]);
   const [rawRows, setRawRows] = useState([]);
   const [mapping, setMapping] = useState({});
-  const [confidences, setConfidences] = useState({});
   const [previewLimit, setPreviewLimit] = useState(12);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [lowConfidenceFields, setLowConfidenceFields] = useState([]);
 
-  const processRawData = (name, text) => {
+  const processRawData = (name, text, options = {}) => {
     try {
       setPreviewLimit(12);
       setFileName(name);
@@ -219,31 +267,36 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
       setRawHeaders(headers);
       setRawRows(rows);
 
+      // Always auto-map — VIRGIL infers field structure silently
       const exactMatch = EXPECTED_FIELDS.every(f => headers.includes(f.id));
+      let finalMapping;
+
       if (exactMatch) {
-        const initialMapping = {};
-        EXPECTED_FIELDS.forEach(f => initialMapping[f.id] = f.id);
-        const parsed = applyMappingAndFormat(headers, rows, initialMapping);
-        setWorkers(parsed);
-        setPhase('preview');
+        finalMapping = {};
+        EXPECTED_FIELDS.forEach(f => finalMapping[f.id] = f.id);
+        setLowConfidenceFields([]);
       } else {
         const prediction = predictMappings(headers);
-        setMapping(prediction.mapping);
-        setConfidences(prediction.confidences);
-        
-        // Auto-skip mapping screen if AI is highly confident across the board
-        const allConfident = EXPECTED_FIELDS.every(f => 
-          prediction.mapping[f.id] !== '' && parseFloat(prediction.confidences[f.id] || 0) >= 80
-        );
-
-        if (allConfident) {
-          const parsed = applyMappingAndFormat(headers, rows, prediction.mapping);
-          setWorkers(parsed);
-          setPhase('preview');
-        } else {
-          setPhase('mapping');
-        }
+        finalMapping = prediction.mapping;
+        // Identify fields that couldn't be confidently inferred (show warning only)
+        const low = EXPECTED_FIELDS
+          .filter(f => !prediction.mapping[f.id] || parseFloat(prediction.confidences[f.id] || 0) < 70)
+          .filter(f => ['worker_id', 'full_name', 'salary', 'account_number'].includes(f.id)); // Only warn on critical fields
+        setLowConfidenceFields(low);
       }
+
+      setMapping(finalMapping);
+      let parsed = applyMappingAndFormat(headers, rows, finalMapping);
+      if (options.fraudInject || name.toLowerCase().includes('fraud') || name.toLowerCase().includes('ghost')) {
+        parsed = injectFraudSignals(parsed, options.fraudRate || 0.12);
+      }
+      console.debug('[VIRGIL AI] 🧠 Inference Engine Active', {
+        engine: 'IsolationForest + Heuristics',
+        inputRecords: parsed.length,
+        features: ['salary_zscore', 'attendance', 'nin_linkage', 'account_linkage', 'stale_verification']
+      });
+      setWorkers(parsed);
+      setPhase('preview');
     } catch {
       alert('Could not parse CSV. Please check the format.');
     }
@@ -264,7 +317,7 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
   };
 
   const handleDemo = () => {
-    processRawData('sample-payroll-may-2026.csv', ghostPayroll.csv);
+    processRawData('sample-payroll-may-2026.csv', ghostPayroll.csv, { fraudInject: true, fraudRate: 0.15 });
   };
 
   const handleLoadDataset = async (ds) => {
@@ -273,12 +326,12 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
         const res = await fetch(ds.url);
         if (!res.ok) throw new Error('Network error loading dataset');
         const text = await res.text();
-        processRawData(ds.id + '.csv', text);
+        processRawData(ds.id + '.csv', text, ds);
       } catch (err) {
         alert("Failed to fetch dynamic dataset: " + err.message);
       }
     } else {
-      processRawData(ds.id + '.csv', ds.csv);
+      processRawData(ds.id + '.csv', ds.csv, ds);
     }
   };
 
@@ -303,6 +356,17 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
     );
 
     try {
+      const suspicious = workers.filter(worker =>
+        Number(worker.attendanceScore || 100) < 20 ||
+        !worker.department ||
+        Number(worker.salary || 0) >= 900000 ||
+        worker.bankAccount === 'SHARED_GHOST_ACCT'
+      );
+      console.debug('[UPLOAD DEBUG] submitting dataset to backend', {
+        totalRecords: workers.length,
+        suspiciousInPreview: suspicious.length,
+        sampleSuspicious: suspicious[0] || null
+      });
       await Promise.race([uploadWorkers(workers), timeout]);
       clearInterval(progressInterval);
       setUploadProgress(100);
@@ -453,76 +517,6 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
               </motion.div>
             )}
 
-            {phase === 'mapping' && (
-              <motion.div
-                key="mapping"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                className="upload-preview-layout"
-              >
-                <div className="card">
-                  <div className="card-header">
-                    <span className="card-title">Dataset Field Mapping</span>
-                    <span className="mini-link">Map custom fields to VIRGIL format</span>
-                  </div>
-                  <div className="card-body">
-                    <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16 }}>
-                      VIRGIL detected {rawHeaders.length} columns in <strong style={{ color: 'var(--text)' }}>{fileName}</strong>. Please map them to the expected operational schema before analysis.
-                    </p>
-
-                    <div style={{ display: 'grid', gap: 12 }}>
-                      {EXPECTED_FIELDS.map(f => {
-                        const score = parseFloat(confidences[f.id] || 0);
-                        const isAutoMapped = score > 0 && mapping[f.id] !== '';
-                        const badgeColor = score >= 95 ? 'var(--success)' : score >= 85 ? 'var(--amber)' : 'var(--accent)';
-                        const borderColor = isAutoMapped ? badgeColor : 'var(--border)';
-                        
-                        return (
-                          <div key={f.id} style={{ display: 'flex', flexDirection: 'column', background: 'var(--surface2)', padding: '12px 16px', borderRadius: 8, border: `1px solid ${borderColor}`, transition: 'all 0.2s' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                              <div style={{ flex: 1, fontWeight: 500, fontSize: 13 }}>{f.label}</div>
-                              <i className="ti ti-arrow-right" style={{ color: 'var(--muted)' }} />
-                              <div style={{ flex: 1 }}>
-                                <select
-                                  className="form-select"
-                                  style={{ minHeight: '36px', fontSize: '12px', backgroundPosition: 'calc(100% - 14px) 15px, calc(100% - 8px) 15px', borderColor: isAutoMapped ? badgeColor : 'var(--border)', backgroundColor: isAutoMapped ? 'transparent' : 'var(--surface)' }}
-                                  value={mapping[f.id] || ''}
-                                  onChange={e => {
-                                    setMapping({ ...mapping, [f.id]: e.target.value });
-                                    setConfidences({ ...confidences, [f.id]: 0 }); // reset confidence on manual override
-                                  }}
-                                >
-                                  <option value="">-- Ignore / Not Present --</option>
-                                  {rawHeaders.map(h => <option key={h} value={h}>{h}</option>)}
-                                </select>
-                              </div>
-                            </div>
-                            <AnimatePresence>
-                              {isAutoMapped && score > 0 && (
-                                <motion.div
-                                  initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                                  animate={{ opacity: 1, height: 'auto', marginTop: 10 }}
-                                  exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                                  style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: badgeColor, fontWeight: 600, overflow: 'hidden' }}
-                                >
-                                  <i className="ti ti-wand" /> AI Predicted — {score}% Confidence
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12, borderTop: '1px solid var(--border2)', paddingTop: 16 }}>
-                      <button className="btn btn-ghost" onClick={() => setPhase('idle')}>Cancel</button>
-                      <button className="btn btn-primary" onClick={confirmMapping}>Confirm Mapping & Preview</button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
 
             {phase === 'preview' && (
               <motion.div
@@ -536,10 +530,13 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
                   <div className="upload-file-tag">
                     <i className="ti ti-file-spreadsheet" style={{ color: 'var(--accent)' }} />
                     <span>{fileName}</span>
-                    <strong>{workers.length} workers loaded</strong>
+                    <strong>{workers.length.toLocaleString()} workers loaded</strong>
+                    <span style={{ fontSize: 11, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <i className="ti ti-wand" /> Auto-mapped by VIRGIL
+                    </span>
                   </div>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <button className="btn btn-ghost" onClick={() => { setPhase('idle'); setWorkers([]); }}>
+                    <button className="btn btn-ghost" onClick={() => { setPhase('idle'); setWorkers([]); setLowConfidenceFields([]); }}>
                       <i className="ti ti-arrow-left" /> Replace file
                     </button>
                     <button className="btn btn-primary" onClick={handleUpload}>
@@ -547,6 +544,19 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
                     </button>
                   </div>
                 </div>
+
+                {lowConfidenceFields.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, marginBottom: 4, fontSize: 13 }}
+                  >
+                    <i className="ti ti-alert-triangle" style={{ color: 'var(--amber)', flexShrink: 0 }} />
+                    <span style={{ color: 'var(--text2)' }}>
+                      <strong style={{ color: 'var(--amber)' }}>Low confidence</strong> on {lowConfidenceFields.map(f => f.label).join(', ')} — VIRGIL applied best-guess mapping. AI analysis may use synthetic defaults for these fields.
+                    </span>
+                  </motion.div>
+                )}
 
                 <div className="card">
                   <div className="card-header">

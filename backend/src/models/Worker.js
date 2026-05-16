@@ -17,6 +17,9 @@ const Worker = sequelize.define('Worker', {
   department: { type: DataTypes.STRING },
   status: { type: DataTypes.STRING, defaultValue: 'PENDING' },
   aiConfidence: { type: DataTypes.FLOAT },
+  trustScore: { type: DataTypes.FLOAT },
+  riskLevel: { type: DataTypes.STRING },
+  anomalyScore: { type: DataTypes.FLOAT },
   aiReasons: { type: DataTypes.JSON },
   lastVerified: { type: DataTypes.DATE }
 });

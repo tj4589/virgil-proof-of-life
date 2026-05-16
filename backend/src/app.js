@@ -11,7 +11,7 @@ const app = express();
 // Middleware
 app.use(cors());
 // Handle large CSV uploads (up to 10mb) as specified
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '50mb' }));
 
 // Routes
 app.use('/workers',   require('./routes/workers'));

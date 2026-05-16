@@ -169,7 +169,7 @@ const ResultsScreen = ({ onDashboard, onNav, theme, onToggleTheme }) => {
                     {display.map(worker => (
                       <tr key={worker.id}>
                         <td>{worker.name}</td>
-                        <td><span style={{ color: worker.score >= 60 ? 'var(--red-bright)' : 'var(--green)', fontWeight: 700 }}>{worker.score}%</span></td>
+                        <td><span style={{ color: worker.score >= 50 ? 'var(--red-bright)' : 'var(--green)', fontWeight: 700 }}>{worker.score}%</span></td>
                         <td>{worker.reasons[0]?.flag || 'Low risk pattern'}</td>
                         <td>{worker.status === 'FLAGGED' ? <span className="badge badge-red">Blocked</span> : <span className="badge badge-green">Queued</span>}</td>
                       </tr>
