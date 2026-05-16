@@ -74,11 +74,15 @@ async function releaseSalaryPayment(worker, amount, forceMock = false) {
       bank_code:             worker.bankCode || '058',
       account_number:        worker.bankAccount,
       account_name:          worker.name || `${worker.firstName} ${worker.lastName}`,
-      narration:             `VIRGIL Salary — ${new Date().toLocaleDateString('en-NG', { month: 'long', year: 'numeric' })}`,
       currency_id:           'NGN',
     };
 
     try {
+      if (process.env.NODE_ENV !== 'production') {
+        const masked = { ...payload, account_number: '******' + payload.account_number.slice(-4) };
+        console.log(`[SQUAD] Outgoing Payload:`, JSON.stringify(masked, null, 2));
+      }
+      
       console.log(`[SQUAD] Calling LIVE Payout: ${url}`);
       
       const res = await fetch(url, {
