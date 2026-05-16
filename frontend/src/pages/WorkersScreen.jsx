@@ -136,12 +136,20 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
 
   const departments = ['all', ...new Set(workers.map(w => w.department).filter(Boolean))];
 
-  const visible = workers.filter(w => {
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 25;
+
+  const filtered = workers.filter(w => {
     const matchQuery = `${w.name} ${w.department} ${w.nin}`.toLowerCase().includes(query.toLowerCase());
     const matchRisk = riskFilter === 'all' || w.status === riskFilter;
     const matchDept = deptFilter === 'all' || w.department === deptFilter;
     return matchQuery && matchRisk && matchDept;
   });
+
+  const visible = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+  // Reset page on filter change
+  useEffect(() => { setPage(0); }, [riskFilter, deptFilter, query]);
 
   const flaggedCount = stats?.flagged ?? workers.filter(w => w.status === 'FLAGGED').length;
   const verifiedCount = stats?.verified ?? workers.filter(w => w.status === 'VERIFIED').length;
@@ -288,6 +296,31 @@ const WorkersScreen = ({ onNav, theme, onToggleTheme }) => {
                 )}
               </tbody>
             </table>
+            
+            {filtered.length > PAGE_SIZE && (
+              <div className="pagination-bar">
+                <div className="pagination-info">
+                  Showing {Math.min(filtered.length, (page * PAGE_SIZE) + 1)}–{Math.min(filtered.length, (page + 1) * PAGE_SIZE)} of {filtered.length.toLocaleString()} workers
+                </div>
+                <div className="pagination-btns">
+                  <button 
+                    className="btn-pagi" 
+                    disabled={page === 0}
+                    onClick={() => setPage(p => p - 1)}
+                  >
+                    Previous
+                  </button>
+                  <span className="page-indicator">Page {page + 1} of {Math.ceil(filtered.length / PAGE_SIZE)}</span>
+                  <button 
+                    className="btn-pagi" 
+                    disabled={(page + 1) * PAGE_SIZE >= filtered.length}
+                    onClick={() => setPage(p => p + 1)}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

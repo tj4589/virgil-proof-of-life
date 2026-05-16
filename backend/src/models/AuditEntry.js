@@ -6,6 +6,11 @@ const AuditEntry = sequelize.define('AuditEntry', {
   action: { type: DataTypes.STRING, allowNull: false },
   details: { type: DataTypes.TEXT },
   squadReference: { type: DataTypes.STRING }
+}, {
+  indexes: [
+    { fields: ['action'] },
+    { fields: ['createdAt'] }
+  ]
 });
 
 module.exports = AuditEntry;

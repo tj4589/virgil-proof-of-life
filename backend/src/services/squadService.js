@@ -68,17 +68,24 @@ async function releaseSalaryPayment(worker, amount, forceMock = false) {
   if (!forceMock && SQUAD_MODE === 'live_sandbox' && SQUAD_KEY) {
     const url = `${SQUAD_BASE}/payout/transfer`; 
     
+    // SQUAD requires a 6-character NIP code (bank_code)
+    let bank_code = String(worker.bankCode || '058').padStart(6, '0');
+    
     const payload = {
       transaction_reference,
       amount:                Math.round(amount * 100), // KOBO
-      bank_code:             worker.bankCode || '058',
+      bank_code,
       account_number:        worker.bankAccount,
       account_name:          worker.name || `${worker.firstName} ${worker.lastName}`,
-      narration:             `VIRGIL Salary — ${new Date().toLocaleDateString('en-NG', { month: 'long', year: 'numeric' })}`,
       currency_id:           'NGN',
     };
 
     try {
+      if (process.env.NODE_ENV !== 'production') {
+        const masked = { ...payload, account_number: '******' + payload.account_number.slice(-4) };
+        console.log(`[SQUAD] Outgoing Payload:`, JSON.stringify(masked, null, 2));
+      }
+      
       console.log(`[SQUAD] Calling LIVE Payout: ${url}`);
       
       const res = await fetch(url, {

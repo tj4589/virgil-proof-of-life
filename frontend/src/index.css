@@ -2333,3 +2333,60 @@ body {
   .worker-modal-score-row { grid-template-columns: 1fr; }
   .dept-risk-row { grid-template-columns: 110px 1fr; }
 }
+/* Pagination Bar */
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border2);
+  background: var(--bg2);
+  border-radius: 0 0 12px 12px;
+}
+
+.pagination-info {
+  font-size: 12px;
+  color: var(--text3);
+}
+
+.pagination-btns {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-pagi {
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 6px;
+  background: var(--soft);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-pagi:hover:not(:disabled) {
+  background: var(--border);
+  color: var(--text);
+  border-color: var(--text3);
+}
+
+.btn-pagi:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-indicator {
+  font-size: 12px;
+  color: var(--text2);
+  font-weight: 500;
+  min-width: 100px;
+  text-align: center;
+}
+
+/* Ensure table container doesn't overflow */
+.card {
+  overflow: hidden;
+}

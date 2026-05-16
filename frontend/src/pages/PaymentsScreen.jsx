@@ -21,7 +21,7 @@ const PaymentsScreen = ({ onNav, theme, onToggleTheme }) => {
   const reload = async () => {
     try {
       const [workersData, statsData] = await Promise.all([
-        getWorkers({ limit: 1000 }), // Sample list for the table
+        getWorkers({ limit: 500 }), // Sample list for the table
         getPaymentStats()
       ]);
       setWorkers(workersData.workers || []);

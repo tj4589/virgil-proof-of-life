@@ -1,5 +1,18 @@
 const express = require('express');
 const router = express.Router();
+
+/**
+ * Smart field inference helper for CSV/JSON ingestion.
+ * Tries a list of aliases to find a value in an object.
+ */
+function inferField(obj, aliases) {
+  for (const alias of aliases) {
+    if (obj[alias] !== undefined && obj[alias] !== null && obj[alias] !== '') {
+      return obj[alias];
+    }
+  }
+  return null;
+}
 const multer = require('multer');
 const { Worker, AuditEntry, PaymentTransaction } = require('../models');
 const aiService = require('../services/aiService');
@@ -106,64 +119,91 @@ router.post('/upload', async (req, res) => {
       };
     });
 
-    // 2. Score all workers in one massively fast vectorized batch request
-    const aiScores = await aiService.scoreWorkersBatch(workerFeatures);
-    const scoredFlagged = aiScores.filter(score => (score.status === 'FLAGGED') || (score.label === 'GHOST'));
-    const anomalyScores = aiScores.map(score => Number(score.anomaly_score ?? score.isolation_score ?? score.risk_score ?? score.confidence ?? 0));
+    // 2. Score all workers in chunks to prevent timeouts
+    const AI_CHUNK_SIZE = 500;
+    const aiScores = [];
     
-    console.log('[UPLOAD DEBUG] feature_names: ["nin_count", "account_count", "salary_zscore", "missing_score", "attendance_score", "days_since_verification"]');
-    if (workerFeatures.length > 0) {
-      console.log(`[UPLOAD DEBUG] first_worker_features: ${JSON.stringify(workerFeatures[0])}`);
-    }
-    console.log(
-      `[UPLOAD DEBUG] AI returned records=${aiScores.length} flagged=${scoredFlagged.length} ` +
-      `anomaly_score_range=${anomalyScores.length ? Math.min(...anomalyScores).toFixed(1) : 'n/a'}..${anomalyScores.length ? Math.max(...anomalyScores).toFixed(1) : 'n/a'}`
-    );
-    if (scoredFlagged[0]) {
-      console.log('[UPLOAD DEBUG] sample flagged AI result:', JSON.stringify(scoredFlagged[0]));
-    } else {
-      const topScore = aiScores.reduce((best, item) => (
-        Number(item.risk_score ?? item.confidence ?? 0) > Number(best?.risk_score ?? best?.confidence ?? -1) ? item : best
-      ), null);
-      console.warn('[UPLOAD DEBUG] no flagged workers from AI. Top score:', JSON.stringify(topScore));
-      console.warn('[UPLOAD DEBUG] sample features:', JSON.stringify(workerFeatures.slice(0, 3)));
+    console.log(`[UPLOAD] Starting AI analysis for ${workers.length} workers in chunks of ${AI_CHUNK_SIZE}...`);
+    
+    for (let i = 0; i < workerFeatures.length; i += AI_CHUNK_SIZE) {
+      const featureChunk = workerFeatures.slice(i, i + AI_CHUNK_SIZE);
+      try {
+        const chunkResults = await aiService.scoreWorkersBatch(featureChunk);
+        aiScores.push(...chunkResults);
+        console.log(`[UPLOAD] AI progress: ${aiScores.length}/${workers.length} scored...`);
+      } catch (err) {
+        console.error(`[UPLOAD] AI chunk failed at offset ${i}:`, err.message);
+        // Fallback for failed chunk
+        const fallback = featureChunk.map(() => ({ 
+          status: 'NEEDS REVIEW', 
+          confidence: 0, 
+          reasons: [{ flag: 'AI Service Timeout', severity: 'medium', contribution: 0 }] 
+        }));
+        aiScores.push(...fallback);
+      }
     }
 
     // 3. Chunk DB inserts to prevent SQLite locking
-    const BATCH_SIZE = 100;
-    for (let i = 0; i < workers.length; i += BATCH_SIZE) {
-      const chunk = workers.slice(i, i + BATCH_SIZE);
-      const scoreChunk = aiScores.slice(i, i + BATCH_SIZE);
+    const DB_CHUNK_SIZE = 100;
+    for (let i = 0; i < workers.length; i += DB_CHUNK_SIZE) {
+      const chunk = workers.slice(i, i + DB_CHUNK_SIZE);
+      const scoreChunk = aiScores.slice(i, i + DB_CHUNK_SIZE);
 
-      const processedChunk = chunk.map((w, localIndex) => {
-        const absoluteIndex = i + localIndex;
-        const acct = w.bankAccount || w.bank_account || w.account_number || '';
-        const salary = Number(w.salary || 0);
-        const score = scoreChunk[localIndex] || { label: 'ERROR', status: 'NEEDS REVIEW', confidence: 0, reasons: [{ flag: 'AI score missing for worker', severity: 'high', contribution: 0 }] };
-        const status = score.status || (score.label === 'GHOST' ? 'FLAGGED' : score.label === 'ERROR' ? 'NEEDS REVIEW' : 'VERIFIED');
-        const riskScore = Number(score.risk_score ?? score.confidence ?? 0);
-
-        return {
-          batch: activeBatch,
-          staffId: w.staffId || `STF-${activeBatch}-${absoluteIndex + 1}`,
-          firstName: w.firstName || w.name?.split(' ')[0] || 'Unknown',
-          lastName: w.lastName || w.name?.split(' ').slice(1).join(' ') || 'Unknown',
-          email: w.email || '',
-          phone: w.phone || '',
-          nin: w.nin,
-          bvn: w.bvn,
-          bankAccount: acct,
-          bankCode: w.bankCode || w.bank_code || w.bank_id || '058',
-          salary,
-          department: w.department || null,
-          status,
-          aiConfidence: riskScore,
-          trustScore: Number(score.trust_score ?? Math.max(0, 100 - riskScore)),
-          riskLevel: score.risk_level || (riskScore >= 70 ? 'HIGH' : riskScore >= 50 ? 'MEDIUM' : 'LOW'),
-          anomalyScore: Number(score.anomaly_score ?? score.isolation_score ?? riskScore),
-          aiReasons: (score.reasons || []).map(normalizeReason),
-          lastVerified: w.lastVerified || w.last_verification || null,
+      const processedChunk = [];
+      
+      // LOG INFERENCE ONCE PER BATCH
+      if (i === 0 && workers.length > 0) {
+        const first = workers[0];
+        const fields = {
+          bankAccount: ['bankAccount', 'bank_account', 'account_number', 'acct_no', 'account'].find(a => first[a]),
+          salary: ['salary', 'monthly_pay', 'base_salary', 'amount'].find(a => first[a]),
+          nin: ['nin', 'identity_no', 'national_id'].find(a => first[a])
         };
+        console.log('[UPLOAD] Smart Inference Mapping:', JSON.stringify(fields));
+      }
+
+      chunk.forEach((w, localIndex) => {
+        try {
+          const absoluteIndex = i + localIndex;
+          
+          const bankAccount = inferField(w, ['bankAccount', 'bank_account', 'account_number', 'acct_no', 'account']) || '';
+          const salary = Number(inferField(w, ['salary', 'monthly_pay', 'base_salary', 'amount']) || 0);
+          const nin = inferField(w, ['nin', 'identity_no', 'national_id']);
+          const bankCode = w.bankCode || w.bank_code || w.bank_id || '058';
+
+          const score = scoreChunk[localIndex] || { 
+            status: 'NEEDS REVIEW', 
+            confidence: 0, 
+            reasons: [{ flag: 'AI score missing', severity: 'medium', contribution: 0 }] 
+          };
+          
+          const status = score.status || (score.label === 'GHOST' ? 'FLAGGED' : 'VERIFIED');
+          const riskScore = Number(score.risk_score ?? score.confidence ?? 0);
+
+          processedChunk.push({
+            batch: activeBatch,
+            staffId: w.staffId || `STF-${activeBatch}-${absoluteIndex + 1}`,
+            firstName: w.firstName || w.name?.split(' ')[0] || 'Unknown',
+            lastName: w.lastName || w.name?.split(' ').slice(1).join(' ') || 'Unknown',
+            email: w.email || '',
+            phone: w.phone || '',
+            nin,
+            bvn: w.bvn || '',
+            bankAccount,
+            bankCode,
+            salary,
+            department: w.department || null,
+            status,
+            aiConfidence: riskScore,
+            trustScore: Number(score.trust_score ?? Math.max(0, 100 - riskScore)),
+            riskLevel: score.risk_level || (riskScore >= 70 ? 'HIGH' : riskScore >= 50 ? 'MEDIUM' : 'LOW'),
+            anomalyScore: Number(score.anomaly_score ?? score.isolation_score ?? riskScore),
+            aiReasons: (score.reasons || []).map(normalizeReason),
+            lastVerified: w.lastVerified || w.last_verification || null,
+          });
+        } catch (err) {
+          console.error(`[UPLOAD] Skipping malformed record at index ${i + localIndex}:`, err.message);
+        }
       });
 
       // Deduplicate: delete any existing records with the same staffIds
@@ -218,7 +258,7 @@ router.post('/upload', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const where = await buildWorkerWhere(req.query);
-    const limit = Math.min(parseInt(req.query.limit || '200', 10), 5000);
+    const limit = Math.min(parseInt(req.query.limit || '5000', 10), 10000);
     const offset = parseInt(req.query.offset || '0', 10);
     
     const { count, rows: workers } = await Worker.findAndCountAll({ 
@@ -253,16 +293,33 @@ router.get('/stats/summary', async (req, res) => {
     const { Sequelize, Op } = require('sequelize');
     const where = await buildWorkerWhere(req.query);
     
-    // Use DB-side aggregation for speed with 5000+ records
-    const counts = await Worker.findAll({
-      where,
-      attributes: [
-        'status',
-        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count'],
-        [Sequelize.fn('SUM', Sequelize.col('salary')), 'totalSalary']
-      ],
-      group: ['status']
-    });
+    const [counts, deptStats, workersWithReasons] = await Promise.all([
+      // 1. Status & Salary Counts
+      Worker.findAll({
+        where,
+        attributes: [
+          'status',
+          [Sequelize.fn('COUNT', Sequelize.col('id')), 'count'],
+          [Sequelize.fn('SUM', Sequelize.col('salary')), 'totalSalary']
+        ],
+        group: ['status']
+      }),
+      // 2. Department Breakdown
+      Worker.findAll({
+        where,
+        attributes: [
+          'department',
+          [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']
+        ],
+        group: ['department']
+      }),
+      // 3. Signal Sampling
+      Worker.findAll({
+        where: { ...where, status: 'FLAGGED' },
+        attributes: ['aiReasons'],
+        limit: 200 
+      })
+    ]);
 
     const stats = {
       total: 0,
@@ -273,7 +330,10 @@ router.get('/stats/summary', async (req, res) => {
       blockedAmount: 0,
       queuedAmount: 0,
       releasedAmount: 0,
-      departmentStats: [],
+      departmentStats: deptStats.map(d => ({ 
+        label: d.department || 'Unassigned', 
+        count: parseInt(d.get('count'), 10) 
+      })),
       signals: []
     };
 
@@ -293,28 +353,6 @@ router.get('/stats/summary', async (req, res) => {
         stats.releasedAmount += salary;
         stats.cleared += count;
       }
-    });
-
-    // Get department breakdown
-    const deptStats = await Worker.findAll({
-      where,
-      attributes: [
-        'department',
-        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']
-      ],
-      group: ['department']
-    });
-    stats.departmentStats = deptStats.map(d => ({ 
-      label: d.department || 'Unassigned', 
-      count: parseInt(d.get('count'), 10) 
-    }));
-
-    // Get signals (reasons) — this still requires some memory work but we can optimize
-    // For large scale, we only sample or aggregate the most common ones
-    const workersWithReasons = await Worker.findAll({
-      where: { ...where, status: 'FLAGGED' },
-      attributes: ['aiReasons'],
-      limit: 200 // Sample for speed
     });
 
     const signalMap = {};

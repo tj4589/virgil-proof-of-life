@@ -21,18 +21,35 @@ router.post('/release-batch', async (req, res) => {
     console.log(`[PAYMENTS] Initiating LIVE release for ${workers.length} workers...`);
 
     const results = [];
-    const CHUNK_SIZE = 15; 
+    const MAX_LIVE_CALLS = 5; // Demo safety cap
+    const CONCURRENCY = 2;    // Calm queue
     
-    for (let i = 0; i < workers.length; i += CHUNK_SIZE) {
-      const chunk = workers.slice(i, i + CHUNK_SIZE);
-      const chunkPromises = chunk.map(async (worker) => {
+    // Process in small batches to avoid overloading Squad
+    for (let i = 0; i < workers.length; i += CONCURRENCY) {
+      const batch = workers.slice(i, i + CONCURRENCY);
+      
+      const batchPromises = batch.map(async (worker, indexInBatch) => {
+        const globalIndex = i + indexInBatch;
+        
         try {
-          // CALL REAL SQUAD SERVICE
-          const squadResult = await squadService.releaseSalaryPayment(worker, worker.salary, forceMock);
+          // 1. STRICT VALIDATION
+          if (!worker.bankAccount || worker.bankAccount.length < 10) {
+            await AuditEntry.create({
+              workerId: worker.id,
+              action: 'PAYMENT_FAILED_VALIDATION',
+              details: `Invalid bank details: ${worker.bankAccount || 'Missing'}`
+            });
+            return { id: worker.id, status: 'FAILED_VALIDATION', error: 'Invalid account number' };
+          }
+
+          // 2. DEMO SAFETY CAP
+          const isDemoSimulated = globalIndex >= MAX_LIVE_CALLS;
+          const shouldCallSquad = !forceMock && !isDemoSimulated && process.env.SQUAD_MODE === 'live_sandbox';
+
+          // CALL SQUAD SERVICE
+          const squadResult = await squadService.releaseSalaryPayment(worker, worker.salary, !shouldCallSquad);
           
           if (squadResult.success === false) {
-            console.error(`[PAYMENTS] Squad rejected worker ${worker.id}: ${squadResult.message}`);
-            
             await PaymentTransaction.create({
               workerId: worker.id,
               reference: `FAIL-${Date.now()}-${worker.id}`,
@@ -43,40 +60,41 @@ router.post('/release-batch', async (req, res) => {
             await AuditEntry.create({
               workerId: worker.id,
               action: 'PAYMENT_FAILED',
-              details: `Squad API Error: ${squadResult.message || 'Not Found (404)'}`
+              details: `Squad Error: ${squadResult.message}`
             });
 
             return { id: worker.id, status: 'FAILED', error: squadResult.message };
           }
 
+          // 3. RECORD SUCCESS (LIVE OR SIMULATED)
           const reference = squadResult.data?.transaction_reference || squadResult.transaction_reference || `VIRGIL-REF-${Date.now()}-${worker.id}`;
+          const finalStatus = isDemoSimulated ? 'SIMULATED' : 'PAID';
 
           await worker.update({ status: 'PAID' });
           
           await PaymentTransaction.create({
             workerId: worker.id,
-            reference: reference,
+            reference,
             amount: worker.salary,
-            status: 'SUCCESS'
+            status: finalStatus === 'PAID' ? 'SUCCESS' : 'SIMULATED'
           });
 
           await AuditEntry.create({
             workerId: worker.id,
-            action: 'PAYMENT_RELEASED',
+            action: isDemoSimulated ? 'PAYMENT_SIMULATED' : 'PAYMENT_RELEASED',
             squadReference: reference,
-            details: `Salary of ${worker.salary} NGN released via Squad Sandbox.`
+            details: isDemoSimulated ? `Demo limit reached: Payment simulated for ${worker.id}` : `Salary released via Squad: ${reference}`
           });
 
-          return { id: worker.id, status: 'PAID' };
+          return { id: worker.id, status: 'PAID', reference };
         } catch (err) {
           console.error(`[PAYMENTS] Critical error for worker ${worker.id}:`, err.message);
           return { id: worker.id, status: 'FAILED', error: err.message };
         }
       });
 
-      const chunkResults = await Promise.all(chunkPromises);
-      results.push(...chunkResults);
-      if (i % 100 === 0 && i > 0) console.log(`[PAYMENTS] Progress: ${i}/${workers.length} released...`);
+      const batchResults = await Promise.all(batchPromises);
+      results.push(...batchResults);
     }
 
     const releasedCount = results.filter(r => r.status === 'PAID').length;
@@ -101,27 +119,48 @@ router.post('/release-batch', async (req, res) => {
 // Stats route
 router.get('/stats', async (req, res) => {
   try {
+    const { Sequelize } = require('sequelize');
     const activeBatch = await getActiveBatch();
     const where = activeBatch ? { batch: activeBatch } : {};
-    const workers = await Worker.findAll({ where });
-    const activeWorkerIds = new Set(workers.map(w => w.id));
-    const transactions = await PaymentTransaction.findAll();
-    const flagged = workers.filter(w => w.status === 'FLAGGED');
-    const verified = workers.filter(w => w.status === 'VERIFIED');
-    const paid = workers.filter(w => w.status === 'PAID' || w.status === 'CONFIRMED');
     
-    res.json({
-      batch: activeBatch,
-      totalWorkers: workers.length,
-      flaggedCount: flagged.length,
-      verifiedCount: verified.length,
-      paidCount: paid.length,
-      blockedAmount: flagged.reduce((sum, w) => sum + Number(w.salary || 0), 0),
-      queuedAmount: verified.reduce((sum, w) => sum + Number(w.salary || 0), 0),
-      releasedAmount: transactions
-        .filter(tx => activeWorkerIds.has(tx.workerId) && (tx.status === 'SUCCESS' || tx.status === 'CONFIRMED'))
-        .reduce((sum, tx) => sum + Number(tx.amount || 0), 0)
+    const stats = await Worker.findAll({
+      where,
+      attributes: [
+        'status',
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count'],
+        [Sequelize.fn('SUM', Sequelize.col('salary')), 'totalSalary']
+      ],
+      group: ['status']
     });
+
+    const result = {
+      batch: activeBatch,
+      totalWorkers: 0,
+      flaggedCount: 0,
+      verifiedCount: 0,
+      paidCount: 0,
+      blockedAmount: 0,
+      queuedAmount: 0,
+      releasedAmount: 0
+    };
+
+    stats.forEach(s => {
+      const count = parseInt(s.get('count'), 10);
+      const salary = parseFloat(s.get('totalSalary') || 0);
+      result.totalWorkers += count;
+      if (s.status === 'FLAGGED') {
+        result.flaggedCount = count;
+        result.blockedAmount = salary;
+      } else if (s.status === 'VERIFIED') {
+        result.verifiedCount = count;
+        result.queuedAmount = salary;
+      } else if (s.status === 'PAID' || s.status === 'CONFIRMED') {
+        result.paidCount = count;
+        result.releasedAmount = salary;
+      }
+    });
+
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

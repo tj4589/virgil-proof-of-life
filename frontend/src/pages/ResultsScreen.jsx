@@ -28,28 +28,35 @@ const ResultsScreen = ({ onDashboard, onNav, theme, onToggleTheme }) => {
 
   const handleOverride = async () => {
     if (!selected || acting) return;
-    setActing(true);
+    const originalWorkers = [...workers];
+    
+    // OPTIMISTIC UPDATE: Update UI instantly
+    setWorkers(prev => prev.map(w => w.id === selected.id ? { ...w, status: 'VERIFIED' } : w));
+    showMsg(`${selected.name} overridden — marked as VERIFIED.`);
+
     try {
       await updateWorkerStatus(selected.id, 'VERIFIED');
-      showMsg(`${selected.name} overridden — marked as VERIFIED and queued for payment.`);
-      await loadWorkers();
+      // No need to reload, state is already correct
     } catch (e) {
+      setWorkers(originalWorkers); // ROLLBACK on error
       showMsg(e.message, 'error');
     }
-    setActing(false);
   };
 
   const handleConfirmGhost = async () => {
     if (!selected || acting) return;
-    setActing(true);
+    const originalWorkers = [...workers];
+
+    // OPTIMISTIC UPDATE: Update UI instantly
+    setWorkers(prev => prev.map(w => w.id === selected.id ? { ...w, status: 'FLAGGED' } : w));
+    showMsg(`${selected.name} confirmed as ghost worker.`, 'error');
+
     try {
       await updateWorkerStatus(selected.id, 'FLAGGED');
-      showMsg(`${selected.name} confirmed as ghost worker — payment permanently blocked.`, 'error');
-      await loadWorkers();
     } catch (e) {
+      setWorkers(originalWorkers); // ROLLBACK on error
       showMsg(e.message, 'error');
     }
-    setActing(false);
   };
 
   const flagged = workers.filter(worker => worker.status === 'FLAGGED');
