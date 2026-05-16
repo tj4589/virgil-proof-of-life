@@ -25,8 +25,12 @@ router.post('/release-batch', async (req, res) => {
           worker.salary,
           forceMock
         );
-        
-        const reference = squadResult.data?.transaction_reference || squadResult.transaction_reference || `MOCK-${Date.now()}`;
+
+        const reference = squadResult?.data?.transaction_reference || squadResult?.transaction_reference || null;
+        const squadSuccess = squadResult?.success === true || squadResult?.status === 200;
+        if (!squadSuccess || !reference) {
+          throw new Error(`Squad transfer not confirmed as successful. Message: ${squadResult?.message || 'No response message'}`);
+        }
 
         await worker.update({
           status: 'PAID'
@@ -42,11 +46,25 @@ router.post('/release-batch', async (req, res) => {
         await AuditEntry.create({
           workerId: worker.id,
           action: 'PAYMENT_RELEASED',
-          squadReference: reference
+          details: `Payment released to worker ${worker.staffId || worker.id}.`,
+          squadReference: reference,
         });
         
         results.push({ worker: worker.id, status: 'PAID', ref: reference });
       } catch (err) {
+        const failedReference = `FAILED-${worker.id}-${Date.now()}`;
+        await PaymentTransaction.create({
+          workerId: worker.id,
+          reference: failedReference,
+          amount: worker.salary,
+          status: 'FAILED'
+        });
+        await AuditEntry.create({
+          workerId: worker.id,
+          action: 'PAYMENT_FAILED',
+          details: `Payment release failed for ${worker.staffId || worker.id}: ${err.message}`,
+          squadReference: failedReference,
+        });
         results.push({ worker: worker.id, status: 'FAILED', error: err.message });
       }
     }

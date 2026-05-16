@@ -49,9 +49,12 @@ const ProofOfLifeScreen = ({ theme, onToggleTheme }) => {
 
   const submitPol = async () => {
     try {
+      const passed = otp.trim().length === 6;
+      const confidence = passed ? 88 : 42;
       const res = await verifyPol({
         staffId: staffId.toUpperCase(),
-        livenessPassed: otp.length >= 4
+        livenessPassed: passed,
+        confidence,
       });
       setResult(res.status);
       setStep('result');
@@ -123,7 +126,7 @@ const ProofOfLifeScreen = ({ theme, onToggleTheme }) => {
                 className="btn btn-primary" 
                 style={{ width: '100%', marginTop: '16px', background: 'var(--red)', color: '#fff', border: 'none', padding: '12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 500 }}
                 onClick={() => setStep('camera')}
-                disabled={otp.length < 4}
+                disabled={otp.trim().length !== 6}
               >
                 Verify Identity
               </button>
@@ -165,18 +168,20 @@ const ProofOfLifeScreen = ({ theme, onToggleTheme }) => {
 
           {step === 'result' && (
             <motion.div key="result" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ textAlign: 'center' }}>
-              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: result === 'VERIFIED' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-                <i className={`ti ${result === 'VERIFIED' ? 'ti-shield-check' : 'ti-alert-triangle'}`} style={{ fontSize: '32px', color: result === 'VERIFIED' ? 'var(--green)' : 'var(--red)' }} />
+              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: result === 'VERIFIED' ? 'rgba(34, 197, 94, 0.1)' : result === 'NEEDS REVIEW' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(239, 68, 68, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+                <i className={`ti ${result === 'VERIFIED' ? 'ti-shield-check' : result === 'NEEDS REVIEW' ? 'ti-alert-circle' : 'ti-alert-triangle'}`} style={{ fontSize: '32px', color: result === 'VERIFIED' ? 'var(--green)' : result === 'NEEDS REVIEW' ? 'var(--amber)' : 'var(--red)' }} />
               </div>
               
               <h3 style={{ color: 'var(--text)', fontSize: '20px', fontWeight: 600, marginBottom: '8px' }}>
-                {result === 'VERIFIED' ? 'Verification Successful' : 'Verification Failed'}
+                {result === 'VERIFIED' ? 'Verification Successful' : result === 'NEEDS REVIEW' ? 'Pending Manual Review' : 'Verification Failed'}
               </h3>
               
               <p style={{ color: 'var(--text2)', fontSize: '14px', lineHeight: 1.6, marginBottom: '32px' }}>
                 {result === 'VERIFIED' 
-                  ? 'Your biometric signature matches our secure records. Your payroll status has been updated and released for disbursement.'
-                  : 'We could not securely verify your identity. Your payment status has been flagged for manual review by the HR department.'}
+                  ? 'Your biometric signature matches secure records. Your payroll status has been updated.'
+                  : result === 'NEEDS REVIEW'
+                    ? 'Your submission was received, but automatic verification is disabled by policy. HR must manually approve this verification.'
+                    : 'We could not securely verify your identity. Your payment status has been flagged for manual review by HR.'}
               </p>
 
               <button 

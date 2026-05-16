@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const { Worker, AuditEntry, PaymentTransaction } = require('../models');
+const { Worker, AuditEntry } = require('../models');
 const aiService = require('../services/aiService');
-
-const upload = multer({ dest: 'uploads/' });
 
 const normalizeReason = (reason) => {
   if (typeof reason !== 'string') return reason;
@@ -50,6 +47,30 @@ router.post('/upload', async (req, res) => {
     }
 
     const activeBatch = batchId || `BATCH_${Date.now()}`;
+    const batchExists = await Worker.count({ where: { batch: activeBatch } });
+    if (batchExists > 0) {
+      return res.status(409).json({
+        success: false,
+        error: `Batch "${activeBatch}" already exists. Upload with a new batch ID to preserve audit/payment history.`
+      });
+    }
+
+    const duplicateProvidedStaffIds = {};
+    workers.forEach((w) => {
+      const id = typeof w.staffId === 'string' ? w.staffId.trim().toUpperCase() : '';
+      if (!id) return;
+      duplicateProvidedStaffIds[id] = (duplicateProvidedStaffIds[id] || 0) + 1;
+    });
+    const repeated = Object.entries(duplicateProvidedStaffIds)
+      .filter(([, count]) => count > 1)
+      .map(([id]) => id);
+    if (repeated.length > 0) {
+      return res.status(400).json({
+        success: false,
+        error: `Duplicate staffId values in payload: ${repeated.slice(0, 5).join(', ')}`
+      });
+    }
+
     const salaries = workers.map(w => Number(w.salary || w.monthly_pay || 0)).filter(n => Number.isFinite(n) && n > 0);
     const avgSalary = salaries.length ? salaries.reduce((a, c) => a + c, 0) / salaries.length : 0;
     const variance = salaries.length > 1
@@ -112,7 +133,7 @@ router.post('/upload', async (req, res) => {
 
         return {
           batch: activeBatch,
-          staffId: w.staffId || `STF-${activeBatch}-${absoluteIndex + 1}`,
+          staffId: String(w.staffId || `STF-${activeBatch}-${absoluteIndex + 1}`).trim().toUpperCase(),
           firstName: w.firstName || w.name?.split(' ')[0] || 'Unknown',
           lastName: w.lastName || w.name?.split(' ').slice(1).join(' ') || 'Unknown',
           email: w.email || '',
@@ -131,17 +152,6 @@ router.post('/upload', async (req, res) => {
       });
 
       const processedChunk = await Promise.all(chunkPromises);
-
-      // Deduplicate: delete any existing records with the same staffIds
-      const staffIds = processedChunk.map(w => w.staffId).filter(Boolean);
-      const existingWorkers = await Worker.findAll({ where: { staffId: staffIds } });
-      const existingIds = existingWorkers.map(worker => worker.id);
-      if (existingIds.length) {
-        await PaymentTransaction.destroy({ where: { workerId: existingIds } });
-        await AuditEntry.destroy({ where: { workerId: existingIds } });
-        await Worker.destroy({ where: { id: existingIds } });
-      }
-
       const createdWorkers = await Worker.bulkCreate(processedChunk);
 
       const auditEntries = createdWorkers.map(cw => ({
@@ -286,20 +296,35 @@ router.patch('/:id/status', async (req, res) => {
 // Proof of Life completion
 router.post('/verify-pol', async (req, res) => {
   try {
-    const { staffId, livenessPassed } = req.body;
+    const { staffId, livenessPassed, confidence } = req.body;
+    if (typeof staffId !== 'string' || !staffId.trim()) {
+      return res.status(400).json({ success: false, error: 'staffId is required' });
+    }
+    if (typeof livenessPassed !== 'boolean') {
+      return res.status(400).json({ success: false, error: 'livenessPassed must be a boolean' });
+    }
+    const numericConfidence = Number(confidence);
+    if (!Number.isFinite(numericConfidence) || numericConfidence < 0 || numericConfidence > 100) {
+      return res.status(400).json({ success: false, error: 'confidence must be a number between 0 and 100' });
+    }
 
-    const worker = await Worker.findOne({ where: { staffId } });
+    const worker = await Worker.findOne({ where: { staffId: staffId.trim().toUpperCase() } });
     if (!worker) return res.status(404).json({ success: false, error: 'Worker not found' });
 
-    const confidence = livenessPassed ? 96 : 42;
-    const newStatus = livenessPassed ? 'VERIFIED' : 'NEEDS REVIEW';
+    const allowAutoVerify = process.env.ALLOW_SELF_VERIFIED_POL === 'true';
+    let newStatus = 'NEEDS REVIEW';
+    if (!livenessPassed) {
+      newStatus = 'FLAGGED';
+    } else if (numericConfidence >= 85 && allowAutoVerify) {
+      newStatus = 'VERIFIED';
+    }
 
-    await worker.update({ status: newStatus, lastVerified: new Date(), aiConfidence: confidence });
+    await worker.update({ status: newStatus, lastVerified: new Date(), aiConfidence: numericConfidence });
 
     await AuditEntry.create({
       workerId: worker.id,
       action: 'PROOF_OF_LIFE_COMPLETED',
-      details: `Worker completed Liveness Check. Confidence: ${confidence}%. Status: ${newStatus}.`,
+      details: `Proof-of-life submitted. Liveness: ${livenessPassed ? 'PASS' : 'FAIL'}. Confidence: ${numericConfidence}%. Status: ${newStatus}.${allowAutoVerify ? '' : ' Auto-verify disabled by policy.'}`,
     });
 
     res.json({ success: true, status: newStatus, worker });

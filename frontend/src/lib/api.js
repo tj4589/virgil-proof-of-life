@@ -1,9 +1,18 @@
 const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+const ADMIN_API_KEY = import.meta.env.VITE_ADMIN_API_KEY || '';
+
+const getAuthHeaders = () => {
+  if (!ADMIN_API_KEY) return {};
+  return {
+    'Authorization': `Bearer ${ADMIN_API_KEY}`,
+    'x-api-key': ADMIN_API_KEY,
+  };
+};
 
 export const uploadWorkers = async (workers) => {
   const res = await fetch(`${API_URL}/workers/upload`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
     body: JSON.stringify({ batchId: `BATCH_${Date.now()}`, workers }),
   });
   if (!res.ok) throw new Error('Upload failed');
@@ -11,7 +20,7 @@ export const uploadWorkers = async (workers) => {
 };
 
 export const getWorkers = async () => {
-  const res = await fetch(`${API_URL}/workers`);
+  const res = await fetch(`${API_URL}/workers`, { headers: getAuthHeaders() });
   if (!res.ok) throw new Error('Failed to fetch workers');
   return res.json();
 };
@@ -19,7 +28,7 @@ export const getWorkers = async () => {
 export const updateWorkerStatus = async (id, status) => {
   const res = await fetch(`${API_URL}/workers/${id}/status`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
     body: JSON.stringify({ status }),
   });
   if (!res.ok) throw new Error('Failed to update worker status');
@@ -27,25 +36,28 @@ export const updateWorkerStatus = async (id, status) => {
 };
 
 export const releasePayments = async () => {
-  const res = await fetch(`${API_URL}/payments/release-batch`, { method: 'POST' });
+  const res = await fetch(`${API_URL}/payments/release-batch`, {
+    method: 'POST',
+    headers: getAuthHeaders()
+  });
   if (!res.ok) throw new Error('Release failed');
   return res.json();
 };
 
 export const getPaymentStats = async () => {
-  const res = await fetch(`${API_URL}/payments/stats`);
+  const res = await fetch(`${API_URL}/payments/stats`, { headers: getAuthHeaders() });
   if (!res.ok) throw new Error('Failed to fetch payment stats');
   return res.json();
 };
 
 export const getStats = async () => {
-  const res = await fetch(`${API_URL}/workers/stats/summary`);
+  const res = await fetch(`${API_URL}/workers/stats/summary`, { headers: getAuthHeaders() });
   if (!res.ok) throw new Error('Failed to fetch stats');
   return res.json();
 };
 
 export const getAuditLog = async () => {
-  const res = await fetch(`${API_URL}/workers/audit/log`);
+  const res = await fetch(`${API_URL}/workers/audit/log`, { headers: getAuthHeaders() });
   if (!res.ok) throw new Error('Failed to fetch audit log');
   return res.json();
 };
@@ -53,7 +65,7 @@ export const getAuditLog = async () => {
 export const verifyPol = async (data) => {
   const res = await fetch(`${API_URL}/workers/verify-pol`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error('Verification failed');
@@ -61,7 +73,7 @@ export const verifyPol = async (data) => {
 };
 
 export const getSettings = async () => {
-  const res = await fetch(`${API_URL}/settings`);
+  const res = await fetch(`${API_URL}/settings`, { headers: getAuthHeaders() });
   if (!res.ok) throw new Error('Failed to fetch settings');
   return res.json();
 };
@@ -69,7 +81,7 @@ export const getSettings = async () => {
 export const saveSettings = async (settings) => {
   const res = await fetch(`${API_URL}/settings`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
     body: JSON.stringify(settings),
   });
   if (!res.ok) throw new Error('Failed to save settings');

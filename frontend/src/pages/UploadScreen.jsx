@@ -381,7 +381,7 @@ const UploadScreen = ({ onUpload, onNav, theme, onToggleTheme }) => {
                       </div>
                       <div className="upload-security-note">
                         <i className="ti ti-lock" style={{ color: 'var(--accent)', fontSize: 12 }} />
-                        <span>Files are processed locally and never transmitted to external servers</span>
+                        <span>Files are parsed in-browser and sent only to your configured VIRGIL backend for scoring</span>
                       </div>
                     </div>
                   </>
